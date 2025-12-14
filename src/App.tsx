@@ -106,16 +106,9 @@ Content here`
     return () => document.removeEventListener("fullscreenchange", handler);
   }, [isFullscreen]);
 
-  // Copy frontmatter template
-  const copyFrontmatter = () => {
-    const sample = `===/===
-title: Your Title
-date: YYYY-MM-DD
-presenter: Name
-description: Description here
-===/===`;
-
-    navigator.clipboard.writeText(sample).catch(() => {});
+  // Copy editor content
+  const copyEditorContent = () => {
+    navigator.clipboard.writeText(markdown).catch(() => {});
   };
 
   // ---------------------------------------------------------------------------
@@ -221,9 +214,6 @@ description: Description here
       >
         <div>
           <h1 className="text-xl font-semibold">Minimal Presentation Tool</h1>
-          <p className="text-sm mt-1" style={{ opacity: 0.7 }}>
-            Separate slides with === • Add frontmatter with ===/===
-          </p>
         </div>
 
         <button
@@ -246,23 +236,49 @@ description: Description here
           style={{ backgroundColor: bgColor, borderColor: textColor + "20" }}
         >
           <div
-            className="px-4 py-[10px] border-b text-sm font-medium"
+            className="px-4 py-2 border-b text-sm font-medium"
             style={{ borderColor: textColor + "20" }}
           >
             <div className="flex items-center justify-between">
               Editor
-              {/* Copy Button */}
-              <button
-                onClick={copyFrontmatter}
-                className="px-2 py-[2px] text-xs border rounded"
-                style={{
-                  borderColor: textColor + "40",
-                  color: textColor,
-                  backgroundColor: bgColor,
-                }}
-              >
-                Copy FM
-              </button>
+              <div className="flex items-center gap-2">
+                <button
+                  onClick={() => {
+                    setMarkdown(`===/===
+title: Example Title
+date: 2025-01-01
+presenter: Presenter
+description: Example slideshow
+===/===
+
+# Slide 1
+Hello world
+
+===
+
+# Slide 2
+Content here`);
+                    setCurrentSlide(0);
+                  }}
+                  className="px-3 py-1 text-xs border rounded"
+                  style={{ borderColor: textColor + "40", color: textColor }}
+                >
+                  Reset Editor
+                </button>
+
+                {/* Copy Button */}
+                <button
+                  onClick={copyEditorContent}
+                  className="px-2 py-[2px] text-xs border rounded"
+                  style={{
+                    borderColor: textColor + "40",
+                    color: textColor,
+                    backgroundColor: bgColor,
+                  }}
+                >
+                  Copy Content
+                </button>
+              </div>
             </div>
           </div>
 
