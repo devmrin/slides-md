@@ -213,7 +213,7 @@ Content here`
         style={{ backgroundColor: bgColor, borderColor: textColor + "20" }}
       >
         <div>
-          <h1 className="text-xl font-semibold">Minimal Presentation Tool</h1>
+          <h1 className="text-xl font-semibold">slides.md</h1>
         </div>
 
         <button
