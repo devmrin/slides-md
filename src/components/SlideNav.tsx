@@ -1,3 +1,5 @@
+import { Button } from "./Button";
+
 interface SlideNavProps {
   currentSlide: number;
   slidesLength: number;
@@ -19,13 +21,13 @@ export function SlideNav({
   return (
     <div className="border-t p-4 flex items-center justify-between border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-900">
       <div className="flex items-center gap-2">
-        <button
+        <Button
           onClick={prevSlide}
           disabled={currentSlide === 0}
           className="px-4 py-2 border rounded disabled:opacity-30 border-gray-300 dark:border-gray-600 text-gray-900 dark:text-gray-100 bg-white dark:bg-gray-800 hover:bg-gray-50 dark:hover:bg-gray-700"
         >
           ← Previous
-        </button>
+        </Button>
       </div>
       <div className="text-center flex-1 mx-4">
         <div className="text-sm opacity-60">
@@ -39,13 +41,13 @@ export function SlideNav({
           )}
         </div>
       </div>
-      <button
+      <Button
         onClick={nextSlide}
         disabled={currentSlide === slidesLength - 1}
         className="px-4 py-2 border rounded disabled:opacity-30 border-gray-300 dark:border-gray-600 text-gray-900 dark:text-gray-100 bg-white dark:bg-gray-800 hover:bg-gray-50 dark:hover:bg-gray-700"
       >
         Next →
-      </button>
+      </Button>
     </div>
   );
 }

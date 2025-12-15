@@ -1,6 +1,7 @@
 import { Editor } from "./Editor";
 import { Slide } from "./Slide";
 import { Director } from "./Director";
+import { Button } from "./Button";
 
 interface StandardViewProps {
   markdown: string;
@@ -45,12 +46,12 @@ export function StandardView({
           </h1>
         </div>
 
-        <button
+        <Button
           onClick={() => setIsDark(!isDark)}
           className="px-3 py-1 text-sm border rounded border-gray-400 dark:border-gray-600 text-gray-900 dark:text-gray-100 bg-white dark:bg-gray-900 hover:bg-gray-50 dark:hover:bg-gray-800"
         >
           {isDark ? "Light (^T)" : "Dark (^T)"}
-        </button>
+        </Button>
       </header>
 
       <div className="flex-1 flex overflow-hidden">
@@ -67,18 +68,18 @@ export function StandardView({
           <div className="px-4 py-2 border-b text-sm font-medium flex items-center justify-between gap-2 bg-gray-100 dark:bg-gray-800 text-gray-900 dark:text-gray-100 border-gray-300 dark:border-gray-700">
             <span>Preview</span>
             <div className="flex items-center gap-2">
-              <button
+              <Button
                 onClick={() => setCurrentSlide(0)}
                 className="px-3 py-1 text-xs border rounded border-gray-400 dark:border-gray-600 text-gray-900 dark:text-gray-100 bg-white dark:bg-gray-900 hover:bg-gray-50 dark:hover:bg-gray-800"
               >
                 Reset Deck
-              </button>
-              <button
+              </Button>
+              <Button
                 onClick={toggleFullscreen}
                 className="px-3 py-1 text-xs border rounded border-gray-400 dark:border-gray-600 text-gray-900 dark:text-gray-100 bg-white dark:bg-gray-900 hover:bg-gray-50 dark:hover:bg-gray-800"
               >
                 Present (⌘↵)
-              </button>
+              </Button>
             </div>
           </div>
           <div className="flex-1 overflow-auto p-8 flex items-center justify-center text-gray-900 dark:text-gray-100">

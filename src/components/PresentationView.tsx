@@ -1,5 +1,6 @@
 import { Slide } from "./Slide";
 import { Director } from "./Director";
+import { Button } from "./Button";
 
 interface PresentationViewProps {
   currentSlide: number;
@@ -29,25 +30,25 @@ export function PresentationView({
       {/* Top bar for reset, theme, and exit */}
       <div className="w-full flex justify-between items-start px-6 pt-4 z-10">
         <div className="flex gap-2">
-          <button
+          <Button
             className="px-3 py-1 text-sm border rounded border-gray-400 dark:border-gray-600 text-gray-900 dark:text-gray-100 bg-gray-50 dark:bg-gray-900 hover:bg-gray-100 dark:hover:bg-gray-800"
             onClick={() => setCurrentSlide(0)}
           >
             Reset <span className="ml-1 text-xs opacity-70">(R)</span>
-          </button>
-          <button
+          </Button>
+          <Button
             className="px-3 py-1 text-sm border rounded border-gray-400 dark:border-gray-600 text-gray-900 dark:text-gray-100 bg-gray-50 dark:bg-gray-900 hover:bg-gray-100 dark:hover:bg-gray-800"
             onClick={() => setIsDark((d) => !d)}
           >
             Theme <span className="ml-1 text-xs opacity-70">(T)</span>
-          </button>
+          </Button>
         </div>
-        <button
+        <Button
           className="px-3 py-1 text-sm border rounded border-gray-400 dark:border-gray-600 text-gray-900 dark:text-gray-100 bg-gray-50 dark:bg-gray-900 hover:bg-gray-100 dark:hover:bg-gray-800"
           onClick={() => setIsFullscreen(false)}
         >
           Exit <span className="ml-1 text-xs opacity-70">(ESC)</span>
-        </button>
+        </Button>
       </div>
       <div className="flex-1 flex items-center justify-center p-12 overflow-auto">
         <Slide

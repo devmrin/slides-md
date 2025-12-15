@@ -1,6 +1,7 @@
 import CodeMirror from "@uiw/react-codemirror";
 import { markdown as markdownLang } from "@codemirror/lang-markdown";
 import { oneDark } from "@codemirror/theme-one-dark";
+import { Button } from "./Button";
 
 interface EditorProps {
   markdown: string;
@@ -25,18 +26,18 @@ export function Editor({
         <div className="flex items-center justify-between">
           Editor
           <div className="flex items-center gap-2">
-            <button
+            <Button
               onClick={onReset}
               className="px-3 py-1 text-xs border rounded border-gray-400 dark:border-gray-600 text-gray-900 dark:text-gray-100 bg-white dark:bg-gray-900 hover:bg-gray-50 dark:hover:bg-gray-800"
             >
               Reset Editor
-            </button>
-            <button
+            </Button>
+            <Button
               onClick={onCopy}
-              className="px-2 py-[2px] text-xs border rounded border-gray-400 dark:border-gray-600 text-gray-900 dark:text-gray-100 bg-white dark:bg-gray-900 hover:bg-gray-50 dark:hover:bg-gray-800"
+              className="px-3 py-1 text-xs border rounded border-gray-400 dark:border-gray-600 text-gray-900 dark:text-gray-100 bg-white dark:bg-gray-900 hover:bg-gray-50 dark:hover:bg-gray-800"
             >
               Copy Content
-            </button>
+            </Button>
           </div>
         </div>
       </div>
