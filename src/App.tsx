@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useSlides } from "./hooks/useSlides";
 import { useFullscreen } from "./hooks/useFullscreen";
 import { Slide } from "./components/Slide";
@@ -41,6 +41,16 @@ Content here`
   };
 
   const { toggleFullscreen } = useFullscreen(isFullscreen, setIsFullscreen);
+
+  // Arrow key navigation (global)
+  useEffect(() => {
+    const handler = (e: KeyboardEvent) => {
+      if (e.key === "ArrowRight") nextSlide();
+      if (e.key === "ArrowLeft") prevSlide();
+    };
+    window.addEventListener("keydown", handler);
+    return () => window.removeEventListener("keydown", handler);
+  }, [currentSlide, slides.length]);
 
   // Copy editor content
   const copyEditorContent = () => {
