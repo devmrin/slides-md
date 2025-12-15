@@ -1,4 +1,29 @@
 import { marked } from "marked";
+import { useEffect, useRef } from "react";
+import hljs from "highlight.js";
+
+// Configure marked to use highlight.js for code blocks
+marked.setOptions({
+  highlight: function (code: string, lang?: string) {
+    // Ensure code is a string
+    const codeStr = String(code || '');
+    
+    if (lang && hljs.getLanguage(lang)) {
+      try {
+        const result = hljs.highlight(codeStr, { language: lang });
+        // Extract inner HTML from highlight.js output
+        const match = result.value.match(/<code[^>]*>(.*?)<\/code>/s);
+        return match ? match[1] : result.value;
+      } catch (err) {
+        // Fall through to auto-detection
+      }
+    }
+    // Auto-detect language
+    const result = hljs.highlightAuto(codeStr);
+    const match = result.value.match(/<code[^>]*>(.*?)<\/code>/s);
+    return match ? match[1] : result.value;
+  },
+});
 
 interface SlideProps {
   slide: string;
@@ -7,6 +32,21 @@ interface SlideProps {
 }
 
 export function Slide({ slide, isTitle, frontmatter }: SlideProps) {
+  const contentRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    // Add hljs class to code blocks and highlight them after rendering
+    if (contentRef.current) {
+      contentRef.current.querySelectorAll("pre code").forEach((block) => {
+        const codeElement = block as HTMLElement;
+        if (!codeElement.classList.contains("hljs")) {
+          codeElement.classList.add("hljs");
+          hljs.highlightElement(codeElement);
+        }
+      });
+    }
+  }, [slide]);
+
   if (isTitle && frontmatter) {
     return (
       <div className="text-center max-w-4xl">
@@ -24,7 +64,7 @@ export function Slide({ slide, isTitle, frontmatter }: SlideProps) {
   }
   return (
     <div className="max-w-4xl w-full overflow-y-auto overflow-x-hidden max-h-full text-xl leading-[1.875rem] break-words">
-      <div dangerouslySetInnerHTML={{ __html: marked(slide) }} />
+      <div ref={contentRef} dangerouslySetInnerHTML={{ __html: marked(slide) }} />
     </div>
   );
 }
