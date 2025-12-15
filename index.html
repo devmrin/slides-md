@@ -6,6 +6,22 @@
   <link rel="icon" type="image/svg+xml" href="/M-svg.svg" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>slides.md</title>
+  <script>
+    // Apply theme before React renders to prevent flash
+    (function() {
+      try {
+        const stored = localStorage.getItem('slides-md-user-preferences');
+        if (stored) {
+          const prefs = JSON.parse(stored);
+          if (prefs.theme === true) {
+            document.documentElement.classList.add('dark');
+          }
+        }
+      } catch (e) {
+        // Ignore errors
+      }
+    })();
+  </script>
 </head>
 
 <body>

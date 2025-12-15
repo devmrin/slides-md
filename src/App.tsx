@@ -17,6 +17,7 @@ export default function App() {
   const { frontmatter, slides } = useSlides(markdown);
 
   // Apply dark class to root element for Tailwind dark mode
+  // This runs on mount and whenever isDark changes
   useEffect(() => {
     if (isDark) {
       document.documentElement.classList.add("dark");
