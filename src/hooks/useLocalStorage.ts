@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback, useRef } from "react";
+import { useState, useEffect, useCallback, useRef, type Dispatch, type SetStateAction } from "react";
 
 const STORAGE_KEY = "slides-md-user-preferences";
 
@@ -30,7 +30,7 @@ function setStoredPreferences(prefs: UserPreferences): void {
 export function useLocalStorage<T extends keyof UserPreferences>(
   key: T,
   defaultValue: UserPreferences[T]
-): [UserPreferences[T], (value: UserPreferences[T]) => void] {
+): [UserPreferences[T], Dispatch<SetStateAction<UserPreferences[T]>>] {
   const isFirstRender = useRef(true);
   
   const [value, setValue] = useState<UserPreferences[T]>(() => {
@@ -50,7 +50,7 @@ export function useLocalStorage<T extends keyof UserPreferences>(
     setStoredPreferences(stored);
   }, [key, value]);
 
-  const setStoredValue = useCallback((newValue: UserPreferences[T]) => {
+  const setStoredValue: Dispatch<SetStateAction<UserPreferences[T]>> = useCallback((newValue) => {
     setValue(newValue);
   }, []);
 

@@ -1,4 +1,4 @@
-import { useCallback, useEffect, RefObject } from "react";
+import { useCallback, useEffect, type RefObject } from "react";
 
 // Helper functions for vendor-prefixed fullscreen API
 const getFullscreenElement = () => {
@@ -37,7 +37,7 @@ const exitFullscreen = () => {
 };
 
 export function useFullscreen(
-  elementRef: RefObject<HTMLElement>,
+  elementRef: RefObject<HTMLElement | null>,
   isFullscreen: boolean,
   setIsFullscreen: (v: boolean) => void
 ) {

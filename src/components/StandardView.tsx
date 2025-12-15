@@ -14,7 +14,7 @@ interface StandardViewProps {
   slides: string[];
   frontmatter?: Record<string, string>;
   isDark: boolean;
-  setIsDark: (value: boolean) => void;
+  setIsDark: (value: boolean | ((prev: boolean) => boolean)) => void;
   toggleFullscreen: () => void;
   onReset: () => void;
   onCopy: () => void;

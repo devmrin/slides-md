@@ -11,7 +11,7 @@ interface PresentationViewProps {
   prevSlide: () => void;
   nextSlide: () => void;
   setIsFullscreen: (value: boolean) => void;
-  setIsDark: (updater: (prev: boolean) => boolean) => void;
+  setIsDark: (updater: boolean | ((prev: boolean) => boolean)) => void;
   setCurrentSlide: (slide: number) => void;
   isFullscreen: boolean;
 }
