@@ -19,6 +19,19 @@ export function useKeyboardNavigation({
 }: UseKeyboardNavigationProps) {
   useEffect(() => {
     const handler = (e: KeyboardEvent) => {
+      // Don't handle arrow keys if user is typing in an input/textarea/editor
+      const activeElement = document.activeElement;
+      const isEditing =
+        activeElement &&
+        (activeElement.tagName === "INPUT" ||
+          activeElement.tagName === "TEXTAREA" ||
+          activeElement.hasAttribute("contenteditable") ||
+          activeElement.closest(".cm-editor") !== null);
+
+      if (isEditing && (e.key === "ArrowRight" || e.key === "ArrowLeft")) {
+        return; // Let the editor handle these keys
+      }
+
       if (e.key === "ArrowRight") nextSlide();
       if (e.key === "ArrowLeft") prevSlide();
       // Command+Enter to start presentation (fullscreen)
