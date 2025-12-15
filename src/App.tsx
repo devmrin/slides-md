@@ -1,27 +1,13 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
+import initialMarkdown from "./data/compiler.md?raw";
 import { useSlides } from "./hooks/useSlides";
 import { useFullscreen } from "./hooks/useFullscreen";
 import { Slide } from "./components/Slide";
 import { Editor } from "./components/Editor";
 import { SlideNav } from "./components/SlideNav";
 
-export default function App(): JSX.Element {
-  const [markdown, setMarkdown] = useState<string>(
-    `===/===
-title: Example Title
-date: 2025-01-01
-presenter: Presenter
-description: Example slideshow
-===/===
-
-# Slide 1
-Hello world
-
-===
-
-# Slide 2
-Content here`
-  );
+export default function App() {
+  const [markdown, setMarkdown] = useState<string>(initialMarkdown);
 
   const [currentSlide, setCurrentSlide] = useState<number>(0);
   const [isFullscreen, setIsFullscreen] = useState<boolean>(false);
@@ -32,13 +18,13 @@ Content here`
   const bgColor = isDark ? "#1a1a1a" : "#ffffff";
   const textColor = isDark ? "#ffffff" : "#1a1a1a";
 
-  const nextSlide = () => {
+  const nextSlide = useCallback(() => {
     if (currentSlide < slides.length - 1) setCurrentSlide(currentSlide + 1);
-  };
+  }, [currentSlide, slides.length]);
 
-  const prevSlide = () => {
+  const prevSlide = useCallback(() => {
     if (currentSlide > 0) setCurrentSlide(currentSlide - 1);
-  };
+  }, [currentSlide]);
 
   const { toggleFullscreen } = useFullscreen(isFullscreen, setIsFullscreen);
 
@@ -50,7 +36,7 @@ Content here`
     };
     window.addEventListener("keydown", handler);
     return () => window.removeEventListener("keydown", handler);
-  }, [currentSlide, slides.length]);
+  }, [currentSlide, slides.length, nextSlide, prevSlide]);
 
   // Copy editor content
   const copyEditorContent = () => {
@@ -126,9 +112,7 @@ Content here`
           textColor={textColor}
           bgColor={bgColor}
           onReset={() => {
-            setMarkdown(
-              `===/===\ntitle: Example Title\ndate: 2025-01-01\npresenter: Presenter\ndescription: Example slideshow\n===/===\n\n# Slide 1\nHello world\n\n===\n\n# Slide 2\nContent here`
-            );
+            setMarkdown(initialMarkdown);
             setCurrentSlide(0);
           }}
           onCopy={copyEditorContent}
