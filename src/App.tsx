@@ -1,7 +1,6 @@
 import { useState, useCallback, useEffect } from "react";
 import initialMarkdown from "./data/compiler.md?raw";
 import { useSlides } from "./hooks/useSlides";
-import { useFullscreen } from "./hooks/useFullscreen";
 import { useKeyboardNavigation } from "./hooks/useKeyboardNavigation";
 import { useLocalStorage } from "./hooks/useLocalStorage";
 import { PresentationView } from "./components/PresentationView";
@@ -34,7 +33,7 @@ export default function App() {
     if (currentSlide > 0) setCurrentSlide(currentSlide - 1);
   }, [currentSlide]);
 
-  const { toggleFullscreen } = useFullscreen(isFullscreen, setIsFullscreen);
+  // Fullscreen hook is now used in PresentationView component
 
   useKeyboardNavigation({
     nextSlide,
@@ -61,6 +60,7 @@ export default function App() {
         setIsFullscreen={setIsFullscreen}
         setIsDark={setIsDark}
         setCurrentSlide={setCurrentSlide}
+        isFullscreen={isFullscreen}
       />
     );
   }
@@ -75,7 +75,7 @@ export default function App() {
       frontmatter={frontmatter}
       isDark={isDark}
       setIsDark={setIsDark}
-      toggleFullscreen={toggleFullscreen}
+      toggleFullscreen={() => setIsFullscreen(true)}
       onReset={() => {
         setMarkdown(initialMarkdown);
         setCurrentSlide(0);
