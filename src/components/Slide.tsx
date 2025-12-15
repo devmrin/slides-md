@@ -1,27 +1,32 @@
 import { marked } from "marked";
 import { useEffect, useRef } from "react";
 import hljs from "highlight.js";
+import type { Tokens } from "marked";
 
 // Configure marked to use highlight.js for code blocks
-marked.setOptions({
-  highlight: function (code: string, lang?: string) {
-    // Ensure code is a string
-    const codeStr = String(code || '');
-    
-    if (lang && hljs.getLanguage(lang)) {
-      try {
-        const result = hljs.highlight(codeStr, { language: lang });
-        // Extract inner HTML from highlight.js output
-        const match = result.value.match(/<code[^>]*>(.*?)<\/code>/s);
-        return match ? match[1] : result.value;
-      } catch (err) {
-        // Fall through to auto-detection
+marked.use({
+  renderer: {
+    code(token: Tokens.Code) {
+      const codeStr = token.text;
+      const lang = token.lang;
+      
+      if (lang && hljs.getLanguage(lang)) {
+        try {
+          const result = hljs.highlight(codeStr, { language: lang });
+          // Extract inner HTML from highlight.js output
+          const match = result.value.match(/<code[^>]*>(.*?)<\/code>/s);
+          const highlighted = match ? match[1] : result.value;
+          return `<pre><code class="hljs language-${lang}">${highlighted}</code></pre>`;
+        } catch (err) {
+          // Fall through to auto-detection
+        }
       }
-    }
-    // Auto-detect language
-    const result = hljs.highlightAuto(codeStr);
-    const match = result.value.match(/<code[^>]*>(.*?)<\/code>/s);
-    return match ? match[1] : result.value;
+      // Auto-detect language
+      const result = hljs.highlightAuto(codeStr);
+      const match = result.value.match(/<code[^>]*>(.*?)<\/code>/s);
+      const highlighted = match ? match[1] : result.value;
+      return `<pre><code class="hljs">${highlighted}</code></pre>`;
+    },
   },
 });
 

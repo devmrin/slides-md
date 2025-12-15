@@ -88,14 +88,14 @@ export function StandardView({
               frontmatter={frontmatter}
             />
           </div>
-          <Director
-            currentSlide={currentSlide}
-            slidesLength={slides.length}
-            prevSlide={prevSlide}
-            nextSlide={nextSlide}
-            frontmatter={frontmatter}
-            onToggleTheme={() => setIsDark((d) => !d)}
-          />
+            <Director
+              currentSlide={currentSlide}
+              slidesLength={slides.length}
+              prevSlide={prevSlide}
+              nextSlide={nextSlide}
+              frontmatter={frontmatter}
+              onToggleTheme={() => setIsDark(!isDark)}
+            />
         </div>
       </div>
     </div>
