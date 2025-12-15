@@ -33,6 +33,10 @@ export default function App() {
     const handler = (e: KeyboardEvent) => {
       if (e.key === "ArrowRight") nextSlide();
       if (e.key === "ArrowLeft") prevSlide();
+      // Command+Enter to start presentation (fullscreen)
+      if ((e.metaKey || e.ctrlKey) && e.key === "Enter") {
+        setIsFullscreen(true);
+      }
     };
     window.addEventListener("keydown", handler);
     return () => window.removeEventListener("keydown", handler);
@@ -88,7 +92,10 @@ export default function App() {
         style={{ backgroundColor: bgColor, borderColor: textColor + "20" }}
       >
         <div>
-          <h1 className="text-xl font-semibold">slides.md</h1>
+          <h1 className="text-xl font-semibold">
+            slides.md
+            <span className="text-xs ml-4 opacity-70">(⌘↵ to present)</span>
+          </h1>
         </div>
 
         <button
