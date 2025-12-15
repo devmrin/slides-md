@@ -31,11 +31,13 @@ export function SlideNav({
         <div className="text-sm opacity-60">
           Slide {currentSlide + 1} of {slidesLength}
         </div>
-        {frontmatter?.title && Number(currentSlide) > 0 && (
-          <div className="text-xs mt-1 opacity-40">
-            {frontmatter.title} by {frontmatter.presenter}
-          </div>
-        )}
+        <div className="text-xs mt-1 opacity-40 min-h-[1rem]">
+          {frontmatter?.title && frontmatter?.presenter && Number(currentSlide) > 0 && (
+            <>
+              {frontmatter.title} by {frontmatter.presenter}
+            </>
+          )}
+        </div>
       </div>
       <button
         onClick={nextSlide}
