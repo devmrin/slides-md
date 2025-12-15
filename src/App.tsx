@@ -41,6 +41,10 @@ export default function App() {
       if (isFullscreen && (e.key === "r" || e.key === "R")) {
         setCurrentSlide(0);
       }
+      // T to toggle theme in fullscreen
+      if (isFullscreen && (e.key === "t" || e.key === "T")) {
+        setIsDark((d) => !d);
+      }
     };
     window.addEventListener("keydown", handler);
     return () => window.removeEventListener("keydown", handler);
@@ -61,19 +65,32 @@ export default function App() {
         className="fixed inset-0 flex flex-col"
         style={{ backgroundColor: bgColor, color: textColor }}
       >
-        {/* Top bar for reset and exit */}
+        {/* Top bar for reset, theme, and exit */}
         <div className="w-full flex justify-between items-start px-6 pt-4 z-10">
-          <button
-            className="px-3 py-1 text-sm border rounded"
-            style={{
-              borderColor: textColor + "40",
-              color: textColor,
-              backgroundColor: bgColor,
-            }}
-            onClick={() => setCurrentSlide(0)}
-          >
-            Reset <span className="ml-1 text-xs opacity-70">(R)</span>
-          </button>
+          <div className="flex gap-2">
+            <button
+              className="px-3 py-1 text-sm border rounded"
+              style={{
+                borderColor: textColor + "40",
+                color: textColor,
+                backgroundColor: bgColor,
+              }}
+              onClick={() => setCurrentSlide(0)}
+            >
+              Reset <span className="ml-1 text-xs opacity-70">(R)</span>
+            </button>
+            <button
+              className="px-3 py-1 text-sm border rounded"
+              style={{
+                borderColor: textColor + "40",
+                color: textColor,
+                backgroundColor: bgColor,
+              }}
+              onClick={() => setIsDark((d) => !d)}
+            >
+              Theme <span className="ml-1 text-xs opacity-70">(T)</span>
+            </button>
+          </div>
           <button
             className="px-3 py-1 text-sm border rounded"
             style={{
@@ -103,6 +120,7 @@ export default function App() {
           frontmatter={frontmatter}
           isFullscreen={true}
           onExitFullscreen={() => setIsFullscreen(false)}
+          onToggleTheme={() => setIsDark((d) => !d)}
         />
       </div>
     );
@@ -201,6 +219,7 @@ export default function App() {
             nextSlide={nextSlide}
             textColor={textColor}
             bgColor={bgColor}
+            onToggleTheme={() => setIsDark((d) => !d)}
           />
         </div>
       </div>

@@ -8,6 +8,7 @@ interface SlideNavProps {
   frontmatter?: Record<string, string>;
   isFullscreen?: boolean;
   onExitFullscreen?: () => void;
+  onToggleTheme?: () => void;
 }
 
 export function SlideNav({
@@ -20,20 +21,37 @@ export function SlideNav({
   frontmatter,
   isFullscreen,
   onExitFullscreen,
+  onToggleTheme,
 }: SlideNavProps) {
   return (
     <div
       className="border-t p-4 flex items-center justify-between"
       style={{ borderColor: textColor + "20", backgroundColor: bgColor }}
     >
-      <button
-        onClick={prevSlide}
-        disabled={currentSlide === 0}
-        className="px-4 py-2 border rounded disabled:opacity-30"
-        style={{ borderColor: textColor + "40", color: textColor }}
-      >
-        ← Previous
-      </button>
+      <div className="flex items-center gap-2">
+        <button
+          onClick={prevSlide}
+          disabled={currentSlide === 0}
+          className="px-4 py-2 border rounded disabled:opacity-30"
+          style={{ borderColor: textColor + "40", color: textColor }}
+        >
+          ← Previous
+        </button>
+        {/* Theme button available in nav when not fullscreen (App shows it in fullscreen topbar) */}
+        {!isFullscreen && onToggleTheme && (
+          <button
+            onClick={onToggleTheme}
+            className="px-3 py-1 text-sm border rounded"
+            style={{
+              borderColor: textColor + "40",
+              color: textColor,
+              backgroundColor: bgColor,
+            }}
+          >
+            Theme <span className="ml-1 text-xs opacity-70">(T)</span>
+          </button>
+        )}
+      </div>
       <div className="text-center flex-1 mx-4">
         <div className="text-sm opacity-60">
           Slide {currentSlide + 1} of {slidesLength}
@@ -52,7 +70,6 @@ export function SlideNav({
       >
         Next →
       </button>
-      {/* Exit button for fullscreen removed to avoid duplicate with App.tsx top bar */}
     </div>
   );
 }
