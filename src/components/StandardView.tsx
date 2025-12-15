@@ -2,6 +2,7 @@ import { Editor } from "./Editor";
 import { Slide } from "./Slide";
 import { Director } from "./Director";
 import { Button } from "./Button";
+import { GettingStartedModal } from "./GettingStartedModal";
 
 interface StandardViewProps {
   markdown: string;
@@ -40,9 +41,7 @@ export function StandardView({
         <div>
           <h1 className="text-xl font-semibold text-gray-900 dark:text-gray-100">
             ✱ slides.md
-            <span className="text-xs ml-2 opacity-70">
-              (present your markdown)
-            </span>
+            <GettingStartedModal />
           </h1>
         </div>
 
