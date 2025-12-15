@@ -25,7 +25,7 @@ export function PresentationView({
   const isTitle = slides[currentSlide] === "__TITLE_SLIDE__";
   
   return (
-    <div className="fixed inset-0 flex flex-col bg-gray-50 dark:bg-gray-900 text-gray-900 dark:text-gray-100">
+    <div className="fixed inset-0 flex flex-col bg-white dark:bg-gray-900 text-gray-900 dark:text-gray-100">
       {/* Top bar for reset, theme, and exit */}
       <div className="w-full flex justify-between items-start px-6 pt-4 z-10">
         <div className="flex gap-2">

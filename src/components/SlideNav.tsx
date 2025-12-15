@@ -17,12 +17,12 @@ export function SlideNav({
   frontmatter,
 }: SlideNavProps) {
   return (
-    <div className="border-t p-4 flex items-center justify-between border-gray-300 dark:border-gray-700 bg-gray-50 dark:bg-gray-900">
+    <div className="border-t p-4 flex items-center justify-between border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-900">
       <div className="flex items-center gap-2">
         <button
           onClick={prevSlide}
           disabled={currentSlide === 0}
-          className="px-4 py-2 border rounded disabled:opacity-30 border-gray-400 dark:border-gray-600 text-gray-900 dark:text-gray-100 hover:bg-gray-100 dark:hover:bg-gray-800"
+          className="px-4 py-2 border rounded disabled:opacity-30 border-gray-300 dark:border-gray-600 text-gray-900 dark:text-gray-100 bg-white dark:bg-gray-800 hover:bg-gray-50 dark:hover:bg-gray-700"
         >
           ← Previous
         </button>
@@ -40,7 +40,7 @@ export function SlideNav({
       <button
         onClick={nextSlide}
         disabled={currentSlide === slidesLength - 1}
-        className="px-4 py-2 border rounded disabled:opacity-30 border-gray-400 dark:border-gray-600 text-gray-900 dark:text-gray-100 hover:bg-gray-100 dark:hover:bg-gray-800"
+        className="px-4 py-2 border rounded disabled:opacity-30 border-gray-300 dark:border-gray-600 text-gray-900 dark:text-gray-100 bg-white dark:bg-gray-800 hover:bg-gray-50 dark:hover:bg-gray-700"
       >
         Next →
       </button>
