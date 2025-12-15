@@ -69,12 +69,14 @@ export function PresentationView({
           Exit <span className="ml-1 text-xs opacity-70 hidden sm:inline">(ESC)</span>
         </Button>
       </div>
-      <div className="flex-1 flex items-center justify-center p-4 sm:p-12 overflow-auto">
-        <Slide
-          slide={slides[currentSlide]}
-          isTitle={isTitle}
-          frontmatter={frontmatter}
-        />
+      <div className="flex-1 overflow-y-auto overflow-x-hidden">
+        <div className="min-h-full flex items-center justify-center p-4 sm:p-12">
+          <Slide
+            slide={slides[currentSlide]}
+            isTitle={isTitle}
+            frontmatter={frontmatter}
+          />
+        </div>
       </div>
       <Director
         currentSlide={currentSlide}
