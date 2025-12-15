@@ -34,8 +34,8 @@ export function StandardView({
   nextSlide,
 }: StandardViewProps) {
   return (
-    <div className="h-screen flex flex-col bg-white dark:bg-[#1a1a1a] text-gray-900 dark:text-white">
-      <header className="border-b px-6 py-4 flex items-center justify-between bg-white dark:bg-[#1a1a1a] border-gray-200 dark:border-white/20">
+    <div className="h-screen flex flex-col bg-gray-50 dark:bg-gray-900 text-gray-900 dark:text-gray-100">
+      <header className="border-b px-6 py-4 flex items-center justify-between bg-gray-50 dark:bg-gray-900 border-gray-300 dark:border-gray-700">
         <div>
           <h1 className="text-xl font-semibold">
             ✱ slides.md
@@ -47,7 +47,7 @@ export function StandardView({
 
         <button
           onClick={() => setIsDark(!isDark)}
-          className="px-3 py-1 text-sm border rounded border-gray-400 dark:border-white/40 text-gray-900 dark:text-white bg-white dark:bg-[#1a1a1a]"
+          className="px-3 py-1 text-sm border rounded border-gray-400 dark:border-gray-600 text-gray-900 dark:text-gray-100 bg-gray-50 dark:bg-gray-900 hover:bg-gray-100 dark:hover:bg-gray-800"
         >
           {isDark ? "Light (^T)" : "Dark (^T)"}
         </button>
@@ -62,25 +62,25 @@ export function StandardView({
           onCopy={onCopy}
         />
         {/* Preview */}
-        <div className="w-1/2 flex flex-col bg-white dark:bg-[#1a1a1a]">
-          <div className="px-4 py-2 border-b text-sm font-medium flex items-center justify-between gap-2 bg-white dark:bg-[#1a1a1a] text-gray-900 dark:text-white border-gray-200 dark:border-white/20">
+        <div className="w-1/2 flex flex-col bg-gray-50 dark:bg-gray-900">
+          <div className="px-4 py-2 border-b text-sm font-medium flex items-center justify-between gap-2 bg-gray-50 dark:bg-gray-900 text-gray-900 dark:text-gray-100 border-gray-300 dark:border-gray-700">
             <span>Preview</span>
             <div className="flex items-center gap-2">
               <button
                 onClick={() => setCurrentSlide(0)}
-                className="px-3 py-1 text-xs border rounded border-gray-400 dark:border-white/40 text-gray-900 dark:text-white"
+                className="px-3 py-1 text-xs border rounded border-gray-400 dark:border-gray-600 text-gray-900 dark:text-gray-100 hover:bg-gray-100 dark:hover:bg-gray-800"
               >
                 Reset Deck
               </button>
               <button
                 onClick={toggleFullscreen}
-                className="px-3 py-1 text-xs border rounded border-gray-400 dark:border-white/40 text-gray-900 dark:text-white"
+                className="px-3 py-1 text-xs border rounded border-gray-400 dark:border-gray-600 text-gray-900 dark:text-gray-100 hover:bg-gray-100 dark:hover:bg-gray-800"
               >
                 Present (⌘↵)
               </button>
             </div>
           </div>
-          <div className="flex-1 overflow-auto p-8 flex items-center justify-center text-gray-900 dark:text-white">
+          <div className="flex-1 overflow-auto p-8 flex items-center justify-center text-gray-900 dark:text-gray-100">
             <Slide
               slide={slides[currentSlide]}
               isTitle={slides[currentSlide] === "__TITLE_SLIDE__"}
