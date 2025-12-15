@@ -23,15 +23,7 @@ export function Slide({ slide, isTitle, frontmatter }: SlideProps) {
     );
   }
   return (
-    <div
-      className="max-w-4xl w-full overflow-y-auto overflow-x-hidden"
-      style={{
-        maxHeight: "100%",
-        fontSize: "1.25rem",
-        lineHeight: "1.875rem",
-        wordBreak: "break-word",
-      }}
-    >
+    <div className="max-w-4xl w-full overflow-y-auto overflow-x-hidden max-h-full text-xl leading-[1.875rem] break-words">
       <div dangerouslySetInnerHTML={{ __html: marked(slide) }} />
     </div>
   );

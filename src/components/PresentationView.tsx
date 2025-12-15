@@ -5,8 +5,6 @@ interface PresentationViewProps {
   currentSlide: number;
   slides: string[];
   frontmatter?: Record<string, string>;
-  bgColor: string;
-  textColor: string;
   prevSlide: () => void;
   nextSlide: () => void;
   setIsFullscreen: (value: boolean) => void;
@@ -18,8 +16,6 @@ export function PresentationView({
   currentSlide,
   slides,
   frontmatter,
-  bgColor,
-  textColor,
   prevSlide,
   nextSlide,
   setIsFullscreen,
@@ -29,43 +25,25 @@ export function PresentationView({
   const isTitle = slides[currentSlide] === "__TITLE_SLIDE__";
   
   return (
-    <div
-      className="fixed inset-0 flex flex-col"
-      style={{ backgroundColor: bgColor, color: textColor }}
-    >
+    <div className="fixed inset-0 flex flex-col bg-white dark:bg-[#1a1a1a] text-gray-900 dark:text-white">
       {/* Top bar for reset, theme, and exit */}
       <div className="w-full flex justify-between items-start px-6 pt-4 z-10">
         <div className="flex gap-2">
           <button
-            className="px-3 py-1 text-sm border rounded"
-            style={{
-              borderColor: textColor + "40",
-              color: textColor,
-              backgroundColor: bgColor,
-            }}
+            className="px-3 py-1 text-sm border rounded border-gray-400 dark:border-white/40 text-gray-900 dark:text-white bg-white dark:bg-[#1a1a1a]"
             onClick={() => setCurrentSlide(0)}
           >
             Reset <span className="ml-1 text-xs opacity-70">(R)</span>
           </button>
           <button
-            className="px-3 py-1 text-sm border rounded"
-            style={{
-              borderColor: textColor + "40",
-              color: textColor,
-              backgroundColor: bgColor,
-            }}
+            className="px-3 py-1 text-sm border rounded border-gray-400 dark:border-white/40 text-gray-900 dark:text-white bg-white dark:bg-[#1a1a1a]"
             onClick={() => setIsDark((d) => !d)}
           >
             Theme <span className="ml-1 text-xs opacity-70">(T)</span>
           </button>
         </div>
         <button
-          className="px-3 py-1 text-sm border rounded"
-          style={{
-            borderColor: textColor + "40",
-            color: textColor,
-            backgroundColor: bgColor,
-          }}
+          className="px-3 py-1 text-sm border rounded border-gray-400 dark:border-white/40 text-gray-900 dark:text-white bg-white dark:bg-[#1a1a1a]"
           onClick={() => setIsFullscreen(false)}
         >
           Exit <span className="ml-1 text-xs opacity-70">(ESC)</span>
@@ -83,8 +61,6 @@ export function PresentationView({
         slidesLength={slides.length}
         prevSlide={prevSlide}
         nextSlide={nextSlide}
-        textColor={textColor}
-        bgColor={bgColor}
         frontmatter={frontmatter}
         isFullscreen={true}
         onExitFullscreen={() => setIsFullscreen(false)}

@@ -1,4 +1,4 @@
-import { useState, useCallback } from "react";
+import { useState, useCallback, useEffect } from "react";
 import initialMarkdown from "./data/compiler.md?raw";
 import { useSlides } from "./hooks/useSlides";
 import { useFullscreen } from "./hooks/useFullscreen";
@@ -15,8 +15,14 @@ export default function App() {
 
   const { frontmatter, slides } = useSlides(markdown);
 
-  const bgColor = isDark ? "#1a1a1a" : "#ffffff";
-  const textColor = isDark ? "#ffffff" : "#1a1a1a";
+  // Apply dark class to root element for Tailwind dark mode
+  useEffect(() => {
+    if (isDark) {
+      document.documentElement.classList.add("dark");
+    } else {
+      document.documentElement.classList.remove("dark");
+    }
+  }, [isDark]);
 
   const nextSlide = useCallback(() => {
     if (currentSlide < slides.length - 1) setCurrentSlide(currentSlide + 1);
@@ -48,8 +54,6 @@ export default function App() {
         currentSlide={currentSlide}
         slides={slides}
         frontmatter={frontmatter}
-        bgColor={bgColor}
-        textColor={textColor}
         prevSlide={prevSlide}
         nextSlide={nextSlide}
         setIsFullscreen={setIsFullscreen}
@@ -67,8 +71,6 @@ export default function App() {
       setCurrentSlide={setCurrentSlide}
       slides={slides}
       frontmatter={frontmatter}
-      bgColor={bgColor}
-      textColor={textColor}
       isDark={isDark}
       setIsDark={setIsDark}
       toggleFullscreen={toggleFullscreen}

@@ -5,8 +5,6 @@ interface DirectorProps {
   slidesLength: number;
   prevSlide: () => void;
   nextSlide: () => void;
-  textColor: string;
-  bgColor: string;
   frontmatter?: Record<string, string>;
   isFullscreen?: boolean;
   onExitFullscreen?: () => void;

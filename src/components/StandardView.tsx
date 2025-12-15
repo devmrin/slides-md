@@ -9,8 +9,6 @@ interface StandardViewProps {
   setCurrentSlide: (slide: number) => void;
   slides: string[];
   frontmatter?: Record<string, string>;
-  bgColor: string;
-  textColor: string;
   isDark: boolean;
   setIsDark: (value: boolean) => void;
   toggleFullscreen: () => void;
@@ -27,8 +25,6 @@ export function StandardView({
   setCurrentSlide,
   slides,
   frontmatter,
-  bgColor,
-  textColor,
   isDark,
   setIsDark,
   toggleFullscreen,
@@ -38,14 +34,8 @@ export function StandardView({
   nextSlide,
 }: StandardViewProps) {
   return (
-    <div
-      className="h-screen flex flex-col"
-      style={{ backgroundColor: bgColor, color: textColor }}
-    >
-      <header
-        className="border-b px-6 py-4 flex items-center justify-between"
-        style={{ backgroundColor: bgColor, borderColor: textColor + "20" }}
-      >
+    <div className="h-screen flex flex-col bg-white dark:bg-[#1a1a1a] text-gray-900 dark:text-white">
+      <header className="border-b px-6 py-4 flex items-center justify-between bg-white dark:bg-[#1a1a1a] border-gray-200 dark:border-white/20">
         <div>
           <h1 className="text-xl font-semibold">
             ✱ slides.md
@@ -57,12 +47,7 @@ export function StandardView({
 
         <button
           onClick={() => setIsDark(!isDark)}
-          className="px-3 py-1 text-sm border rounded"
-          style={{
-            borderColor: textColor + "40",
-            color: textColor,
-            backgroundColor: bgColor,
-          }}
+          className="px-3 py-1 text-sm border rounded border-gray-400 dark:border-white/40 text-gray-900 dark:text-white bg-white dark:bg-[#1a1a1a]"
         >
           {isDark ? "Light (^T)" : "Dark (^T)"}
         </button>
@@ -73,46 +58,29 @@ export function StandardView({
           markdown={markdown}
           setMarkdown={setMarkdown}
           setCurrentSlide={setCurrentSlide}
-          textColor={textColor}
-          bgColor={bgColor}
           onReset={onReset}
           onCopy={onCopy}
         />
         {/* Preview */}
-        <div
-          className="w-1/2 flex flex-col"
-          style={{ backgroundColor: bgColor }}
-        >
-          <div
-            className="px-4 py-2 border-b text-sm font-medium flex items-center justify-between gap-2"
-            style={{
-              backgroundColor: bgColor,
-              color: textColor,
-              borderColor: textColor + "20",
-            }}
-          >
+        <div className="w-1/2 flex flex-col bg-white dark:bg-[#1a1a1a]">
+          <div className="px-4 py-2 border-b text-sm font-medium flex items-center justify-between gap-2 bg-white dark:bg-[#1a1a1a] text-gray-900 dark:text-white border-gray-200 dark:border-white/20">
             <span>Preview</span>
             <div className="flex items-center gap-2">
               <button
                 onClick={() => setCurrentSlide(0)}
-                className="px-3 py-1 text-xs border rounded"
-                style={{ borderColor: textColor + "40", color: textColor }}
+                className="px-3 py-1 text-xs border rounded border-gray-400 dark:border-white/40 text-gray-900 dark:text-white"
               >
                 Reset Deck
               </button>
               <button
                 onClick={toggleFullscreen}
-                className="px-3 py-1 text-xs border rounded"
-                style={{ borderColor: textColor + "40", color: textColor }}
+                className="px-3 py-1 text-xs border rounded border-gray-400 dark:border-white/40 text-gray-900 dark:text-white"
               >
                 Present (⌘↵)
               </button>
             </div>
           </div>
-          <div
-            className="flex-1 overflow-auto p-8 flex items-center justify-center"
-            style={{ color: textColor }}
-          >
+          <div className="flex-1 overflow-auto p-8 flex items-center justify-center text-gray-900 dark:text-white">
             <Slide
               slide={slides[currentSlide]}
               isTitle={slides[currentSlide] === "__TITLE_SLIDE__"}
@@ -124,8 +92,6 @@ export function StandardView({
             slidesLength={slides.length}
             prevSlide={prevSlide}
             nextSlide={nextSlide}
-            textColor={textColor}
-            bgColor={bgColor}
             frontmatter={frontmatter}
             onToggleTheme={() => setIsDark((d) => !d)}
           />
