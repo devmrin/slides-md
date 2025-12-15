@@ -5,6 +5,8 @@ interface UseKeyboardNavigationProps {
   prevSlide: () => void;
   isFullscreen: boolean;
   setIsFullscreen: (value: boolean) => void;
+  isEditorFullscreen: boolean;
+  setIsEditorFullscreen: (value: boolean) => void;
   setIsDark: (updater: (prev: boolean) => boolean) => void;
   setCurrentSlide: (slide: number) => void;
 }
@@ -14,6 +16,8 @@ export function useKeyboardNavigation({
   prevSlide,
   isFullscreen,
   setIsFullscreen,
+  isEditorFullscreen,
+  setIsEditorFullscreen,
   setIsDark,
   setCurrentSlide,
 }: UseKeyboardNavigationProps) {
@@ -43,6 +47,15 @@ export function useKeyboardNavigation({
         e.preventDefault();
         setIsDark((d) => !d);
       }
+      // ESC to exit fullscreen modes
+      if (e.key === "Escape") {
+        if (isFullscreen) {
+          setIsFullscreen(false);
+        }
+        if (isEditorFullscreen) {
+          setIsEditorFullscreen(false);
+        }
+      }
       // R to reset deck in fullscreen
       if (isFullscreen && (e.key === "r" || e.key === "R")) {
         setCurrentSlide(0);
@@ -54,6 +67,6 @@ export function useKeyboardNavigation({
     };
     window.addEventListener("keydown", handler);
     return () => window.removeEventListener("keydown", handler);
-  }, [nextSlide, prevSlide, isFullscreen, setIsFullscreen, setIsDark, setCurrentSlide]);
+  }, [nextSlide, prevSlide, isFullscreen, setIsFullscreen, isEditorFullscreen, setIsEditorFullscreen, setIsDark, setCurrentSlide]);
 }
 

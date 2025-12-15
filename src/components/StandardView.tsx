@@ -16,6 +16,7 @@ interface StandardViewProps {
   isDark: boolean;
   setIsDark: (value: boolean | ((prev: boolean) => boolean)) => void;
   toggleFullscreen: () => void;
+  toggleEditorFullscreen: () => void;
   onReset: () => void;
   onCopy: () => void;
   prevSlide: () => void;
@@ -32,6 +33,7 @@ export function StandardView({
   isDark,
   setIsDark,
   toggleFullscreen,
+  toggleEditorFullscreen,
   onReset,
   onCopy,
   prevSlide,
@@ -83,6 +85,7 @@ export function StandardView({
             setCurrentSlide={setCurrentSlide}
             onReset={onReset}
             onCopy={onCopy}
+            onToggleFullscreen={toggleEditorFullscreen}
             isDark={isDark}
           />
         </div>

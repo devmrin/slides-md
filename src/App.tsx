@@ -4,6 +4,7 @@ import { useSlides } from "./hooks/useSlides";
 import { useKeyboardNavigation } from "./hooks/useKeyboardNavigation";
 import { useLocalStorage } from "./hooks/useLocalStorage";
 import { PresentationView } from "./components/PresentationView";
+import { FullscreenEditor } from "./components/FullscreenEditor";
 import { StandardView } from "./components/StandardView";
 
 export default function App() {
@@ -11,6 +12,7 @@ export default function App() {
 
   const [currentSlide, setCurrentSlide] = useState<number>(0);
   const [isFullscreen, setIsFullscreen] = useState<boolean>(false);
+  const [isEditorFullscreen, setIsEditorFullscreen] = useState<boolean>(false);
   const [isDark, setIsDarkRaw] = useLocalStorage("theme", false);
   
   // Ensure isDark is always boolean (not undefined)
@@ -56,6 +58,8 @@ export default function App() {
     prevSlide,
     isFullscreen,
     setIsFullscreen,
+    isEditorFullscreen,
+    setIsEditorFullscreen,
     setIsDark,
     setCurrentSlide,
   });
@@ -63,6 +67,12 @@ export default function App() {
   // Copy editor content
   const copyEditorContent = () => {
     navigator.clipboard.writeText(markdown).catch(() => {});
+  };
+
+  // Reset editor content
+  const resetEditorContent = () => {
+    setMarkdown(initialMarkdown);
+    setCurrentSlide(0);
   };
 
   if (isFullscreen) {
@@ -81,6 +91,21 @@ export default function App() {
     );
   }
 
+  if (isEditorFullscreen) {
+    return (
+      <FullscreenEditor
+        markdown={markdown}
+        setMarkdown={setMarkdown}
+        setCurrentSlide={setCurrentSlide}
+        onReset={resetEditorContent}
+        onCopy={copyEditorContent}
+        setIsEditorFullscreen={setIsEditorFullscreen}
+        isDark={isDarkValue}
+        isEditorFullscreen={isEditorFullscreen}
+      />
+    );
+  }
+
   return (
     <StandardView
       markdown={markdown}
@@ -92,10 +117,8 @@ export default function App() {
       isDark={isDarkValue}
       setIsDark={setIsDark}
       toggleFullscreen={() => setIsFullscreen(true)}
-      onReset={() => {
-        setMarkdown(initialMarkdown);
-        setCurrentSlide(0);
-      }}
+      toggleEditorFullscreen={() => setIsEditorFullscreen(true)}
+      onReset={resetEditorContent}
       onCopy={copyEditorContent}
       prevSlide={prevSlide}
       nextSlide={nextSlide}

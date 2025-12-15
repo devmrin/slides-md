@@ -1,4 +1,5 @@
 import * as Dialog from "@radix-ui/react-dialog";
+import { X } from "lucide-react";
 import { Button } from "./Button";
 
 export function GettingStartedModal() {
@@ -15,8 +16,17 @@ export function GettingStartedModal() {
       <Dialog.Portal>
         <Dialog.Overlay className="fixed inset-0 bg-black/50 dark:bg-black/70 z-40" />
         <Dialog.Content className="fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-white dark:bg-gray-800 rounded-lg shadow-xl w-full max-w-2xl max-h-[85vh] overflow-y-auto z-50 border border-gray-300 dark:border-gray-700">
-          <div className="p-6">
-            <Dialog.Title className="text-2xl font-bold mb-6 text-gray-900 dark:text-gray-100">
+          <div className="p-6 relative">
+            <Dialog.Close asChild>
+              <button
+                className="absolute top-4 right-4 sm:top-6 sm:right-6 p-2 sm:p-2.5 rounded-md text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors touch-manipulation"
+                aria-label="Close"
+                type="button"
+              >
+                <X className="w-5 h-5 sm:w-6 sm:h-6" />
+              </button>
+            </Dialog.Close>
+            <Dialog.Title className="text-2xl font-bold mb-6 text-gray-900 dark:text-gray-100 pr-12 sm:pr-16">
               Getting Started with slides.md
             </Dialog.Title>
 
