@@ -1,6 +1,4 @@
-import CodeMirror from "@uiw/react-codemirror";
-import { markdown as markdownLang } from "@codemirror/lang-markdown";
-import { oneDark } from "@codemirror/theme-one-dark";
+import MonacoEditor from "@monaco-editor/react";
 import { Button } from "./Button";
 
 interface EditorProps {
@@ -43,22 +41,27 @@ export function Editor({
           </div>
         </div>
       </div>
-      <div className="flex-1 overflow-hidden [&_.cm-editor]:h-full [&_.cm-scroller]:overflow-auto">
-        <CodeMirror
+      <div className="flex-1 overflow-hidden">
+        <MonacoEditor
           value={markdown}
           onChange={(value) => {
-            setMarkdown(value);
+            setMarkdown(value || "");
             setCurrentSlide(0);
           }}
-          extensions={[markdownLang()]}
-          theme={isDark ? oneDark : undefined}
-          basicSetup={{
-            lineNumbers: true,
-            foldGutter: true,
-            dropCursor: false,
-            allowMultipleSelections: false,
+          language="markdown"
+          theme={isDark ? "vs-dark" : "vs"}
+          options={{
+            minimap: { enabled: false },
+            fontSize: 14,
+            lineNumbers: "on",
+            folding: true,
+            wordWrap: "on",
+            automaticLayout: true,
+            scrollBeyondLastLine: false,
+            padding: { top: 8, bottom: 8 },
+            fontFamily: "ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, 'Liberation Mono', monospace",
           }}
-          className="h-full text-xs sm:text-sm"
+          className="h-full"
         />
       </div>
     </div>
