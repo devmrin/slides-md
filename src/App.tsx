@@ -3,6 +3,7 @@ import initialMarkdown from "./data/compiler.md?raw";
 import { useSlides } from "./hooks/useSlides";
 import { useFullscreen } from "./hooks/useFullscreen";
 import { useKeyboardNavigation } from "./hooks/useKeyboardNavigation";
+import { useLocalStorage } from "./hooks/useLocalStorage";
 import { PresentationView } from "./components/PresentationView";
 import { StandardView } from "./components/StandardView";
 
@@ -11,7 +12,7 @@ export default function App() {
 
   const [currentSlide, setCurrentSlide] = useState<number>(0);
   const [isFullscreen, setIsFullscreen] = useState<boolean>(false);
-  const [isDark, setIsDark] = useState<boolean>(false);
+  const [isDark, setIsDark] = useLocalStorage("theme", false);
 
   const { frontmatter, slides } = useSlides(markdown);
 
