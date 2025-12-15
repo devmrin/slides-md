@@ -29,7 +29,7 @@ export function useFullscreen(isFullscreen: boolean, setIsFullscreen: (v: boolea
       try {
         await document.documentElement.requestFullscreen();
       } catch (err) {
-        console.log("Fullscreen not supported:", err);
+        console.error("Fullscreen not supported:", err);
       }
     } else {
       setIsFullscreen(false);

@@ -14,6 +14,11 @@ export function Slide({ slide, isTitle, frontmatter }: SlideProps) {
         {frontmatter.description && (
           <p className="text-xl opacity-70 mt-6">{frontmatter.description}</p>
         )}
+        {frontmatter.presenter && (
+          <p className="text-lg semi-bold opacity-60 mt-2">
+            by {frontmatter.presenter}
+          </p>
+        )}
       </div>
     );
   }

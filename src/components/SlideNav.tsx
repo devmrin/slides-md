@@ -19,9 +19,6 @@ export function SlideNav({
   textColor,
   bgColor,
   frontmatter,
-  isFullscreen,
-  onExitFullscreen,
-  onToggleTheme,
 }: SlideNavProps) {
   return (
     <div
@@ -37,26 +34,12 @@ export function SlideNav({
         >
           ← Previous
         </button>
-        {/* Theme button available in nav when not fullscreen (App shows it in fullscreen topbar) */}
-        {!isFullscreen && onToggleTheme && (
-          <button
-            onClick={onToggleTheme}
-            className="px-3 py-1 text-sm border rounded"
-            style={{
-              borderColor: textColor + "40",
-              color: textColor,
-              backgroundColor: bgColor,
-            }}
-          >
-            Theme <span className="ml-1 text-xs opacity-70">(T)</span>
-          </button>
-        )}
       </div>
       <div className="text-center flex-1 mx-4">
         <div className="text-sm opacity-60">
           Slide {currentSlide + 1} of {slidesLength}
         </div>
-        {frontmatter?.title && (
+        {frontmatter?.title && Number(currentSlide) > 0 && (
           <div className="text-xs mt-1 opacity-40">
             {frontmatter.title} by {frontmatter.presenter}
           </div>

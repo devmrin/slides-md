@@ -4,7 +4,7 @@ import { useSlides } from "./hooks/useSlides";
 import { useFullscreen } from "./hooks/useFullscreen";
 import { Slide } from "./components/Slide";
 import { Editor } from "./components/Editor";
-import { SlideNav } from "./components/SlideNav";
+import { Director } from "./components/Director";
 
 export default function App() {
   const [markdown, setMarkdown] = useState<string>(initialMarkdown);
@@ -110,7 +110,7 @@ export default function App() {
             frontmatter={frontmatter}
           />
         </div>
-        <SlideNav
+        <Director
           currentSlide={currentSlide}
           slidesLength={slides.length}
           prevSlide={prevSlide}
@@ -212,13 +212,14 @@ export default function App() {
               frontmatter={frontmatter}
             />
           </div>
-          <SlideNav
+          <Director
             currentSlide={currentSlide}
             slidesLength={slides.length}
             prevSlide={prevSlide}
             nextSlide={nextSlide}
             textColor={textColor}
             bgColor={bgColor}
+            frontmatter={frontmatter}
             onToggleTheme={() => setIsDark((d) => !d)}
           />
         </div>
