@@ -145,9 +145,9 @@ export default function App() {
       >
         <div>
           <h1 className="text-xl font-semibold">
-            slides.md
-            <span className="text-xs ml-4 opacity-70">
-              present your markdown
+            ✱ slides.md
+            <span className="text-xs ml-2 opacity-70">
+              (present your markdown)
             </span>
           </h1>
         </div>
