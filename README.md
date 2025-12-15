@@ -6,7 +6,7 @@
 
 ## Demo
 
-[Live demo](https://https://slides-md.netlify.app/)
+[Live demo](https://slides-md.netlify.app/)
 
 ## Features
 

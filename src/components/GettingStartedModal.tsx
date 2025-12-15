@@ -9,7 +9,7 @@ export function GettingStartedModal() {
           className="text-xs ml-2 opacity-70 underline cursor-pointer hover:opacity-100 transition-opacity text-gray-900 dark:text-gray-100"
           type="button"
         >
-          how do I present my markdown?
+          how do I present a markdown?
         </button>
       </Dialog.Trigger>
       <Dialog.Portal>
