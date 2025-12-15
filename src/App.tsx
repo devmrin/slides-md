@@ -37,6 +37,11 @@ export default function App() {
       if ((e.metaKey || e.ctrlKey) && e.key === "Enter") {
         setIsFullscreen(true);
       }
+      // Command+T to toggle theme (prevent browser default)
+      if ((e.metaKey || e.ctrlKey) && (e.key === "t" || e.key === "T")) {
+        e.preventDefault();
+        setIsDark((d) => !d);
+      }
       // R to reset deck in fullscreen
       if (isFullscreen && (e.key === "r" || e.key === "R")) {
         setCurrentSlide(0);
@@ -141,7 +146,9 @@ export default function App() {
         <div>
           <h1 className="text-xl font-semibold">
             slides.md
-            <span className="text-xs ml-4 opacity-70">(⌘↵ to present)</span>
+            <span className="text-xs ml-4 opacity-70">
+              present your markdown
+            </span>
           </h1>
         </div>
 
@@ -154,7 +161,7 @@ export default function App() {
             backgroundColor: bgColor,
           }}
         >
-          {isDark ? "Light" : "Dark"}
+          {isDark ? "Light (^T)" : "Dark (^T)"}
         </button>
       </header>
 
@@ -198,7 +205,7 @@ export default function App() {
                 className="px-3 py-1 text-xs border rounded"
                 style={{ borderColor: textColor + "40", color: textColor }}
               >
-                Fullscreen
+                Present (⌘↵)
               </button>
             </div>
           </div>
