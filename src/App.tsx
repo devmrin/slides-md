@@ -1,10 +1,10 @@
-import { useState, useEffect, useCallback } from "react";
+import { useState, useCallback } from "react";
 import initialMarkdown from "./data/compiler.md?raw";
 import { useSlides } from "./hooks/useSlides";
 import { useFullscreen } from "./hooks/useFullscreen";
-import { Slide } from "./components/Slide";
-import { Editor } from "./components/Editor";
-import { Director } from "./components/Director";
+import { useKeyboardNavigation } from "./hooks/useKeyboardNavigation";
+import { PresentationView } from "./components/PresentationView";
+import { StandardView } from "./components/StandardView";
 
 export default function App() {
   const [markdown, setMarkdown] = useState<string>(initialMarkdown);
@@ -28,209 +28,57 @@ export default function App() {
 
   const { toggleFullscreen } = useFullscreen(isFullscreen, setIsFullscreen);
 
-  // Arrow key navigation (global)
-  useEffect(() => {
-    const handler = (e: KeyboardEvent) => {
-      if (e.key === "ArrowRight") nextSlide();
-      if (e.key === "ArrowLeft") prevSlide();
-      // Command+Enter to start presentation (fullscreen)
-      if ((e.metaKey || e.ctrlKey) && e.key === "Enter") {
-        setIsFullscreen(true);
-      }
-      // Command+T to toggle theme (prevent browser default)
-      if ((e.metaKey || e.ctrlKey) && (e.key === "t" || e.key === "T")) {
-        e.preventDefault();
-        setIsDark((d) => !d);
-      }
-      // R to reset deck in fullscreen
-      if (isFullscreen && (e.key === "r" || e.key === "R")) {
-        setCurrentSlide(0);
-      }
-      // T to toggle theme in fullscreen
-      if (isFullscreen && (e.key === "t" || e.key === "T")) {
-        setIsDark((d) => !d);
-      }
-    };
-    window.addEventListener("keydown", handler);
-    return () => window.removeEventListener("keydown", handler);
-  }, [currentSlide, slides.length, nextSlide, prevSlide, isFullscreen]);
+  useKeyboardNavigation({
+    nextSlide,
+    prevSlide,
+    isFullscreen,
+    setIsFullscreen,
+    setIsDark,
+    setCurrentSlide,
+  });
 
   // Copy editor content
   const copyEditorContent = () => {
     navigator.clipboard.writeText(markdown).catch(() => {});
   };
 
-  // ---------------------------------------------------------------------------
-  // Fullscreen View
-  // ---------------------------------------------------------------------------
   if (isFullscreen) {
-    const isTitle = slides[currentSlide] === "__TITLE_SLIDE__";
     return (
-      <div
-        className="fixed inset-0 flex flex-col"
-        style={{ backgroundColor: bgColor, color: textColor }}
-      >
-        {/* Top bar for reset, theme, and exit */}
-        <div className="w-full flex justify-between items-start px-6 pt-4 z-10">
-          <div className="flex gap-2">
-            <button
-              className="px-3 py-1 text-sm border rounded"
-              style={{
-                borderColor: textColor + "40",
-                color: textColor,
-                backgroundColor: bgColor,
-              }}
-              onClick={() => setCurrentSlide(0)}
-            >
-              Reset <span className="ml-1 text-xs opacity-70">(R)</span>
-            </button>
-            <button
-              className="px-3 py-1 text-sm border rounded"
-              style={{
-                borderColor: textColor + "40",
-                color: textColor,
-                backgroundColor: bgColor,
-              }}
-              onClick={() => setIsDark((d) => !d)}
-            >
-              Theme <span className="ml-1 text-xs opacity-70">(T)</span>
-            </button>
-          </div>
-          <button
-            className="px-3 py-1 text-sm border rounded"
-            style={{
-              borderColor: textColor + "40",
-              color: textColor,
-              backgroundColor: bgColor,
-            }}
-            onClick={() => setIsFullscreen(false)}
-          >
-            Exit <span className="ml-1 text-xs opacity-70">(ESC)</span>
-          </button>
-        </div>
-        <div className="flex-1 flex items-center justify-center p-12 overflow-auto">
-          <Slide
-            slide={slides[currentSlide]}
-            isTitle={isTitle}
-            frontmatter={frontmatter}
-          />
-        </div>
-        <Director
-          currentSlide={currentSlide}
-          slidesLength={slides.length}
-          prevSlide={prevSlide}
-          nextSlide={nextSlide}
-          textColor={textColor}
-          bgColor={bgColor}
-          frontmatter={frontmatter}
-          isFullscreen={true}
-          onExitFullscreen={() => setIsFullscreen(false)}
-          onToggleTheme={() => setIsDark((d) => !d)}
-        />
-      </div>
+      <PresentationView
+        currentSlide={currentSlide}
+        slides={slides}
+        frontmatter={frontmatter}
+        bgColor={bgColor}
+        textColor={textColor}
+        prevSlide={prevSlide}
+        nextSlide={nextSlide}
+        setIsFullscreen={setIsFullscreen}
+        setIsDark={setIsDark}
+        setCurrentSlide={setCurrentSlide}
+      />
     );
   }
 
-  // ---------------------------------------------------------------------------
-  // Standard View
-  // ---------------------------------------------------------------------------
   return (
-    <div
-      className="h-screen flex flex-col"
-      style={{ backgroundColor: bgColor, color: textColor }}
-    >
-      <header
-        className="border-b px-6 py-4 flex items-center justify-between"
-        style={{ backgroundColor: bgColor, borderColor: textColor + "20" }}
-      >
-        <div>
-          <h1 className="text-xl font-semibold">
-            ✱ slides.md
-            <span className="text-xs ml-2 opacity-70">
-              (present your markdown)
-            </span>
-          </h1>
-        </div>
-
-        <button
-          onClick={() => setIsDark(!isDark)}
-          className="px-3 py-1 text-sm border rounded"
-          style={{
-            borderColor: textColor + "40",
-            color: textColor,
-            backgroundColor: bgColor,
-          }}
-        >
-          {isDark ? "Light (^T)" : "Dark (^T)"}
-        </button>
-      </header>
-
-      <div className="flex-1 flex overflow-hidden">
-        <Editor
-          markdown={markdown}
-          setMarkdown={setMarkdown}
-          setCurrentSlide={setCurrentSlide}
-          textColor={textColor}
-          bgColor={bgColor}
-          onReset={() => {
-            setMarkdown(initialMarkdown);
-            setCurrentSlide(0);
-          }}
-          onCopy={copyEditorContent}
-        />
-        {/* Preview */}
-        <div
-          className="w-1/2 flex flex-col"
-          style={{ backgroundColor: bgColor }}
-        >
-          <div
-            className="px-4 py-2 border-b text-sm font-medium flex items-center justify-between gap-2"
-            style={{
-              backgroundColor: bgColor,
-              color: textColor,
-              borderColor: textColor + "20",
-            }}
-          >
-            <span>Preview</span>
-            <div className="flex items-center gap-2">
-              <button
-                onClick={() => setCurrentSlide(0)}
-                className="px-3 py-1 text-xs border rounded"
-                style={{ borderColor: textColor + "40", color: textColor }}
-              >
-                Reset Deck
-              </button>
-              <button
-                onClick={toggleFullscreen}
-                className="px-3 py-1 text-xs border rounded"
-                style={{ borderColor: textColor + "40", color: textColor }}
-              >
-                Present (⌘↵)
-              </button>
-            </div>
-          </div>
-          <div
-            className="flex-1 overflow-auto p-8 flex items-center justify-center"
-            style={{ color: textColor }}
-          >
-            <Slide
-              slide={slides[currentSlide]}
-              isTitle={slides[currentSlide] === "__TITLE_SLIDE__"}
-              frontmatter={frontmatter}
-            />
-          </div>
-          <Director
-            currentSlide={currentSlide}
-            slidesLength={slides.length}
-            prevSlide={prevSlide}
-            nextSlide={nextSlide}
-            textColor={textColor}
-            bgColor={bgColor}
-            frontmatter={frontmatter}
-            onToggleTheme={() => setIsDark((d) => !d)}
-          />
-        </div>
-      </div>
-    </div>
+    <StandardView
+      markdown={markdown}
+      setMarkdown={setMarkdown}
+      currentSlide={currentSlide}
+      setCurrentSlide={setCurrentSlide}
+      slides={slides}
+      frontmatter={frontmatter}
+      bgColor={bgColor}
+      textColor={textColor}
+      isDark={isDark}
+      setIsDark={setIsDark}
+      toggleFullscreen={toggleFullscreen}
+      onReset={() => {
+        setMarkdown(initialMarkdown);
+        setCurrentSlide(0);
+      }}
+      onCopy={copyEditorContent}
+      prevSlide={prevSlide}
+      nextSlide={nextSlide}
+    />
   );
 }
