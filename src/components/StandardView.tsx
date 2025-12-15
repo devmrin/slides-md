@@ -60,6 +60,7 @@ export function StandardView({
           setCurrentSlide={setCurrentSlide}
           onReset={onReset}
           onCopy={onCopy}
+          isDark={isDark}
         />
         {/* Preview */}
         <div className="w-1/2 flex flex-col bg-gray-50 dark:bg-gray-900">

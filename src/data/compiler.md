@@ -6,7 +6,7 @@ description: How we went from punch cards to React spaghetti
 ===/===
 
 
-Why Are We Here?
+# Why Are We Here?
 
 Programming history is messy.  
 Developers are messier.  
@@ -21,7 +21,7 @@ React undid all of it (with hooks).
 ===
 
 
-In the Beginning: Machine Code
+# In the Beginning: Machine Code
 
 Computers spoke in numbers.  
 Humans pretended they understood.  
@@ -37,7 +37,7 @@ Comments were a luxury.
 ===
 
 
-Then Came Assembly
+# Then Came Assembly
 
 Slightly better than raw numbers.  
 Still painful to read.  
@@ -54,7 +54,7 @@ LOOP:  MOV A, B   ; copy B to A
 ===
 
 
-Grace Hopper Saves the Day
+# Grace Hopper Saves the Day
 
 Idea: code in something readable.  
 Result: COBOL.  
@@ -72,7 +72,7 @@ COBOL: the language that never retires.
 
 ===
 
-The Rise of C
+# The Rise of C
 
 More control for humans More ways to crash machines Pointers caused fear
 Undefined behavior ruled
@@ -81,7 +81,7 @@ Undefined behavior ruled
 
 ===
 
-The Great Language Explosion
+# The Great Language Explosion
 
 Everyone created a language Half were variants of Lisp The rest argued
 about braces Compilers aged rapidly
@@ -90,7 +90,7 @@ about braces Compilers aged rapidly
 
 ===
 
-Java Tries to Bring Order
+# Java Tries to Bring Order
 
 Write once Debug everywhere Bytecode ruled the JVM Opinions multiplied
 
@@ -99,7 +99,7 @@ Write once Debug everywhere Bytecode ruled the JVM Opinions multiplied
 ===
 
 
-JavaScript Sneaks In
+# avaScript Sneaks In
 
 Meant for tiny browser tricks.  
 Named in 10 days.  
@@ -119,7 +119,7 @@ async function everything() { await chaos(); }
 
 ===
 
-Enter Build Tools
+# Enter Build Tools
 
 Browsers lagged behind.  
 Developers raced ahead.  
@@ -142,7 +142,7 @@ module.exports = {
 
 ===
 
-React Arrives
+# React Arrives
 
 HTML inside JavaScript.  
 JavaScript inside HTML.  
@@ -167,7 +167,7 @@ function App() {
 
 ===
 
-The Modern Toolchain
+# The Modern Toolchain
 
 Vite arrived with speed.  
 Turbopack followed, promising more.  
@@ -186,7 +186,7 @@ vite build && echo "Did it work?"
 
 ===
 
-The Future
+# The Future
 
 More layers on layers.  
 Compilers for compilers.  
@@ -207,7 +207,7 @@ graph LR
 
 ===
 
-Final Thoughts
+# Final Thoughts
 
 Compilers tried to help.  
 Developers added chaos.  

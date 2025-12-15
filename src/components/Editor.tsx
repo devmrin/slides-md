@@ -1,9 +1,14 @@
+import CodeMirror from "@uiw/react-codemirror";
+import { markdown as markdownLang } from "@codemirror/lang-markdown";
+import { oneDark } from "@codemirror/theme-one-dark";
+
 interface EditorProps {
   markdown: string;
   setMarkdown: (v: string) => void;
   setCurrentSlide: (n: number) => void;
   onReset: () => void;
   onCopy: () => void;
+  isDark: boolean;
 }
 
 export function Editor({
@@ -12,6 +17,7 @@ export function Editor({
   setCurrentSlide,
   onReset,
   onCopy,
+  isDark,
 }: EditorProps) {
   return (
     <div className="w-1/2 border-r flex flex-col bg-gray-50 dark:bg-gray-900 border-gray-300 dark:border-gray-700">
@@ -34,14 +40,24 @@ export function Editor({
           </div>
         </div>
       </div>
-      <textarea
-        value={markdown}
-        onChange={(e) => {
-          setMarkdown(e.target.value);
-          setCurrentSlide(0);
-        }}
-        className="flex-1 p-4 font-mono text-sm resize-none focus:outline-none bg-gray-50 dark:bg-gray-900 text-gray-900 dark:text-gray-100"
-      />
+      <div className="flex-1 overflow-hidden [&_.cm-editor]:h-full [&_.cm-scroller]:overflow-auto">
+        <CodeMirror
+          value={markdown}
+          onChange={(value) => {
+            setMarkdown(value);
+            setCurrentSlide(0);
+          }}
+          extensions={[markdownLang()]}
+          theme={isDark ? oneDark : undefined}
+          basicSetup={{
+            lineNumbers: true,
+            foldGutter: true,
+            dropCursor: false,
+            allowMultipleSelections: false,
+          }}
+          className="h-full text-sm"
+        />
+      </div>
     </div>
   );
 }
