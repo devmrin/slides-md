@@ -52,19 +52,7 @@ export function SlideNav({
       >
         Next →
       </button>
-      {isFullscreen && onExitFullscreen && (
-        <button
-          onClick={onExitFullscreen}
-          className="absolute top-4 right-4 px-3 py-1 text-sm border rounded"
-          style={{
-            borderColor: textColor + "40",
-            color: textColor,
-            backgroundColor: bgColor,
-          }}
-        >
-          Exit (ESC)
-        </button>
-      )}
+      {/* Exit button for fullscreen removed to avoid duplicate with App.tsx top bar */}
     </div>
   );
 }

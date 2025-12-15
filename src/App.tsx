@@ -37,10 +37,14 @@ export default function App() {
       if ((e.metaKey || e.ctrlKey) && e.key === "Enter") {
         setIsFullscreen(true);
       }
+      // R to reset deck in fullscreen
+      if (isFullscreen && (e.key === "r" || e.key === "R")) {
+        setCurrentSlide(0);
+      }
     };
     window.addEventListener("keydown", handler);
     return () => window.removeEventListener("keydown", handler);
-  }, [currentSlide, slides.length, nextSlide, prevSlide]);
+  }, [currentSlide, slides.length, nextSlide, prevSlide, isFullscreen]);
 
   // Copy editor content
   const copyEditorContent = () => {
@@ -57,6 +61,31 @@ export default function App() {
         className="fixed inset-0 flex flex-col"
         style={{ backgroundColor: bgColor, color: textColor }}
       >
+        {/* Top bar for reset and exit */}
+        <div className="w-full flex justify-between items-start px-6 pt-4 z-10">
+          <button
+            className="px-3 py-1 text-sm border rounded"
+            style={{
+              borderColor: textColor + "40",
+              color: textColor,
+              backgroundColor: bgColor,
+            }}
+            onClick={() => setCurrentSlide(0)}
+          >
+            Reset <span className="ml-1 text-xs opacity-70">(R)</span>
+          </button>
+          <button
+            className="px-3 py-1 text-sm border rounded"
+            style={{
+              borderColor: textColor + "40",
+              color: textColor,
+              backgroundColor: bgColor,
+            }}
+            onClick={() => setIsFullscreen(false)}
+          >
+            Exit <span className="ml-1 text-xs opacity-70">(ESC)</span>
+          </button>
+        </div>
         <div className="flex-1 flex items-center justify-center p-12 overflow-auto">
           <Slide
             slide={slides[currentSlide]}
