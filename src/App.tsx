@@ -69,9 +69,9 @@ export default function App() {
     navigator.clipboard.writeText(markdown).catch(() => {});
   };
 
-  // Reset editor content
-  const resetEditorContent = () => {
-    setMarkdown(initialMarkdown);
+  // Clear editor content
+  const clearEditorContent = () => {
+    setMarkdown("");
     setCurrentSlide(0);
   };
 
@@ -97,7 +97,7 @@ export default function App() {
         markdown={markdown}
         setMarkdown={setMarkdown}
         setCurrentSlide={setCurrentSlide}
-        onReset={resetEditorContent}
+        onClear={clearEditorContent}
         onCopy={copyEditorContent}
         setIsEditorFullscreen={setIsEditorFullscreen}
         isDark={isDarkValue}
@@ -118,7 +118,7 @@ export default function App() {
       setIsDark={setIsDark}
       toggleFullscreen={() => setIsFullscreen(true)}
       toggleEditorFullscreen={() => setIsEditorFullscreen(true)}
-      onReset={resetEditorContent}
+      onClear={clearEditorContent}
       onCopy={copyEditorContent}
       prevSlide={prevSlide}
       nextSlide={nextSlide}

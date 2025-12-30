@@ -7,7 +7,7 @@ interface EditorProps {
   markdown: string;
   setMarkdown: (v: string) => void;
   setCurrentSlide: (n: number) => void;
-  onReset: () => void;
+  onClear: () => void;
   onCopy: () => void;
   onToggleFullscreen: () => void;
   isDark: boolean;
@@ -17,7 +17,7 @@ export function Editor({
   markdown,
   setMarkdown,
   setCurrentSlide,
-  onReset,
+  onClear,
   onCopy,
   onToggleFullscreen,
   isDark,
@@ -45,11 +45,11 @@ export function Editor({
               <span className="hidden sm:inline">Fullscreen</span>
             </Button>
             <Button
-              onClick={onReset}
+              onClick={onClear}
               className="px-2 sm:px-3 py-1 text-xs border rounded border-gray-400 dark:border-gray-600 text-gray-900 dark:text-gray-100 bg-white dark:bg-gray-900 hover:bg-gray-50 dark:hover:bg-gray-800 touch-manipulation"
             >
-              <span className="hidden sm:inline">Reset Editor</span>
-              <span className="sm:hidden">Reset</span>
+              <span className="hidden sm:inline">Clear Editor</span>
+              <span className="sm:hidden">Clear</span>
             </Button>
             <Button
               onClick={handleCopy}

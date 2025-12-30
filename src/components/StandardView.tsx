@@ -17,7 +17,7 @@ interface StandardViewProps {
   setIsDark: (value: boolean | ((prev: boolean) => boolean)) => void;
   toggleFullscreen: () => void;
   toggleEditorFullscreen: () => void;
-  onReset: () => void;
+  onClear: () => void;
   onCopy: () => void;
   prevSlide: () => void;
   nextSlide: () => void;
@@ -34,7 +34,7 @@ export function StandardView({
   setIsDark,
   toggleFullscreen,
   toggleEditorFullscreen,
-  onReset,
+  onClear,
   onCopy,
   prevSlide,
   nextSlide,
@@ -83,7 +83,7 @@ export function StandardView({
             markdown={markdown}
             setMarkdown={setMarkdown}
             setCurrentSlide={setCurrentSlide}
-            onReset={onReset}
+            onClear={onClear}
             onCopy={onCopy}
             onToggleFullscreen={toggleEditorFullscreen}
             isDark={isDark}

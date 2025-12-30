@@ -7,7 +7,7 @@ interface FullscreenEditorProps {
   markdown: string;
   setMarkdown: (v: string) => void;
   setCurrentSlide: (n: number) => void;
-  onReset: () => void;
+  onClear: () => void;
   onCopy: () => void;
   setIsEditorFullscreen: (value: boolean) => void;
   isDark: boolean;
@@ -18,7 +18,7 @@ export function FullscreenEditor({
   markdown,
   setMarkdown,
   setCurrentSlide,
-  onReset,
+  onClear,
   onCopy,
   setIsEditorFullscreen,
   isDark,
@@ -37,18 +37,18 @@ export function FullscreenEditor({
   }, [isEditorFullscreen, requestFullscreenOnly]);
 
   return (
-    <div 
+    <div
       ref={containerRef}
       className="fixed inset-0 flex flex-col bg-gray-50 dark:bg-gray-900 text-gray-900 dark:text-gray-100"
     >
-      {/* Top bar for reset, copy, and exit */}
+      {/* Top bar for clear, copy, and exit */}
       <div className="w-full flex justify-between items-start px-4 pt-3 sm:px-6 sm:pt-4 z-10 border-b border-gray-300 dark:border-gray-700 bg-gray-100 dark:bg-gray-800">
         <div className="flex gap-2">
           <Button
             className="px-3 py-1.5 sm:py-1 text-sm border rounded border-gray-400 dark:border-gray-600 text-gray-900 dark:text-gray-100 bg-white dark:bg-gray-900 hover:bg-gray-100 dark:hover:bg-gray-800 touch-manipulation"
-            onClick={onReset}
+            onClick={onClear}
           >
-            Reset <span className="ml-1 text-xs opacity-70 hidden sm:inline">Editor</span>
+            Clear <span className="ml-1 text-xs opacity-70 hidden sm:inline">Editor</span>
           </Button>
           <Button
             className="px-3 py-1.5 sm:py-1 text-sm border rounded border-gray-400 dark:border-gray-600 text-gray-900 dark:text-gray-100 bg-white dark:bg-gray-900 hover:bg-gray-100 dark:hover:bg-gray-800 touch-manipulation"
