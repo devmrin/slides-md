@@ -31,16 +31,18 @@ export function SlideNav({
         </Button>
       </div>
       <div className="text-center flex-1 mx-2 sm:mx-4">
-        <div className="text-xs sm:text-sm opacity-60">
+        <div className="text-xs sm:text-sm opacity-60 tabular-nums">
           Slide {currentSlide + 1} of {slidesLength}
         </div>
-        <div className="text-xs mt-1 opacity-40 min-h-[1rem] hidden sm:block">
-          {frontmatter?.title && frontmatter?.presenter && Number(currentSlide) > 0 && (
-            <>
-              {frontmatter.title} by {frontmatter.presenter}
-            </>
-          )}
-        </div>
+        {frontmatter?.description && (
+          <div className="text-xs mt-1 opacity-40 min-h-[1rem] hidden sm:block">
+            {frontmatter?.title && frontmatter?.presenter && Number(currentSlide) > 0 && (
+              <>
+                {frontmatter.title} by {frontmatter.presenter}
+              </>
+            )}
+          </div>
+        )}
       </div>
       <Button
         onClick={nextSlide}
