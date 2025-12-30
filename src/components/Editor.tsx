@@ -76,7 +76,6 @@ export function Editor({
           value={markdown}
           onChange={(value) => {
             setMarkdown(value || "");
-            setCurrentSlide(0);
           }}
           language="markdown"
           theme={isDark ? "vs-dark" : "vs"}

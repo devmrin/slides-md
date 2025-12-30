@@ -69,7 +69,7 @@ export function Slide({ slide, isTitle, frontmatter }: SlideProps) {
   }
   return (
     <div className="max-w-full sm:max-w-4xl w-full text-base sm:text-xl leading-[1.5rem] sm:leading-[1.875rem] break-words">
-      <div ref={contentRef} dangerouslySetInnerHTML={{ __html: marked(slide) }} />
+      <div ref={contentRef} dangerouslySetInnerHTML={{ __html: marked(slide || "") }} />
     </div>
   );
 }
