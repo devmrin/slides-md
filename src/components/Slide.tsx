@@ -2,6 +2,17 @@ import { marked } from "marked";
 import { useEffect, useRef } from "react";
 import hljs from "highlight.js";
 import type { Tokens } from "marked";
+import { format } from "date-fns";
+
+function formatDate(dateStr: string): string {
+  try {
+    const date = new Date(dateStr);
+    if (isNaN(date.getTime())) return format(new Date(), "d MMM, yyyy");
+    return format(date, "d MMM, yyyy");
+  } catch {
+    return format(new Date(), "d MMM, yyyy");
+  }
+}
 
 // Configure marked to use highlight.js for code blocks
 marked.use({
@@ -54,16 +65,21 @@ export function Slide({ slide, isTitle, frontmatter }: SlideProps) {
 
   if (isTitle && frontmatter) {
     return (
-      <div className="text-center max-w-full sm:max-w-4xl">
-        <h1 className="text-4xl sm:text-6xl font-bold mb-3 sm:mb-4">{frontmatter.title}</h1>
+      <div className="text-center max-w-full sm:max-w-4xl flex flex-col items-center">
+        <h1 className="text-4xl sm:text-6xl font-bold">{frontmatter.title}</h1>
         {frontmatter.description && (
-          <p className="text-base sm:text-xl opacity-70 mt-4 sm:mt-6">{frontmatter.description}</p>
+          <p className="text-base sm:text-xl opacity-70 mt-4 sm:mt-5">{frontmatter.description}</p>
         )}
-        {frontmatter.presenter && (
-          <p className="text-sm sm:text-lg semi-bold opacity-60 mt-2">
-            by {frontmatter.presenter}
-          </p>
-        )}
+        <div className="mt-8 sm:mt-10 space-y-1">
+          {frontmatter.presenter && (
+            <p className="text-sm sm:text-lg font-medium opacity-60">
+              by {frontmatter.presenter}
+            </p>
+          )}
+          {frontmatter.date && (
+            <p className="text-sm sm:text-base italic opacity-40 tracking-wide">{formatDate(frontmatter.date)}</p>
+          )}
+        </div>
       </div>
     );
   }
