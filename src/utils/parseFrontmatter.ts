@@ -1,4 +1,19 @@
 // Utility to parse frontmatter from markdown
+
+// Aliases that should be normalized to a canonical key
+const keyAliases: Record<string, string> = {
+  presenters: "presenter",
+  author: "presenter",
+  authors: "presenter",
+  by: "presenter",
+  subtitle: "description",
+};
+
+function normalizeKey(key: string): string {
+  const lowercaseKey = key.toLowerCase();
+  return keyAliases[lowercaseKey] ?? lowercaseKey;
+}
+
 export function parseFrontmatter(text: string): {
   frontmatter: Record<string, string>;
   content: string;
@@ -18,7 +33,8 @@ export function parseFrontmatter(text: string): {
     if (colonIndex > -1) {
       const key = line.substring(0, colonIndex).trim();
       const value = line.substring(colonIndex + 1).trim();
-      frontmatter[key] = value;
+      const normalizedKey = normalizeKey(key);
+      frontmatter[normalizedKey] = value;
     }
   });
 
