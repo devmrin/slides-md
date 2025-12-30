@@ -46,8 +46,14 @@ export function PresentationView({
       ref={containerRef}
       className="fixed inset-0 flex flex-col bg-white dark:bg-gray-900 text-gray-900 dark:text-gray-100"
     >
-      {/* Top bar for reset, theme, and exit */}
+      {/* Top bar for exit, reset, and theme */}
       <div className="w-full flex justify-between items-start px-4 pt-3 sm:px-6 sm:pt-4 z-10">
+        <Button
+          className="px-3 py-1.5 sm:py-1 text-sm border rounded border-gray-400 dark:border-gray-600 text-gray-900 dark:text-gray-100 bg-gray-50 dark:bg-gray-900 hover:bg-gray-100 dark:hover:bg-gray-800 touch-manipulation"
+          onClick={() => setIsFullscreen(false)}
+        >
+          Exit <span className="ml-1 text-xs opacity-70 hidden sm:inline">(ESC)</span>
+        </Button>
         <div className="flex gap-2">
           <Button
             className="px-3 py-1.5 sm:py-1 text-sm border rounded border-gray-400 dark:border-gray-600 text-gray-900 dark:text-gray-100 bg-gray-50 dark:bg-gray-900 hover:bg-gray-100 dark:hover:bg-gray-800 touch-manipulation"
@@ -62,12 +68,6 @@ export function PresentationView({
             Theme <span className="ml-1 text-xs opacity-70 hidden sm:inline">(T)</span>
           </Button>
         </div>
-        <Button
-          className="px-3 py-1.5 sm:py-1 text-sm border rounded border-gray-400 dark:border-gray-600 text-gray-900 dark:text-gray-100 bg-gray-50 dark:bg-gray-900 hover:bg-gray-100 dark:hover:bg-gray-800 touch-manipulation"
-          onClick={() => setIsFullscreen(false)}
-        >
-          Exit <span className="ml-1 text-xs opacity-70 hidden sm:inline">(ESC)</span>
-        </Button>
       </div>
       <div className="flex-1 overflow-y-auto overflow-x-hidden">
         <div className={`presentation-view-slide px-4 sm:px-12 flex ${
