@@ -1,4 +1,4 @@
-import { marked } from "marked";
+import { marked, type TokenizerExtension, type RendererExtension } from "marked";
 import { useEffect, useRef } from "react";
 import hljs from "highlight.js";
 import type { Tokens } from "marked";
@@ -14,13 +14,79 @@ function formatDate(dateStr: string): string {
   }
 }
 
-// Configure marked to use highlight.js for code blocks
+// Custom extension for standalone todo items: [ ] and [x] without the - prefix
+const standaloneTodoExtension: TokenizerExtension & RendererExtension = {
+  name: "standaloneTodo",
+  level: "block",
+  start(src: string) {
+    return src.match(/^(?:\[ \]|\[x\])/im)?.index;
+  },
+  tokenizer(src: string) {
+    // Match lines starting with [ ] or [x] (case insensitive for x)
+    const rule = /^(\[( |x)\]) (.+?)(?:\n|$)/i;
+    const match = rule.exec(src);
+    if (match) {
+      return {
+        type: "standaloneTodo",
+        raw: match[0],
+        checked: match[2].toLowerCase() === "x",
+        text: match[3].trim(),
+      };
+    }
+    return undefined;
+  },
+  renderer(token) {
+    const { checked, text } = token as unknown as { checked: boolean; text: string };
+    const checkbox = checked
+      ? '<input type="checkbox" checked disabled>'
+      : '<input type="checkbox" disabled>';
+    return `<p class="todo-item">${checkbox} ${text}</p>\n`;
+  },
+};
+
+// Custom extension for 1) style ordered lists
+const parenOrderedListExtension: TokenizerExtension & RendererExtension = {
+  name: "parenOrderedList",
+  level: "block",
+  start(src: string) {
+    return src.match(/^\d+\) /m)?.index;
+  },
+  tokenizer(src: string) {
+    // Match consecutive lines starting with number)
+    const rule = /^((?:\d+\) .+(?:\n|$))+)/;
+    const match = rule.exec(src);
+    if (match) {
+      const items = match[1]
+        .split("\n")
+        .filter((line) => line.trim())
+        .map((line) => {
+          const itemMatch = line.match(/^\d+\) (.+)/);
+          return itemMatch ? itemMatch[1] : line;
+        });
+      return {
+        type: "parenOrderedList",
+        raw: match[0],
+        items,
+      };
+    }
+    return undefined;
+  },
+  renderer(token) {
+    const { items } = token as unknown as { items: string[] };
+    const listItems = items.map((item) => `<li>${item}</li>`).join("\n");
+    return `<ol>\n${listItems}\n</ol>\n`;
+  },
+};
+
+// Configure marked with GFM (for - [ ] task lists) and custom extensions
 marked.use({
+  gfm: true,
+  extensions: [standaloneTodoExtension, parenOrderedListExtension],
   renderer: {
     code(token: Tokens.Code) {
       const codeStr = token.text;
       const lang = token.lang;
-      
+
       if (lang && hljs.getLanguage(lang)) {
         try {
           const result = hljs.highlight(codeStr, { language: lang });
@@ -28,7 +94,7 @@ marked.use({
           const match = result.value.match(/<code[^>]*>(.*?)<\/code>/s);
           const highlighted = match ? match[1] : result.value;
           return `<pre><code class="hljs language-${lang}">${highlighted}</code></pre>`;
-        } catch (err) {
+        } catch {
           // Fall through to auto-detection
         }
       }
