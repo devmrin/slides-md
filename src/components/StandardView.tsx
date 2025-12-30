@@ -109,7 +109,11 @@ export function StandardView({
               </Button>
             </div>
           </div>
-          <div className="flex-1 overflow-auto p-4 sm:p-8 flex items-center justify-center text-gray-900 dark:text-gray-100">
+          <div className={`standard-view-slide flex-1 overflow-auto px-4 sm:px-8 flex text-gray-900 dark:text-gray-100 ${
+            slides[currentSlide] === "__TITLE_SLIDE__"
+              ? "items-center justify-center p-4 sm:p-8"
+              : "pt-[25vh] pb-8 justify-center"
+          }`}>
             <Slide
               slide={slides[currentSlide]}
               isTitle={slides[currentSlide] === "__TITLE_SLIDE__"}

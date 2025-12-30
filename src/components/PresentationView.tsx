@@ -70,7 +70,11 @@ export function PresentationView({
         </Button>
       </div>
       <div className="flex-1 overflow-y-auto overflow-x-hidden">
-        <div className="min-h-full flex items-center justify-center p-4 sm:p-12">
+        <div className={`presentation-view-slide px-4 sm:px-12 flex ${
+          isTitle
+            ? "min-h-full items-center justify-center p-4 sm:p-12"
+            : "pt-[25vh] pb-12 justify-center"
+        }`}>
           <Slide
             slide={slides[currentSlide]}
             isTitle={isTitle}

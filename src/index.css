@@ -213,6 +213,19 @@ pre {
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
 }
 
+/* Fixed width code blocks in slideshow views */
+.standard-view-slide pre {
+  width: 800px;
+  max-width: 100%;
+  overflow-x: auto;
+}
+
+.presentation-view-slide pre {
+  width: 896px;
+  max-width: 100%;
+  overflow-x: auto;
+}
+
 code {
   font-family: 'SF Mono', 'Monaco', 'Inconsolata', 'Fira Code', 'Courier New', monospace;
   font-size: 0.9em;
