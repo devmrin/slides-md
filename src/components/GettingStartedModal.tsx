@@ -38,31 +38,27 @@ export function GettingStartedModal() {
                   Overview
                 </h2>
                 <p className="leading-relaxed">
-                  slides.md lets you create presentations using plain Markdown. Your file defines metadata through a fixed frontmatter block and divides content into slides using a dedicated delimiter. The result is a clean, predictable workflow suited for technical content.
+                  slides.md turns Markdown into presentations. Add optional frontmatter for metadata, separate slides with <code className="px-1.5 py-0.5 bg-gray-100 dark:bg-gray-700 rounded text-xs font-mono">===</code>, and you're done.
                 </p>
               </section>
 
               {/* Frontmatter */}
               <section>
                 <h2 className="text-xl font-semibold mb-3 text-gray-900 dark:text-gray-100">
-                  Required Frontmatter
+                  Frontmatter (Optional)
                 </h2>
                 <p className="leading-relaxed">
-                  Each presentation begins with an optional frontmatter block enclosed by the delimiter shown below. The available fields are fixed and must appear at the top of the file.
+                  Add metadata at the top of your file using the <code className="px-1.5 py-0.5 bg-gray-100 dark:bg-gray-700 rounded text-xs font-mono">===/===</code> delimiter:
                 </p>
 
                 <div className="mt-3 p-4 bg-gray-900 dark:bg-gray-950 rounded-lg text-xs overflow-x-auto border border-gray-700 dark:border-gray-600 font-mono text-gray-100 dark:text-gray-200 whitespace-pre">
-{`===/===
-title: A Brief, Questionable History of Compilers
+                  {`===/===
+title: My Presentation
 date: 2025-01-01
-presenter: Mrinmay
-description: How we went from punch cards to React spaghetti
+presenter: Your Name
+description: A brief summary
 ===/===`}
                 </div>
-
-                <p className="mt-3 text-sm leading-relaxed">
-                  The system reads this block before rendering your slides. Your primary markdown content will come after this block.
-                </p>
               </section>
 
               {/* Slide Separation */}
@@ -71,11 +67,11 @@ description: How we went from punch cards to React spaghetti
                   Slide Separation
                 </h2>
                 <p className="leading-relaxed">
-                  Individual slides are separated with a triple equals delimiter. Everything between two delimiters is treated as one slide.
+                  Use <code className="px-1.5 py-0.5 bg-gray-100 dark:bg-gray-700 rounded text-xs font-mono">===</code> on its own line to separate slides:
                 </p>
 
                 <div className="mt-3 p-4 bg-gray-900 dark:bg-gray-950 rounded-lg text-xs overflow-x-auto border border-gray-700 dark:border-gray-600 font-mono text-gray-100 dark:text-gray-200 whitespace-pre">
-{`# First Slide
+                  {`# First Slide
 Content here
 
 ===
@@ -83,33 +79,26 @@ Content here
 # Second Slide
 More content`}
                 </div>
-
-                <p className="mt-3 text-sm leading-relaxed">
-                  You can include any Markdown element such as headings, lists, fenced code blocks, and diagrams.
-                </p>
               </section>
 
               {/* Writing Slides */}
               <section>
                 <h2 className="text-xl font-semibold mb-3 text-gray-900 dark:text-gray-100">
-                  Writing Effective Slides
+                  Supported Markdown
                 </h2>
-                <ul className="text-sm list-disc list-inside space-y-2 ml-4 text-gray-700 dark:text-gray-300">
-                  <li>Use headings to establish structure.</li>
-                  <li>Keep each slide narrowly focused.</li>
-                  <li>Prefer lists and concise text for readability.</li>
-                  <li>Use fenced code blocks for technical examples.</li>
-                  <li>Place diagrams, ASCII art, or mermaid blocks directly where needed.</li>
+                <ul className="text-sm list-disc list-inside space-y-1 ml-4 text-gray-700 dark:text-gray-300">
+                  <li>Headings, lists, blockquotes</li>
+                  <li>Fenced code blocks with syntax highlighting</li>
                 </ul>
               </section>
 
               {/* Presentation Mode */}
               <section>
                 <h2 className="text-xl font-semibold mb-3 text-gray-900 dark:text-gray-100">
-                  Preview and Present
+                  Presenting
                 </h2>
                 <p className="leading-relaxed">
-                  The preview pane reflects changes as you edit your Markdown. When ready, select the presentation mode option to launch a full screen view. Navigation follows common slide deck conventions using arrow keys or on screen controls.
+                  Click "Present" to enter fullscreen. Use arrow keys or on-screen controls to navigate.
                 </p>
               </section>
 
@@ -141,29 +130,47 @@ More content`}
               {/* LLM Prompt */}
               <section>
                 <h2 className="text-xl font-semibold mb-3 text-gray-900 dark:text-gray-100">
-                  Optional LLM Prompt
+                  LLM Prompt
                 </h2>
                 <p className="leading-relaxed mb-3">
-                  You can use this prompt to convert existing Markdown into a presentation compatible with slides.md.
+                  Use this prompt to generate slides.md-compatible presentations:
                 </p>
 
                 <div className="bg-gray-900 dark:bg-gray-950 rounded-lg p-4 border border-gray-700 dark:border-gray-600 text-sm font-mono text-gray-100 dark:text-gray-200 whitespace-pre-wrap">
-{`Convert the following content into a slides.md presentation. Use:
+                  {`FORMAT CONTRACT (slides.md)
 
-1. A frontmatter block enclosed in triple equals slash triple equals
-2. The fields: title, date, presenter, description
-3. Triple equals delimiters to separate slides
-4. Concise, well structured slides
-5. Appropriate Markdown formatting
+1. Output type
+Respond with a single text document for slides.md.
 
-Here is my content:
+2. Frontmatter
+Start with:
+  ===/===
+  title: ...
+  date: YYYY-MM-DD
+  presenter: ...
+  description: ...
+  ===/===
 
-[Paste your Markdown content here]`}
+3. Slide separation
+Separate slides with a line containing exactly:
+  ===
+
+4. Code fences (IMPORTANT)
+Use DOUBLE backticks for code blocks:
+  \`\`lang
+  code...
+  \`\`
+Inline code uses single backticks: \`like this\`
+
+5. Allowed Markdown
+Headings (#, ##, ###), lists, blockquotes.
+
+6. No extra commentary
+Output only the deck content.
+
+---
+[INSERT YOUR TOPIC OR CONTENT HERE]`}
                 </div>
-
-                <p className="mt-3 text-sm leading-relaxed text-gray-600 dark:text-gray-400">
-                  Replace the placeholder with your content and the model will restructure it accordingly.
-                </p>
               </section>
             </div>
 
