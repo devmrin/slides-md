@@ -10,7 +10,7 @@ export function AppHeader({ isDark, setIsDark }: AppHeaderProps) {
   return (
     <header className="border-b px-4 sm:px-6 py-3 sm:py-4 bg-gray-100 dark:bg-gray-800 border-gray-300 dark:border-gray-700">
       <div className="flex items-center justify-between">
-        <h1 className="text-xl sm:text-4xl font-semibold text-gray-900 dark:text-gray-100">
+        <h1 className="text-xl sm:text-4xl font-bold text-gray-900 dark:text-gray-100">
           ✱ slides.md
           <GettingStartedModal />
         </h1>
