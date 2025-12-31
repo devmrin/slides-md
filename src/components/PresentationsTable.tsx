@@ -1,6 +1,6 @@
 import { useMemo, useState } from "react";
 import { useNavigate } from "@tanstack/react-router";
-import { Trash2 } from "lucide-react";
+import { Trash2, Pencil } from "lucide-react";
 import { format } from "date-fns";
 import {
   useReactTable,
@@ -12,11 +12,13 @@ import { Slide } from "./Slide";
 import { useSlides } from "../hooks/useSlides";
 import { Button } from "../ui/Button";
 import { DeleteConfirmationDialog } from "./DeleteConfirmationDialog";
+import { EditPresentationNameDialog } from "./EditPresentationNameDialog";
 import type { Presentation } from "../db/adapter";
 
 interface PresentationsTableProps {
   presentations: Presentation[];
   onDelete: (id: string) => void;
+  onEdit: (id: string, newName: string) => void;
 }
 
 function PreviewCell({ presentation }: { presentation: Presentation }) {
@@ -36,10 +38,12 @@ function PreviewCell({ presentation }: { presentation: Presentation }) {
   );
 }
 
-export function PresentationsTable({ presentations, onDelete }: PresentationsTableProps) {
+export function PresentationsTable({ presentations, onDelete, onEdit }: PresentationsTableProps) {
   const navigate = useNavigate();
   const [deleteDialogOpen, setDeleteDialogOpen] = useState<string | null>(null);
   const [deleteTarget, setDeleteTarget] = useState<Presentation | null>(null);
+  const [editDialogOpen, setEditDialogOpen] = useState<string | null>(null);
+  const [editTarget, setEditTarget] = useState<Presentation | null>(null);
 
   const handleRowClick = (presentation: Presentation) => {
     navigate({ to: "/presentation/$id", params: { id: presentation.id } });
@@ -56,6 +60,20 @@ export function PresentationsTable({ presentations, onDelete }: PresentationsTab
       onDelete(deleteTarget.id);
       setDeleteTarget(null);
       setDeleteDialogOpen(null);
+    }
+  };
+
+  const handleEditClick = (e: React.MouseEvent, presentation: Presentation) => {
+    e.stopPropagation();
+    setEditTarget(presentation);
+    setEditDialogOpen(presentation.id);
+  };
+
+  const handleConfirmEdit = (newName: string) => {
+    if (editTarget) {
+      onEdit(editTarget.id, newName);
+      setEditTarget(null);
+      setEditDialogOpen(null);
     }
   };
 
@@ -103,12 +121,19 @@ export function PresentationsTable({ presentations, onDelete }: PresentationsTab
         },
       },
       {
-        id: "delete",
+        id: "actions",
         header: "",
         cell: ({ row }) => {
           const presentation = row.original;
           return (
-            <div className="w-16 flex justify-end">
+            <div className="w-24 flex justify-end gap-1">
+              <Button
+                onClick={(e) => handleEditClick(e, presentation)}
+                className="p-1.5 text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700 rounded shrink-0"
+                title="Edit presentation name"
+              >
+                <Pencil className="w-4 h-4" />
+              </Button>
               <Button
                 onClick={(e) => handleDeleteClick(e, presentation)}
                 className="p-1.5 text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700 rounded shrink-0"
@@ -119,9 +144,9 @@ export function PresentationsTable({ presentations, onDelete }: PresentationsTab
             </div>
           );
         },
-        size: 64,
-        minSize: 64,
-        maxSize: 64,
+        size: 96,
+        minSize: 96,
+        maxSize: 96,
       },
     ],
     []
@@ -141,7 +166,7 @@ export function PresentationsTable({ presentations, onDelete }: PresentationsTab
           {/* Header */}
           <div
             className="grid border-b border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-800"
-            style={{ gridTemplateColumns: "160px 1fr 120px 120px 100px" }}
+            style={{ gridTemplateColumns: "160px 1fr 120px 120px 120px" }}
           >
             {table.getHeaderGroups().map((headerGroup) =>
               headerGroup.headers.map((header) => (
@@ -161,7 +186,7 @@ export function PresentationsTable({ presentations, onDelete }: PresentationsTab
             <div
               key={row.id}
               className="grid border-b border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 hover:bg-gray-50 dark:hover:bg-gray-700/50 cursor-pointer transition-colors"
-              style={{ gridTemplateColumns: "160px 1fr 120px 120px 100px" }}
+              style={{ gridTemplateColumns: "160px 1fr 120px 120px 120px" }}
               onClick={() => handleRowClick(row.original)}
             >
               {row.getVisibleCells().map((cell) => (
@@ -185,6 +210,20 @@ export function PresentationsTable({ presentations, onDelete }: PresentationsTab
           }}
           onConfirm={handleConfirmDelete}
           presentationName={deleteTarget.name}
+        />
+      )}
+
+      {editTarget && (
+        <EditPresentationNameDialog
+          open={editDialogOpen === editTarget.id}
+          onOpenChange={(open) => {
+            if (!open) {
+              setEditDialogOpen(null);
+              setEditTarget(null);
+            }
+          }}
+          currentName={editTarget.name}
+          onSave={handleConfirmEdit}
         />
       )}
     </>

@@ -1,30 +1,43 @@
 import { useState } from "react";
 import { useNavigate } from "@tanstack/react-router";
-import { Trash2 } from "lucide-react";
+import { Trash2, Pencil } from "lucide-react";
 import { Slide } from "./Slide";
 import { useSlides } from "../hooks/useSlides";
 import { Button } from "../ui/Button";
 import { DeleteConfirmationDialog } from "./DeleteConfirmationDialog";
+import { EditPresentationNameDialog } from "./EditPresentationNameDialog";
 import type { Presentation } from "../db/adapter";
 
 interface PresentationCardProps {
   presentation: Presentation;
   onDelete: (id: string) => void;
+  onEdit: (id: string, newName: string) => void;
 }
 
-export function PresentationCard({ presentation, onDelete }: PresentationCardProps) {
+export function PresentationCard({ presentation, onDelete, onEdit }: PresentationCardProps) {
   const navigate = useNavigate();
   const { frontmatter, slides } = useSlides(presentation.markdown);
   const firstSlide = slides[0] || "";
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
+  const [editDialogOpen, setEditDialogOpen] = useState(false);
 
   const handleClick = () => {
     navigate({ to: "/presentation/$id", params: { id: presentation.id } });
   };
 
+  const handleEdit = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    setEditDialogOpen(true);
+  };
+
   const handleDelete = (e: React.MouseEvent) => {
     e.stopPropagation();
     setDeleteDialogOpen(true);
+  };
+
+  const handleConfirmEdit = (newName: string) => {
+    onEdit(presentation.id, newName);
+    setEditDialogOpen(false);
   };
 
   const handleConfirmDelete = () => {
@@ -53,16 +66,31 @@ export function PresentationCard({ presentation, onDelete }: PresentationCardPro
           <h3 className="font-semibold text-gray-900 dark:text-gray-100 truncate flex-1">
             {presentation.name}
           </h3>
-          <Button
-            onClick={handleDelete}
-            className="p-1.5 text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700 rounded shrink-0"
-            title="Delete presentation"
-          >
-            <Trash2 className="w-4 h-4" />
-          </Button>
+          <div className="flex items-center gap-1">
+            <Button
+              onClick={handleEdit}
+              className="p-1.5 text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700 rounded shrink-0"
+              title="Edit presentation name"
+            >
+              <Pencil className="w-4 h-4" />
+            </Button>
+            <Button
+              onClick={handleDelete}
+              className="p-1.5 text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700 rounded shrink-0"
+              title="Delete presentation"
+            >
+              <Trash2 className="w-4 h-4" />
+            </Button>
+          </div>
         </div>
       </div>
 
+      <EditPresentationNameDialog
+        open={editDialogOpen}
+        onOpenChange={setEditDialogOpen}
+        currentName={presentation.name}
+        onSave={handleConfirmEdit}
+      />
       <DeleteConfirmationDialog
         open={deleteDialogOpen}
         onOpenChange={setDeleteDialogOpen}

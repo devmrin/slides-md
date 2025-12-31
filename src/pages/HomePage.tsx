@@ -110,6 +110,23 @@ export function HomePage() {
     }
   };
 
+  const handleEdit = async (id: string, newName: string) => {
+    try {
+      const presentation = await db.getPresentation(id);
+      if (presentation) {
+        await db.savePresentation({
+          id,
+          name: newName,
+          markdown: presentation.markdown,
+        });
+        await loadPresentations();
+      }
+    } catch (error) {
+      console.error("Error updating presentation name:", error);
+      alert("Failed to update presentation name");
+    }
+  };
+
   const handleDelete = async (id: string) => {
     try {
       await db.deletePresentation(id);
@@ -222,6 +239,7 @@ export function HomePage() {
                   key={pres.id}
                   presentation={pres}
                   onDelete={handleDelete}
+                  onEdit={handleEdit}
                 />
               ))}
             </div>
@@ -230,6 +248,7 @@ export function HomePage() {
               <PresentationsTable
                 presentations={presentations}
                 onDelete={handleDelete}
+                onEdit={handleEdit}
               />
             </div>
           )}
