@@ -1,8 +1,55 @@
 import * as Dialog from "@radix-ui/react-dialog";
-import { X } from "lucide-react";
+import { X, Copy, Check } from "lucide-react";
+import { useState } from "react";
 import { Button } from "./Button";
 
 export function GettingStartedModal() {
+  const [copied, setCopied] = useState(false);
+
+  const llmPrompt = `FORMAT CONTRACT (slides.md)
+
+1. Output type
+Respond with a single text document for slides.md.
+
+2. Frontmatter
+Start with:
+  ===/===
+  title: ...
+  date: YYYY-MM-DD
+  presenter: ...
+  description: ...
+  ===/===
+
+3. Slide separation
+Separate slides with a line containing exactly:
+  ===
+
+4. Code fences
+Use TRIPLE backticks for code blocks:
+  \`\`\`lang
+  code...
+  \`\`\`
+Inline code uses single backticks: \`like this\`
+
+5. Allowed Markdown
+Headings (#, ##, ###), lists, blockquotes, checkboxes
+
+6. No extra commentary
+Output only the deck content.
+
+---
+[INSERT YOUR TOPIC OR CONTENT HERE]`;
+
+  const handleCopy = async () => {
+    try {
+      await navigator.clipboard.writeText(llmPrompt);
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2000);
+    } catch (err) {
+      console.error("Failed to copy:", err);
+    }
+  };
+
   return (
     <Dialog.Root>
       <Dialog.Trigger asChild>
@@ -38,7 +85,9 @@ export function GettingStartedModal() {
                   Overview
                 </h2>
                 <p className="leading-relaxed">
-                  slides.md turns Markdown into presentations. Add optional frontmatter for metadata, separate slides with <code className="px-1.5 py-0.5 bg-gray-100 dark:bg-gray-700 rounded text-xs font-mono">===</code>, and you're done.
+                  slides.md turns markdown into presentations.
+                  <br />
+                  add optional frontmatter for metadata, separate slides with <code className="px-1.5 py-0.5 bg-gray-100 dark:bg-gray-700 rounded text-xs font-mono">===</code>, and you're done.
                 </p>
               </section>
 
@@ -48,7 +97,7 @@ export function GettingStartedModal() {
                   Frontmatter (Optional)
                 </h2>
                 <p className="leading-relaxed">
-                  Add metadata at the top of your file using the <code className="px-1.5 py-0.5 bg-gray-100 dark:bg-gray-700 rounded text-xs font-mono">===/===</code> delimiter:
+                  add metadata at the top of your file using the <code className="px-1.5 py-0.5 bg-gray-100 dark:bg-gray-700 rounded text-xs font-mono">===/===</code> delimiter:
                 </p>
 
                 <div className="mt-3 p-4 bg-gray-900 dark:bg-gray-950 rounded-lg text-xs overflow-x-auto border border-gray-700 dark:border-gray-600 font-mono text-gray-100 dark:text-gray-200 whitespace-pre">
@@ -59,6 +108,10 @@ presenter: Your Name
 description: A brief summary
 ===/===`}
                 </div>
+
+                <p className="leading-relaxed">
+                  this adds a title slide to your presentation.
+                </p>
               </section>
 
               {/* Slide Separation */}
@@ -67,7 +120,7 @@ description: A brief summary
                   Slide Separation
                 </h2>
                 <p className="leading-relaxed">
-                  Use <code className="px-1.5 py-0.5 bg-gray-100 dark:bg-gray-700 rounded text-xs font-mono">===</code> on its own line to separate slides:
+                  use <code className="px-1.5 py-0.5 bg-gray-100 dark:bg-gray-700 rounded text-xs font-mono">===</code> delimiter in content to separate slides:
                 </p>
 
                 <div className="mt-3 p-4 bg-gray-900 dark:bg-gray-950 rounded-lg text-xs overflow-x-auto border border-gray-700 dark:border-gray-600 font-mono text-gray-100 dark:text-gray-200 whitespace-pre">
@@ -86,9 +139,9 @@ More content`}
                 <h2 className="text-xl font-semibold mb-3 text-gray-900 dark:text-gray-100">
                   Supported Markdown
                 </h2>
-                <ul className="text-sm list-disc list-inside space-y-1 ml-4 text-gray-700 dark:text-gray-300">
-                  <li>Headings, lists, blockquotes</li>
-                  <li>Fenced code blocks with syntax highlighting</li>
+                <ul className="list-disc list-inside space-y-1 ml-4 text-gray-700 dark:text-gray-300">
+                  <li>headings, lists, blockquotes</li>
+                  <li>fenced code blocks with syntax highlighting</li>
                 </ul>
               </section>
 
@@ -98,7 +151,7 @@ More content`}
                   Presenting
                 </h2>
                 <p className="leading-relaxed">
-                  Click "Present" to enter fullscreen. Use arrow keys or on-screen controls to navigate.
+                  click "Present" to enter fullscreen. use arrow keys or on-screen controls to navigate.
                 </p>
               </section>
 
@@ -107,24 +160,48 @@ More content`}
                 <h2 className="text-xl font-semibold mb-3 text-gray-900 dark:text-gray-100">
                   Keyboard Shortcuts
                 </h2>
-                <ul className="text-sm list-disc list-inside space-y-2 ml-4 text-gray-700 dark:text-gray-300">
-                  <li className="flex items-center gap-2">
-                    <kbd className="px-2 py-1 bg-gray-100 dark:bg-gray-700 rounded text-xs border border-gray-300 dark:border-gray-600 text-gray-800 dark:text-gray-200 font-mono font-medium">F</kbd>
-                    <span>Toggle fullscreen</span>
-                  </li>
-                  <li className="flex items-center gap-2">
-                    <kbd className="px-2 py-1 bg-gray-100 dark:bg-gray-700 rounded text-xs border border-gray-300 dark:border-gray-600 text-gray-800 dark:text-gray-200 font-mono font-medium">→</kbd>
-                    <span>Next slide</span>
-                  </li>
-                  <li className="flex items-center gap-2">
-                    <kbd className="px-2 py-1 bg-gray-100 dark:bg-gray-700 rounded text-xs border border-gray-300 dark:border-gray-600 text-gray-800 dark:text-gray-200 font-mono font-medium">←</kbd>
-                    <span>Previous slide</span>
-                  </li>
-                  <li className="flex items-center gap-2">
-                    <kbd className="px-2 py-1 bg-gray-100 dark:bg-gray-700 rounded text-xs border border-gray-300 dark:border-gray-600 text-gray-800 dark:text-gray-200 font-mono font-medium">^T</kbd>
-                    <span>Toggle dark mode</span>
-                  </li>
-                </ul>
+
+                <div className="space-y-4">
+                  <div>
+                    <h3 className="text-sm font-semibold mb-2 text-gray-900 dark:text-gray-100">
+                      standard view
+                    </h3>
+                    <ul className="text-sm list-disc list-inside space-y-2 ml-4 text-gray-700 dark:text-gray-300">
+                      <li className="flex items-center gap-2">
+                        <kbd className="px-2 py-1 bg-gray-100 dark:bg-gray-700 rounded text-xs border border-gray-300 dark:border-gray-600 text-gray-800 dark:text-gray-200 font-mono font-medium">⌘↵</kbd>
+                        <span>present (fullscreen)</span>
+                      </li>
+                      <li className="flex items-center gap-2">
+                        <kbd className="px-2 py-1 bg-gray-100 dark:bg-gray-700 rounded text-xs border border-gray-300 dark:border-gray-600 text-gray-800 dark:text-gray-200 font-mono font-medium">^T</kbd>
+                        <span>toggle dark mode</span>
+                      </li>
+                    </ul>
+                  </div>
+
+                  <div>
+                    <h3 className="text-sm font-semibold mb-2 text-gray-900 dark:text-gray-100">
+                      presentation view
+                    </h3>
+                    <ul className="text-sm list-disc list-inside space-y-2 ml-4 text-gray-700 dark:text-gray-300">
+                      <li className="flex items-center gap-2">
+                        <kbd className="px-2 py-1 bg-gray-100 dark:bg-gray-700 rounded text-xs border border-gray-300 dark:border-gray-600 text-gray-800 dark:text-gray-200 font-mono font-medium">→</kbd>
+                        <span>next slide</span>
+                      </li>
+                      <li className="flex items-center gap-2">
+                        <kbd className="px-2 py-1 bg-gray-100 dark:bg-gray-700 rounded text-xs border border-gray-300 dark:border-gray-600 text-gray-800 dark:text-gray-200 font-mono font-medium">←</kbd>
+                        <span>previous slide</span>
+                      </li>
+                      <li className="flex items-center gap-2">
+                        <kbd className="px-2 py-1 bg-gray-100 dark:bg-gray-700 rounded text-xs border border-gray-300 dark:border-gray-600 text-gray-800 dark:text-gray-200 font-mono font-medium">T</kbd>
+                        <span>toggle theme</span>
+                      </li>
+                      <li className="flex items-center gap-2">
+                        <kbd className="px-2 py-1 bg-gray-100 dark:bg-gray-700 rounded text-xs border border-gray-300 dark:border-gray-600 text-gray-800 dark:text-gray-200 font-mono font-medium">R</kbd>
+                        <span>reset deck</span>
+                      </li>
+                    </ul>
+                  </div>
+                </div>
               </section>
 
               {/* LLM Prompt */}
@@ -133,43 +210,23 @@ More content`}
                   LLM Prompt
                 </h2>
                 <p className="leading-relaxed mb-3">
-                  Use this prompt to generate slides.md-compatible presentations:
+                  use this prompt to generate slides.md-compatible presentations:
                 </p>
 
-                <div className="bg-gray-900 dark:bg-gray-950 rounded-lg p-4 border border-gray-700 dark:border-gray-600 text-sm font-mono text-gray-100 dark:text-gray-200 whitespace-pre-wrap">
-                  {`FORMAT CONTRACT (slides.md)
-
-1. Output type
-Respond with a single text document for slides.md.
-
-2. Frontmatter
-Start with:
-  ===/===
-  title: ...
-  date: YYYY-MM-DD
-  presenter: ...
-  description: ...
-  ===/===
-
-3. Slide separation
-Separate slides with a line containing exactly:
-  ===
-
-4. Code fences (IMPORTANT)
-Use DOUBLE backticks for code blocks:
-  \`\`lang
-  code...
-  \`\`
-Inline code uses single backticks: \`like this\`
-
-5. Allowed Markdown
-Headings (#, ##, ###), lists, blockquotes.
-
-6. No extra commentary
-Output only the deck content.
-
----
-[INSERT YOUR TOPIC OR CONTENT HERE]`}
+                <div className="relative bg-gray-900 dark:bg-gray-950 rounded-lg p-4 border border-gray-700 dark:border-gray-600 text-sm font-mono text-gray-100 dark:text-gray-200 whitespace-pre-wrap">
+                  <button
+                    onClick={handleCopy}
+                    className="absolute top-3 right-3 p-2 rounded-md text-gray-400 hover:text-gray-100 dark:hover:text-gray-200 hover:bg-gray-800 dark:hover:bg-gray-900 transition-colors"
+                    aria-label="Copy prompt to clipboard"
+                    type="button"
+                  >
+                    {copied ? (
+                      <Check className="w-4 h-4" />
+                    ) : (
+                      <Copy className="w-4 h-4" />
+                    )}
+                  </button>
+                  {llmPrompt}
                 </div>
               </section>
             </div>
