@@ -42,11 +42,6 @@ export function useKeyboardNavigation({
       if ((e.metaKey || e.ctrlKey) && e.key === "Enter") {
         setIsFullscreen(true);
       }
-      // Command+T to toggle theme (prevent browser default)
-      if ((e.metaKey || e.ctrlKey) && (e.key === "t" || e.key === "T")) {
-        e.preventDefault();
-        setIsDark((d) => !d);
-      }
       // ESC to exit fullscreen modes
       if (e.key === "Escape") {
         if (isFullscreen) {
