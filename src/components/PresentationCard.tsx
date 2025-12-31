@@ -1,7 +1,6 @@
 import { useState } from "react";
 import { useNavigate } from "@tanstack/react-router";
 import { Trash2 } from "lucide-react";
-import { format } from "date-fns";
 import { Slide } from "./Slide";
 import { useSlides } from "../hooks/useSlides";
 import { Button } from "../ui/Button";
@@ -32,8 +31,6 @@ export function PresentationCard({ presentation, onDelete }: PresentationCardPro
     onDelete(presentation.id);
   };
 
-  const formattedDate = format(new Date(presentation.updatedAt), "MMM d, yyyy");
-
   return (
     <div
       className="bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-700 rounded-lg overflow-hidden cursor-pointer hover:shadow-lg transition-shadow"
@@ -51,8 +48,8 @@ export function PresentationCard({ presentation, onDelete }: PresentationCardPro
       </div>
 
       {/* Card content */}
-      <div className="p-4">
-        <div className="flex items-start justify-between gap-2 mb-2">
+      <div className="p-3">
+        <div className="flex items-center justify-between gap-2">
           <h3 className="font-semibold text-gray-900 dark:text-gray-100 truncate flex-1">
             {presentation.name}
           </h3>
@@ -64,7 +61,6 @@ export function PresentationCard({ presentation, onDelete }: PresentationCardPro
             <Trash2 className="w-4 h-4" />
           </Button>
         </div>
-        <p className="text-xs text-gray-500 dark:text-gray-400">{formattedDate}</p>
       </div>
 
       <DeleteConfirmationDialog
