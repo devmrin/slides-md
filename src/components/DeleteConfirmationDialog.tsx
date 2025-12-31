@@ -38,6 +38,9 @@ export function DeleteConfirmationDialog({
             <Dialog.Title className="text-lg font-bold mb-4 text-gray-900 dark:text-gray-100 pr-12">
               Delete Presentation
             </Dialog.Title>
+            <Dialog.Description className="sr-only">
+              Confirm deletion of the presentation. This action cannot be undone.
+            </Dialog.Description>
 
             <div className="mb-6">
               <p className="text-sm text-gray-700 dark:text-gray-300">

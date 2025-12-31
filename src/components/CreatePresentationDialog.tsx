@@ -71,6 +71,9 @@ export function CreatePresentationDialog({
             <Dialog.Title className="text-lg font-bold mb-4 text-gray-900 dark:text-gray-100 pr-12">
               Create New Presentation
             </Dialog.Title>
+            <Dialog.Description className="sr-only">
+              Enter a name for your new presentation
+            </Dialog.Description>
 
             <form onSubmit={handleSubmit}>
               <div className="mb-4">

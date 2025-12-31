@@ -69,6 +69,9 @@ export function EditPresentationNameDialog({
             <Dialog.Title className="text-2xl font-bold mb-4 text-gray-900 dark:text-gray-100 pr-12">
               Edit Presentation Name
             </Dialog.Title>
+            <Dialog.Description className="sr-only">
+              Update the name of your presentation
+            </Dialog.Description>
 
             <form onSubmit={handleSubmit}>
               <div className="mb-4">

@@ -95,6 +95,9 @@ presenter: My team
             <Dialog.Title className="text-2xl font-bold mb-6 text-gray-900 dark:text-gray-100 pr-12 sm:pr-16">
               Overview
             </Dialog.Title>
+            <Dialog.Description className="sr-only">
+              Guide on how to use slides.md to create and present markdown presentations
+            </Dialog.Description>
 
             <div className="space-y-6 text-gray-700 dark:text-gray-300">
 
