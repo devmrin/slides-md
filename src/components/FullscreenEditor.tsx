@@ -1,9 +1,9 @@
 import { useRef, useEffect, useState } from "react";
 import MonacoEditor from "@monaco-editor/react";
-import { format } from "date-fns";
-import { Trash2, Check } from "lucide-react";
+import { Trash2, Check, FilePlus } from "lucide-react";
 import { Button } from "../ui/Button";
 import { useFullscreen } from "../hooks/useFullscreen";
+import { getSamplePresentationMarkdown } from "../utils/samplePresentation";
 
 interface FullscreenEditorProps {
   markdown: string;
@@ -19,7 +19,7 @@ interface FullscreenEditorProps {
 export function FullscreenEditor({
   markdown,
   setMarkdown,
-  setCurrentSlide: _setCurrentSlide, // eslint-disable-line @typescript-eslint/no-unused-vars
+  setCurrentSlide,
   onClear,
   onCopy,
   setIsEditorFullscreen,
@@ -29,19 +29,14 @@ export function FullscreenEditor({
   const containerRef = useRef<HTMLDivElement>(null);
   const hasRequestedFullscreen = useRef(false);
   const { requestFullscreenOnly } = useFullscreen(containerRef, isEditorFullscreen, setIsEditorFullscreen);
-  const [isSampleCopied, setIsSampleCopied] = useState(false);
+  const [isSampleInserted, setIsSampleInserted] = useState(false);
 
-  const handleCopySampleFrontmatter = () => {
-    const sampleFrontmatter = `@@@
-title: Sample presentation
-description: Add presentation description
-date: ${format(new Date(), "yyyyMMdd")}
-presenter: My team
-@@@
-`;
-    navigator.clipboard.writeText(sampleFrontmatter);
-    setIsSampleCopied(true);
-    setTimeout(() => setIsSampleCopied(false), 2000);
+  const handleInsertSamplePresentation = () => {
+    const sampleMarkdown = getSamplePresentationMarkdown();
+    setMarkdown(sampleMarkdown);
+    setCurrentSlide(0);
+    setIsSampleInserted(true);
+    setTimeout(() => setIsSampleInserted(false), 2000);
   };
 
   // Request fullscreen when component mounts with isEditorFullscreen=true
@@ -69,11 +64,13 @@ presenter: My team
         <div className="flex gap-2 pb-3 sm:pb-4">
           <Button
             btnType="secondary"
-            className="px-3 py-1.5 sm:py-1 text-sm touch-manipulation"
-            onClick={handleCopySampleFrontmatter}
+            className="px-3 py-1.5 sm:py-1 text-sm touch-manipulation flex items-center gap-1.5"
+            onClick={handleInsertSamplePresentation}
           >
-            Copy <span className="ml-1 text-xs opacity-70 hidden sm:inline">Sample Frontmatter</span>
-            {isSampleCopied && <Check className="w-3.5 h-3.5 ml-1" />}
+            <FilePlus className="w-4 h-4" />
+            <span className="hidden sm:inline">Insert Sample Presentation</span>
+            <span className="sm:hidden">Insert Sample</span>
+            {isSampleInserted && <Check className="w-3.5 h-3.5 ml-1" />}
           </Button>
           <Button
             btnType="secondary"
