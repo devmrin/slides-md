@@ -5,7 +5,7 @@ import { Plus, Grid3x3, List } from "lucide-react";
 import { AppHeader } from "../components/AppHeader";
 import { CreatePresentationDialog } from "../components/CreatePresentationDialog";
 import { PresentationCard } from "../components/PresentationCard";
-import { PresentationListItem } from "../components/PresentationListItem";
+import { PresentationsTable } from "../components/PresentationsTable";
 import { Button } from "../ui/Button";
 import { db } from "../db";
 import { generateUUID } from "../utils/uuid";
@@ -164,14 +164,11 @@ export function HomePage() {
                 ))}
               </div>
             ) : (
-              <div className="space-y-3 max-w-4xl">
-                {presentations.map((pres) => (
-                  <PresentationListItem
-                    key={pres.id}
-                    presentation={pres}
-                    onDelete={handleDelete}
-                  />
-                ))}
+              <div className="max-w-full">
+                <PresentationsTable
+                  presentations={presentations}
+                  onDelete={handleDelete}
+                />
               </div>
             )}
           </div>

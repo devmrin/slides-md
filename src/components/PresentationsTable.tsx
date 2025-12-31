@@ -1,0 +1,187 @@
+import { useMemo, useState } from "react";
+import { useNavigate } from "@tanstack/react-router";
+import { Trash2 } from "lucide-react";
+import { format } from "date-fns";
+import {
+  useReactTable,
+  getCoreRowModel,
+  type ColumnDef,
+  flexRender,
+} from "@tanstack/react-table";
+import { Slide } from "./Slide";
+import { useSlides } from "../hooks/useSlides";
+import { Button } from "../ui/Button";
+import { DeleteConfirmationDialog } from "./DeleteConfirmationDialog";
+import type { Presentation } from "../db/adapter";
+
+interface PresentationsTableProps {
+  presentations: Presentation[];
+  onDelete: (id: string) => void;
+}
+
+function PreviewCell({ presentation }: { presentation: Presentation }) {
+  const { frontmatter, slides } = useSlides(presentation.markdown);
+  const firstSlide = slides[0] || "";
+
+  return (
+    <div className="w-32 h-20 bg-gray-100 dark:bg-gray-900 flex items-center justify-center overflow-hidden rounded">
+      <div className="standard-view-slide scale-[0.15] origin-center w-[667%] h-[667%] pointer-events-none">
+        <Slide
+          slide={firstSlide}
+          isTitle={firstSlide === "__TITLE_SLIDE__"}
+          frontmatter={frontmatter}
+        />
+      </div>
+    </div>
+  );
+}
+
+export function PresentationsTable({ presentations, onDelete }: PresentationsTableProps) {
+  const navigate = useNavigate();
+  const [deleteDialogOpen, setDeleteDialogOpen] = useState<string | null>(null);
+  const [deleteTarget, setDeleteTarget] = useState<Presentation | null>(null);
+
+  const handleRowClick = (presentation: Presentation) => {
+    navigate({ to: "/presentation/$id", params: { id: presentation.id } });
+  };
+
+  const handleDeleteClick = (e: React.MouseEvent, presentation: Presentation) => {
+    e.stopPropagation();
+    setDeleteTarget(presentation);
+    setDeleteDialogOpen(presentation.id);
+  };
+
+  const handleConfirmDelete = () => {
+    if (deleteTarget) {
+      onDelete(deleteTarget.id);
+      setDeleteTarget(null);
+      setDeleteDialogOpen(null);
+    }
+  };
+
+  const columns = useMemo<ColumnDef<Presentation>[]>(
+    () => [
+      {
+        id: "preview",
+        header: "Preview",
+        cell: ({ row }) => <PreviewCell presentation={row.original} />,
+      },
+      {
+        id: "name",
+        header: "Name",
+        accessorKey: "name",
+        cell: ({ getValue }) => (
+          <div className="font-semibold text-gray-900 dark:text-gray-100">
+            {getValue() as string}
+          </div>
+        ),
+      },
+      {
+        id: "updatedAt",
+        header: "Updated At",
+        accessorFn: (row) => row.updatedAt,
+        cell: ({ getValue }) => {
+          const timestamp = getValue() as number;
+          return (
+            <div className="text-sm text-gray-500 dark:text-gray-400">
+              {format(new Date(timestamp), "MMM d, yyyy")}
+            </div>
+          );
+        },
+      },
+      {
+        id: "delete",
+        header: "",
+        cell: ({ row }) => {
+          const presentation = row.original;
+          return (
+            <div className="w-16 flex justify-end">
+              <Button
+                onClick={(e) => handleDeleteClick(e, presentation)}
+                className="p-1.5 text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700 rounded shrink-0"
+                title="Delete presentation"
+              >
+                <Trash2 className="w-4 h-4" />
+              </Button>
+            </div>
+          );
+        },
+        size: 64,
+        minSize: 64,
+        maxSize: 64,
+      },
+    ],
+    []
+  );
+
+  // eslint-disable-next-line react-hooks/incompatible-library
+  const table = useReactTable({
+    data: presentations,
+    columns,
+    getCoreRowModel: getCoreRowModel(),
+  });
+
+  return (
+    <>
+      <div className="overflow-x-auto">
+        <table className="w-full border-collapse">
+          <thead>
+            {table.getHeaderGroups().map((headerGroup) => (
+              <tr key={headerGroup.id} className="border-b border-gray-300 dark:border-gray-700">
+                {headerGroup.headers.map((header) => (
+                  <th
+                    key={header.id}
+                    className="px-4 py-3 text-left text-xs font-semibold text-gray-600 dark:text-gray-400 uppercase tracking-wider bg-white dark:bg-gray-800"
+                    style={{
+                      width: header.id === "delete" ? 64 : undefined,
+                    }}
+                  >
+                    {header.isPlaceholder
+                      ? null
+                      : flexRender(header.column.columnDef.header, header.getContext())}
+                  </th>
+                ))}
+              </tr>
+            ))}
+          </thead>
+          <tbody>
+            {table.getRowModel().rows.map((row) => (
+              <tr
+                key={row.id}
+                className="border-b border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 hover:bg-gray-50 dark:hover:bg-gray-700/50 cursor-pointer transition-colors"
+                onClick={() => handleRowClick(row.original)}
+              >
+                {row.getVisibleCells().map((cell) => (
+                  <td
+                    key={cell.id}
+                    className="px-4 py-3"
+                    style={{
+                      width: cell.column.id === "delete" ? 64 : undefined,
+                    }}
+                  >
+                    {flexRender(cell.column.columnDef.cell, cell.getContext())}
+                  </td>
+                ))}
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+
+      {deleteTarget && (
+        <DeleteConfirmationDialog
+          open={deleteDialogOpen === deleteTarget.id}
+          onOpenChange={(open) => {
+            if (!open) {
+              setDeleteDialogOpen(null);
+              setDeleteTarget(null);
+            }
+          }}
+          onConfirm={handleConfirmDelete}
+          presentationName={deleteTarget.name}
+        />
+      )}
+    </>
+  );
+}
+
