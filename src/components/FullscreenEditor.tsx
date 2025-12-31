@@ -17,7 +17,7 @@ interface FullscreenEditorProps {
 export function FullscreenEditor({
   markdown,
   setMarkdown,
-  setCurrentSlide: _setCurrentSlide,
+  setCurrentSlide: _setCurrentSlide, // eslint-disable-line @typescript-eslint/no-unused-vars
   onClear,
   onCopy,
   setIsEditorFullscreen,

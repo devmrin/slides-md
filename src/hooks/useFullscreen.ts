@@ -1,37 +1,56 @@
 import { useCallback, useEffect, type RefObject } from "react";
 
+// Type definitions for vendor-prefixed fullscreen APIs
+interface DocumentWithVendorPrefixes extends Document {
+  webkitFullscreenElement?: Element | null;
+  mozFullScreenElement?: Element | null;
+  msFullscreenElement?: Element | null;
+  webkitExitFullscreen?: () => Promise<void>;
+  mozCancelFullScreen?: () => Promise<void>;
+  msExitFullscreen?: () => Promise<void>;
+}
+
+interface HTMLElementWithVendorPrefixes extends HTMLElement {
+  webkitRequestFullscreen?: () => Promise<void>;
+  mozRequestFullScreen?: () => Promise<void>;
+  msRequestFullscreen?: () => Promise<void>;
+}
+
 // Helper functions for vendor-prefixed fullscreen API
 const getFullscreenElement = () => {
+  const doc = document as DocumentWithVendorPrefixes;
   return (
     document.fullscreenElement ||
-    (document as any).webkitFullscreenElement ||
-    (document as any).mozFullScreenElement ||
-    (document as any).msFullscreenElement
+    doc.webkitFullscreenElement ||
+    doc.mozFullScreenElement ||
+    doc.msFullscreenElement
   );
 };
 
 const requestFullscreen = (element: HTMLElement) => {
+  const el = element as HTMLElementWithVendorPrefixes;
   if (element.requestFullscreen) {
     return element.requestFullscreen();
-  } else if ((element as any).webkitRequestFullscreen) {
-    return (element as any).webkitRequestFullscreen();
-  } else if ((element as any).mozRequestFullScreen) {
-    return (element as any).mozRequestFullScreen();
-  } else if ((element as any).msRequestFullscreen) {
-    return (element as any).msRequestFullscreen();
+  } else if (el.webkitRequestFullscreen) {
+    return el.webkitRequestFullscreen();
+  } else if (el.mozRequestFullScreen) {
+    return el.mozRequestFullScreen();
+  } else if (el.msRequestFullscreen) {
+    return el.msRequestFullscreen();
   }
   return Promise.reject(new Error("Fullscreen API not supported"));
 };
 
 const exitFullscreen = () => {
+  const doc = document as DocumentWithVendorPrefixes;
   if (document.exitFullscreen) {
     return document.exitFullscreen();
-  } else if ((document as any).webkitExitFullscreen) {
-    return (document as any).webkitExitFullscreen();
-  } else if ((document as any).mozCancelFullScreen) {
-    return (document as any).mozCancelFullScreen();
-  } else if ((document as any).msExitFullscreen) {
-    return (document as any).msExitFullscreen();
+  } else if (doc.webkitExitFullscreen) {
+    return doc.webkitExitFullscreen();
+  } else if (doc.mozCancelFullScreen) {
+    return doc.mozCancelFullScreen();
+  } else if (doc.msExitFullscreen) {
+    return doc.msExitFullscreen();
   }
   return Promise.reject(new Error("Fullscreen API not supported"));
 };
