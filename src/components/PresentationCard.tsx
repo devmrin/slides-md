@@ -36,7 +36,7 @@ export function PresentationCard({ presentation, onDelete }: PresentationCardPro
     >
       {/* Thumbnail preview */}
       <div className="w-full h-[150px] bg-gray-100 dark:bg-gray-900 flex items-center justify-center p-4 overflow-hidden">
-        <div className="scale-[0.3] origin-top-left w-[333%] h-[333%] pointer-events-none">
+        <div className="standard-view-slide scale-[0.3] origin-center w-[333%] h-[333%] pointer-events-none">
           <Slide
             slide={firstSlide}
             isTitle={firstSlide === "__TITLE_SLIDE__"}
@@ -53,7 +53,7 @@ export function PresentationCard({ presentation, onDelete }: PresentationCardPro
           </h3>
           <Button
             onClick={handleDelete}
-            className="p-1.5 text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/20 rounded flex-shrink-0"
+            className="p-1.5 text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/20 rounded shrink-0"
             title="Delete presentation"
           >
             <Trash2 className="w-4 h-4" />
