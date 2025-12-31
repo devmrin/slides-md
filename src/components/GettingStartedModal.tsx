@@ -107,13 +107,24 @@ presenter: My team
                 </p>
               </section>
 
+              {/* Multiple Presentations */}
+              <section>
+                <h2 className="text-xl font-semibold mb-3 text-gray-900 dark:text-gray-100">
+                  Multiple Presentations
+                </h2>
+                <p className="leading-relaxed">
+                  create and manage multiple presentations from the home page. click "New Presentation" or press <kbd className="px-2 py-1 bg-gray-100 dark:bg-gray-700 rounded text-xs border border-gray-300 dark:border-gray-600 text-gray-800 dark:text-gray-200 font-mono font-medium">^N</kbd> to create a new deck.</p>
+              </section>
+
+
+
               {/* Frontmatter */}
               <section>
                 <h2 className="text-xl font-semibold mb-3 text-gray-900 dark:text-gray-100">
                   Frontmatter (Optional)
                 </h2>
                 <p className="leading-relaxed">
-                  add metadata at the top of your file using the <code className="px-1.5 py-0.5 bg-gray-100 dark:bg-gray-700 rounded text-xs font-mono">@@@</code> delimiter:
+                  add metadata at the beginning of your editor using the <code className="px-1.5 py-0.5 bg-gray-100 dark:bg-gray-700 rounded text-xs font-mono">@@@</code> delimiter:
                 </p>
 
                 <div className="relative mt-3 p-4 bg-gray-900 dark:bg-gray-950 rounded-lg text-xs overflow-x-auto border border-gray-700 dark:border-gray-600 font-mono text-gray-100 dark:text-gray-200 whitespace-pre">
