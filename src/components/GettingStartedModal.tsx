@@ -74,18 +74,15 @@ Output only the deck content.
               </Button>
             </Dialog.Close>
             <Dialog.Title className="text-2xl font-bold mb-6 text-gray-900 dark:text-gray-100 pr-12 sm:pr-16">
-              Getting Started with slides.md
+              Overview
             </Dialog.Title>
 
             <div className="space-y-6 text-gray-700 dark:text-gray-300">
 
               {/* Overview */}
               <section>
-                <h2 className="text-xl font-semibold mb-3 text-gray-900 dark:text-gray-100">
-                  Overview
-                </h2>
                 <p className="leading-relaxed">
-                  slides.md turns markdown into presentations.
+                  <span className="font-bold">✱ slides.md</span> turns markdown into presentations.
                   <br />
                   add optional frontmatter for metadata, separate slides with <code className="px-1.5 py-0.5 bg-gray-100 dark:bg-gray-700 rounded text-xs font-mono">===</code>, and you're done.
                 </p>
