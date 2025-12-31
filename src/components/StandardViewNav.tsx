@@ -1,7 +1,7 @@
 import { useNavigate } from "@tanstack/react-router";
-import * as Switch from "@radix-ui/react-switch";
 import { ArrowLeft, Pencil } from "lucide-react";
 import { Button } from "../ui/Button";
+import { Switch } from "../ui/Switch";
 
 interface StandardViewNavProps {
   presentationName?: string;
@@ -51,14 +51,11 @@ export function StandardViewNav({
           <label className="text-xs text-gray-600 dark:text-gray-400" htmlFor="editor-toggle">
             Show Editor
           </label>
-          <Switch.Root
+          <Switch
             id="editor-toggle"
             checked={isEditorExpanded}
             onCheckedChange={onToggleEditorExpand}
-            className="w-11 h-6 bg-gray-300 dark:bg-gray-600 rounded-full relative data-[state=checked]:bg-blue-600 dark:data-[state=checked]:bg-blue-500 outline-none cursor-pointer"
-          >
-            <Switch.Thumb className="block w-5 h-5 bg-white rounded-full shadow-sm transition-transform duration-100 translate-x-0.5 will-change-transform data-[state=checked]:translate-x-[22px]" />
-          </Switch.Root>
+          />
         </div>
       </div>
     </div>

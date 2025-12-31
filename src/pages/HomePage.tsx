@@ -1,12 +1,12 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "@tanstack/react-router";
-import * as Switch from "@radix-ui/react-switch";
 import { Plus, Grid3x3, List } from "lucide-react";
 import { AppHeader } from "../components/AppHeader";
 import { CreatePresentationDialog } from "../components/CreatePresentationDialog";
 import { PresentationCard } from "../components/PresentationCard";
 import { PresentationsTable } from "../components/PresentationsTable";
 import { Button } from "../ui/Button";
+import { Switch } from "../ui/Switch";
 import { db } from "../db";
 import { generateUUID } from "../utils/uuid";
 import { MAX_PRESENTATIONS } from "../config/constants";
@@ -127,13 +127,10 @@ export function HomePage() {
           {/* View mode toggle */}
           <div className="flex items-center gap-2">
             <Grid3x3 className="w-4 h-4 text-gray-600 dark:text-gray-400" />
-            <Switch.Root
+            <Switch
               checked={viewMode === "list"}
               onCheckedChange={(checked) => setViewMode(checked ? "list" : "gallery")}
-              className="w-11 h-6 bg-gray-300 dark:bg-gray-600 rounded-full relative data-[state=checked]:bg-blue-600 dark:data-[state=checked]:bg-blue-500 outline-none cursor-pointer"
-            >
-              <Switch.Thumb className="block w-5 h-5 bg-white rounded-full shadow-sm transition-transform duration-100 translate-x-0.5 will-change-transform data-[state=checked]:translate-x-[22px]" />
-            </Switch.Root>
+            />
             <List className="w-4 h-4 text-gray-600 dark:text-gray-400" />
           </div>
         </div>
