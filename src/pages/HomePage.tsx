@@ -45,6 +45,33 @@ export function HomePage() {
     }
   }, [isDarkValue]);
 
+  // Keyboard shortcut: Command/Control+N to create new presentation
+  useEffect(() => {
+    const handler = (e: KeyboardEvent) => {
+      // Don't handle if user is typing in an input/textarea
+      const activeElement = document.activeElement;
+      const isEditing =
+        activeElement &&
+        (activeElement.tagName === "INPUT" ||
+          activeElement.tagName === "TEXTAREA" ||
+          activeElement.hasAttribute("contenteditable"));
+
+      if (isEditing) {
+        return; // Let the input handle the key
+      }
+
+      // Command+N or Control+N to create new presentation
+      if ((e.metaKey || e.ctrlKey) && (e.key === "n" || e.key === "N")) {
+        e.preventDefault();
+        if (presentations.length < MAX_PRESENTATIONS) {
+          setCreateDialogOpen(true);
+        }
+      }
+    };
+    window.addEventListener("keydown", handler);
+    return () => window.removeEventListener("keydown", handler);
+  }, [presentations.length]);
+
   const loadPresentations = async () => {
     try {
       setIsLoading(true);
@@ -115,7 +142,8 @@ export function HomePage() {
               className="px-3 py-1 text-xs sm:text-sm border rounded border-gray-400 dark:border-gray-600 text-gray-900 dark:text-gray-100 bg-white dark:bg-gray-900 hover:bg-gray-50 dark:hover:bg-gray-800 disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2"
             >
               <Plus className="w-4 h-4" />
-              New Presentation
+              <span className="hidden sm:inline">New Presentation (^N)</span>
+              <span className="sm:hidden">New Presentation</span>
             </Button>
             {presentations.length >= MAX_PRESENTATIONS && (
               <span className="text-sm text-gray-500 dark:text-gray-400">
