@@ -7,18 +7,20 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>slides.md</title>
   <script>
-    // Apply theme before React renders to prevent flash
+    // Apply theme before React renders to prevent FOUC/FOUT
+    // This script runs synchronously before any CSS or React code loads
     (function() {
       try {
         const stored = localStorage.getItem('slides-md-user-preferences');
         if (stored) {
           const prefs = JSON.parse(stored);
+          // Check if theme is set to dark mode
           if (prefs.theme === true) {
             document.documentElement.classList.add('dark');
           }
         }
       } catch (e) {
-        // Ignore errors
+        // Silently ignore errors (e.g., localStorage disabled, invalid JSON)
       }
     })();
   </script>

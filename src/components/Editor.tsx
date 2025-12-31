@@ -16,7 +16,7 @@ interface EditorProps {
 export function Editor({
   markdown,
   setMarkdown,
-  setCurrentSlide,
+  setCurrentSlide: _setCurrentSlide,
   onClear,
   onCopy,
   onToggleFullscreen,
