@@ -134,7 +134,7 @@ logo: https://example.com/logo.png
                 <div className="relative mt-3 p-4 bg-gray-900 dark:bg-gray-950 rounded-lg text-xs overflow-x-auto border border-gray-700 dark:border-gray-600 font-mono text-gray-100 dark:text-gray-200 whitespace-pre">
                   <Button
                     onClick={handleCopyFrontmatter}
-                    className="absolute top-3 right-3 p-2 text-gray-400 hover:text-gray-100 dark:hover:text-gray-200 hover:bg-gray-800 dark:hover:bg-gray-900"
+                    className="absolute top-3 right-3 p-2 text-gray-100 dark:text-gray-200 bg-gray-800 dark:bg-gray-900 hover:text-gray-100 dark:hover:text-gray-200 hover:bg-gray-800 dark:hover:bg-gray-900"
                     aria-label="Copy frontmatter to clipboard"
                     type="button"
                   >
@@ -154,7 +154,10 @@ logo: https://example.com/logo.png
                 </div>
 
                 <p className="leading-relaxed">
-                  this adds a title slide to your presentation. the <code className="px-1.5 py-0.5 bg-gray-100 dark:bg-gray-700 rounded text-xs font-mono">logo</code> field (optional) displays a logo in the bottom-left corner of slides.
+                  <br />
+                  this adds a title slide to your presentation.
+                  <br />
+                  the <code className="px-1.5 py-0.5 bg-gray-100 dark:bg-gray-700 rounded text-xs font-mono">logo</code> field (optional) displays a logo in the bottom-left corner of slides.
                 </p>
               </section>
 
@@ -265,7 +268,7 @@ More content`}
                 <div className="relative bg-gray-900 dark:bg-gray-950 rounded-lg p-4 border border-gray-700 dark:border-gray-600 text-sm font-mono text-gray-100 dark:text-gray-200 whitespace-pre-wrap">
                   <Button
                     onClick={handleCopy}
-                    className="absolute top-3 right-3 p-2 text-gray-400 hover:text-gray-100 dark:hover:text-gray-200 hover:bg-gray-800 dark:hover:bg-gray-900"
+                    className="absolute top-3 right-3 p-2 text-gray-100 dark:text-gray-200 bg-gray-800 dark:bg-gray-900 hover:text-gray-100 dark:hover:text-gray-200 hover:bg-gray-800 dark:hover:bg-gray-900"
                     aria-label="Copy prompt to clipboard"
                     type="button"
                   >
