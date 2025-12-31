@@ -3,6 +3,7 @@ title: React Server Components Architecture
 by: Engineering Team
 date: 2026-01-01
 description: An overview of React Server Components and their architectural implications
+logo: https://upload.wikimedia.org/wikipedia/commons/thumb/a/a7/React-icon.svg/1024px-React-icon.svg.png?20220125121207
 @@@
 
 # What Are React Server Components

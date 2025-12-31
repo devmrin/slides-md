@@ -79,7 +79,7 @@ export function StandardView({
           />
         </div>
         {/* Preview - visible on desktop always (1200px+), on mobile only when editor is collapsed */}
-        <div className={`${!isEditorExpanded ? "flex" : "hidden"} min-[1200px]:flex min-[1200px]:flex-1 w-full flex-col bg-white dark:bg-gray-900`}>
+        <div className={`${!isEditorExpanded ? "flex" : "hidden"} min-[1200px]:flex min-[1200px]:flex-1 w-full flex-col bg-white dark:bg-gray-900 relative`}>
           <div className="px-3 sm:px-4 py-2 border-b text-sm font-medium flex items-center justify-between gap-2 bg-gray-100 dark:bg-gray-800 text-gray-900 dark:text-gray-100 border-gray-300 dark:border-gray-700">
             <span>Preview</span>
             <div className="flex items-center gap-2">
@@ -117,13 +117,12 @@ export function StandardView({
               </DropdownMenu.Root>
             </div>
           </div>
-          <div className={`standard-view-slide flex-1 overflow-auto flex text-gray-900 dark:text-gray-100 ${
-            slides[currentSlide] === "__TITLE_SLIDE__"
-              ? "items-center justify-center p-4 sm:p-8 px-4 sm:px-8"
-              : imageOnlySlides.has(currentSlide)
+          <div className={`standard-view-slide flex-1 overflow-auto flex text-gray-900 dark:text-gray-100 ${slides[currentSlide] === "__TITLE_SLIDE__"
+            ? "items-center justify-center p-4 sm:p-8 px-4 sm:px-8"
+            : imageOnlySlides.has(currentSlide)
               ? "items-center justify-center p-0"
               : "pt-[25vh] pb-8 justify-center px-4 sm:px-8"
-          }`}>
+            }`}>
             <Slide
               slide={slides[currentSlide]}
               isTitle={slides[currentSlide] === "__TITLE_SLIDE__"}
@@ -140,6 +139,17 @@ export function StandardView({
             frontmatter={frontmatter}
             onToggleTheme={() => setIsDark(!isDark)}
           />
+          {/* Logo positioned relative to SlideNav container */}
+          {frontmatter?.logo && (
+            <img
+              src={frontmatter.logo}
+              alt="Logo"
+              className="presentation-logo absolute bottom-[94px] left-4 h-10 w-auto opacity-90 z-10 shadow-none"
+              onError={(e) => {
+                (e.target as HTMLImageElement).style.display = "none";
+              }}
+            />
+          )}
         </div>
       </div>
     </div>

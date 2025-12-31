@@ -85,8 +85,11 @@ This command verifies code quality by running ESLint and TypeScript type checkin
   title: My Talk Title
   presenter: Your Name
   description: Short description
+  logo: https://example.com/logo.png
   @@@
   ```
+  
+  The `logo` field (optional) displays a logo in the bottom-left corner of slides.
 * Enter presentation mode by selecting Present or pressing `Cmd/Ctrl+Enter`.
 * Navigate with the arrow keys. Press `R` to reset, `T` to toggle the theme, and `ESC` to exit presentation mode.
 

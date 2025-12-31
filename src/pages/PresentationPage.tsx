@@ -149,6 +149,11 @@ export function PresentationPage() {
     focusSlideInput,
   });
 
+  // Memoize the onFocusInputReady callback to prevent infinite loops
+  const handleFocusInputReady = useCallback((focusFn: () => void) => {
+    setFocusSlideInput(() => focusFn);
+  }, []);
+
   // Copy editor content
   const copyEditorContent = () => {
     navigator.clipboard.writeText(markdown).catch(() => {});
@@ -212,9 +217,7 @@ export function PresentationPage() {
         setIsDark={setIsDark}
         setCurrentSlide={setCurrentSlide}
         isFullscreen={isFullscreen}
-        onFocusInputReady={(focusFn) => {
-          setFocusSlideInput(() => focusFn);
-        }}
+        onFocusInputReady={handleFocusInputReady}
       />
     );
   }

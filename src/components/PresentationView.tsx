@@ -45,9 +45,9 @@ export function PresentationView({
 
   const isTitle = slides[currentSlide] === "__TITLE_SLIDE__";
   const isImageOnly = imageOnlySlides.has(currentSlide);
-  
+
   return (
-    <div 
+    <div
       ref={containerRef}
       className="fixed inset-0 flex flex-col bg-white dark:bg-gray-900 text-gray-900 dark:text-gray-100"
     >
@@ -74,14 +74,8 @@ export function PresentationView({
           </Button>
         </div>
       </div>
-      <div className="flex-1 overflow-y-auto overflow-x-hidden">
-        <div className={`presentation-view-slide flex ${
-          isTitle
-            ? "min-h-full items-center justify-center p-4 sm:p-12 px-4 sm:px-12"
-            : isImageOnly
-            ? "min-h-full items-center justify-center p-0"
-            : "pt-[25vh] pb-12 justify-center px-4 sm:px-12"
-        }`}>
+      {isImageOnly ? (
+        <div className={`presentation-view-slide flex-1 overflow-hidden flex items-center justify-center p-0`}>
           <Slide
             slide={slides[currentSlide]}
             isTitle={isTitle}
@@ -89,7 +83,21 @@ export function PresentationView({
             frontmatter={frontmatter}
           />
         </div>
-      </div>
+      ) : (
+        <div className="flex-1 overflow-y-auto overflow-x-hidden">
+          <div className={`presentation-view-slide flex ${isTitle
+            ? "min-h-full items-center justify-center p-4 sm:p-12 px-4 sm:px-12"
+            : "pt-[25vh] pb-12 justify-center px-4 sm:px-12"
+            }`}>
+            <Slide
+              slide={slides[currentSlide]}
+              isTitle={isTitle}
+              isImageOnly={isImageOnly}
+              frontmatter={frontmatter}
+            />
+          </div>
+        </div>
+      )}
       <Director
         currentSlide={currentSlide}
         slidesLength={slides.length}
@@ -102,6 +110,17 @@ export function PresentationView({
         onToggleTheme={() => setIsDark((d) => !d)}
         onFocusInputReady={onFocusInputReady}
       />
+      {/* Logo positioned relative to SlideNav container */}
+      {frontmatter?.logo && (
+        <img
+          src={frontmatter.logo}
+          alt="Logo"
+          className="presentation-logo absolute bottom-[94px] left-4 h-10 w-auto opacity-90 z-10 shadow-none"
+          onError={(e) => {
+            (e.target as HTMLImageElement).style.display = "none";
+          }}
+        />
+      )}
     </div>
   );
 }

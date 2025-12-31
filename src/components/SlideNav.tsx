@@ -67,7 +67,7 @@ export function SlideNav({
   };
 
   return (
-    <div className="border-t p-2 sm:p-4 flex items-center justify-between border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-900">
+    <div className="border-t p-2 sm:p-4 flex items-center justify-between border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-900 h-[84px]">
       <div className="flex items-center gap-1.5 sm:gap-2">
         <Button
           onClick={prevSlide}

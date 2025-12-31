@@ -58,6 +58,7 @@ title: Sample presentation
 description: Add presentation description
 date: ${format(new Date(), "yyyyMMdd")}
 presenter: My team
+logo: https://example.com/logo.png
 @@@
 `;
     try {
@@ -148,11 +149,12 @@ title: Sample presentation
 description: Add presentation description
 date: ${format(new Date(), "yyyyMMdd")}
 presenter: My team
+logo: https://example.com/logo.png
 @@@`}
                 </div>
 
                 <p className="leading-relaxed">
-                  this adds a title slide to your presentation.
+                  this adds a title slide to your presentation. the <code className="px-1.5 py-0.5 bg-gray-100 dark:bg-gray-700 rounded text-xs font-mono">logo</code> field (optional) displays a logo in the bottom-left corner of slides.
                 </p>
               </section>
 

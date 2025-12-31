@@ -369,16 +369,17 @@
 
 /* Images - Enhanced with subtle border */
 /* Scoped to presentation views only */
-.standard-view-slide img,
-.presentation-view-slide img {
+/* Exclude presentation logo from these styles */
+.standard-view-slide img:not(.presentation-logo),
+.presentation-view-slide img:not(.presentation-logo) {
   max-width: 100%;
   height: auto;
   margin: 1.5rem 0;
   border-radius: 0.5rem;
   box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
 }
-.dark .standard-view-slide img,
-.dark .presentation-view-slide img {
+.dark .standard-view-slide img:not(.presentation-logo),
+.dark .presentation-view-slide img:not(.presentation-logo) {
   box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.3), 0 2px 4px -1px rgba(0, 0, 0, 0.2);
 }
 
@@ -392,17 +393,35 @@
   padding: 0;
 }
 
-.image-only-slide img {
+/* Make image-only slide styles more specific to override general image styles */
+.standard-view-slide .image-only-slide img,
+.presentation-view-slide .image-only-slide img {
   width: 100%;
   height: 100%;
   object-fit: contain;
   margin: 0;
   border-radius: 0;
   box-shadow: none;
+  max-width: none;
 }
 
-.dark .image-only-slide img {
+.dark .standard-view-slide .image-only-slide img,
+.dark .presentation-view-slide .image-only-slide img {
   box-shadow: none;
+}
+
+/* Remove margins and padding from wrapper elements in image-only slides */
+.standard-view-slide .image-only-slide p,
+.presentation-view-slide .image-only-slide p,
+.standard-view-slide .image-only-slide div,
+.presentation-view-slide .image-only-slide div {
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 /* Links - More vibrant and visible */
