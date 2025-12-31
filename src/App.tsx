@@ -1,6 +1,7 @@
 import { RouterProvider } from "@tanstack/react-router";
 import { useEffect } from "react";
 import { useLocalStorage } from "./hooks/useLocalStorage";
+import { useHighlightTheme } from "./hooks/useHighlightTheme";
 import { router } from "./router";
 
 export default function App() {
@@ -15,6 +16,9 @@ export default function App() {
       document.documentElement.classList.remove("dark");
     }
   }, [isDarkValue]);
+
+  // Dynamically load highlight.js theme based on dark mode
+  useHighlightTheme(isDarkValue);
 
   return <RouterProvider router={router} />;
 }

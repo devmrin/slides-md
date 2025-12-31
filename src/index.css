@@ -295,23 +295,18 @@
   background-color: #1a1f2e;
 }
 
-/* Code blocks - Enhanced with better contrast */
+/* Code blocks - Layout and structure only */
+/* Colors are handled by highlight.js themes (atom-one-dark/atom-one-light) */
 /* Scoped to presentation views only */
 .standard-view-slide pre,
 .presentation-view-slide pre {
-  background-color: #1f2937;
   padding: 1.25rem;
   border-radius: 0.5rem;
   overflow-x: auto;
   margin: 1.5rem 0;
-  border: 1px solid #374151;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
-}
-.dark .standard-view-slide pre,
-.dark .presentation-view-slide pre {
-  background-color: #0f172a;
-  border-color: #1e293b;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+  border: 1px solid transparent;
+  /* Let highlight.js theme handle background - don't override */
+  background: inherit;
 }
 
 /* Fixed width code blocks in slideshow views */
@@ -336,13 +331,11 @@
 
 .standard-view-slide pre code,
 .presentation-view-slide pre code {
-  background: none;
   padding: 0;
-  color: #e5e7eb;
-}
-.dark .standard-view-slide pre code,
-.dark .presentation-view-slide pre code {
-  color: #cbd5e1;
+  /* Colors and background are handled by highlight.js themes */
+  /* Reset any conflicting styles to let highlight.js theme take precedence */
+  background: inherit;
+  color: inherit;
 }
 
 /* Inline code - More prominent */
@@ -371,178 +364,8 @@
   border-color: #374151;
 }
 
-/* Highlight.js syntax highlighting - Light mode */
-/* Scoped to presentation views only */
-.standard-view-slide pre code.hljs,
-.presentation-view-slide pre code.hljs {
-  background: #1f2937;
-  color: #e5e7eb;
-}
-.standard-view-slide pre code.hljs .hljs-keyword,
-.presentation-view-slide pre code.hljs .hljs-keyword,
-.standard-view-slide pre code.hljs .hljs-selector-tag,
-.presentation-view-slide pre code.hljs .hljs-selector-tag,
-.standard-view-slide pre code.hljs .hljs-built_in,
-.presentation-view-slide pre code.hljs .hljs-built_in,
-.standard-view-slide pre code.hljs .hljs-name,
-.presentation-view-slide pre code.hljs .hljs-name,
-.standard-view-slide pre code.hljs .hljs-tag,
-.presentation-view-slide pre code.hljs .hljs-tag {
-  color: #60a5fa;
-}
-.standard-view-slide pre code.hljs .hljs-string,
-.presentation-view-slide pre code.hljs .hljs-string,
-.standard-view-slide pre code.hljs .hljs-title,
-.presentation-view-slide pre code.hljs .hljs-title,
-.standard-view-slide pre code.hljs .hljs-section,
-.presentation-view-slide pre code.hljs .hljs-section,
-.standard-view-slide pre code.hljs .hljs-attribute,
-.presentation-view-slide pre code.hljs .hljs-attribute,
-.standard-view-slide pre code.hljs .hljs-literal,
-.presentation-view-slide pre code.hljs .hljs-literal,
-.standard-view-slide pre code.hljs .hljs-template-tag,
-.presentation-view-slide pre code.hljs .hljs-template-tag,
-.standard-view-slide pre code.hljs .hljs-template-variable,
-.presentation-view-slide pre code.hljs .hljs-template-variable,
-.standard-view-slide pre code.hljs .hljs-type,
-.presentation-view-slide pre code.hljs .hljs-type,
-.standard-view-slide pre code.hljs .hljs-addition,
-.presentation-view-slide pre code.hljs .hljs-addition {
-  color: #34d399;
-}
-.standard-view-slide pre code.hljs .hljs-comment,
-.presentation-view-slide pre code.hljs .hljs-comment,
-.standard-view-slide pre code.hljs .hljs-quote,
-.presentation-view-slide pre code.hljs .hljs-quote,
-.standard-view-slide pre code.hljs .hljs-deletion,
-.presentation-view-slide pre code.hljs .hljs-deletion,
-.standard-view-slide pre code.hljs .hljs-meta,
-.presentation-view-slide pre code.hljs .hljs-meta {
-  color: #9ca3af;
-  font-style: italic;
-}
-.standard-view-slide pre code.hljs .hljs-number,
-.presentation-view-slide pre code.hljs .hljs-number,
-.standard-view-slide pre code.hljs .hljs-regexp,
-.presentation-view-slide pre code.hljs .hljs-regexp,
-.standard-view-slide pre code.hljs .hljs-symbol,
-.presentation-view-slide pre code.hljs .hljs-symbol,
-.standard-view-slide pre code.hljs .hljs-variable,
-.presentation-view-slide pre code.hljs .hljs-variable,
-.standard-view-slide pre code.hljs .hljs-template-variable,
-.presentation-view-slide pre code.hljs .hljs-template-variable,
-.standard-view-slide pre code.hljs .hljs-link,
-.presentation-view-slide pre code.hljs .hljs-link,
-.standard-view-slide pre code.hljs .hljs-selector-attr,
-.presentation-view-slide pre code.hljs .hljs-selector-attr,
-.standard-view-slide pre code.hljs .hljs-selector-pseudo,
-.presentation-view-slide pre code.hljs .hljs-selector-pseudo {
-  color: #fbbf24;
-}
-.standard-view-slide pre code.hljs .hljs-function,
-.presentation-view-slide pre code.hljs .hljs-function,
-.standard-view-slide pre code.hljs .hljs-title.function_,
-.presentation-view-slide pre code.hljs .hljs-title.function_,
-.standard-view-slide pre code.hljs .hljs-class,
-.presentation-view-slide pre code.hljs .hljs-class,
-.standard-view-slide pre code.hljs .hljs-title.class_,
-.presentation-view-slide pre code.hljs .hljs-title.class_ {
-  color: #a78bfa;
-}
-.standard-view-slide pre code.hljs .hljs-operator,
-.presentation-view-slide pre code.hljs .hljs-operator {
-  color: #f472b6;
-}
-.standard-view-slide pre code.hljs .hljs-punctuation,
-.presentation-view-slide pre code.hljs .hljs-punctuation {
-  color: #cbd5e1;
-}
-
-/* Highlight.js syntax highlighting - Dark mode */
-.dark .standard-view-slide pre code.hljs,
-.dark .presentation-view-slide pre code.hljs {
-  background: #0f172a;
-  color: #cbd5e1;
-}
-.dark .standard-view-slide pre code.hljs .hljs-keyword,
-.dark .presentation-view-slide pre code.hljs .hljs-keyword,
-.dark .standard-view-slide pre code.hljs .hljs-selector-tag,
-.dark .presentation-view-slide pre code.hljs .hljs-selector-tag,
-.dark .standard-view-slide pre code.hljs .hljs-built_in,
-.dark .presentation-view-slide pre code.hljs .hljs-built_in,
-.dark .standard-view-slide pre code.hljs .hljs-name,
-.dark .presentation-view-slide pre code.hljs .hljs-name,
-.dark .standard-view-slide pre code.hljs .hljs-tag,
-.dark .presentation-view-slide pre code.hljs .hljs-tag {
-  color: #60a5fa;
-}
-.dark .standard-view-slide pre code.hljs .hljs-string,
-.dark .presentation-view-slide pre code.hljs .hljs-string,
-.dark .standard-view-slide pre code.hljs .hljs-title,
-.dark .presentation-view-slide pre code.hljs .hljs-title,
-.dark .standard-view-slide pre code.hljs .hljs-section,
-.dark .presentation-view-slide pre code.hljs .hljs-section,
-.dark .standard-view-slide pre code.hljs .hljs-attribute,
-.dark .presentation-view-slide pre code.hljs .hljs-attribute,
-.dark .standard-view-slide pre code.hljs .hljs-literal,
-.dark .presentation-view-slide pre code.hljs .hljs-literal,
-.dark .standard-view-slide pre code.hljs .hljs-template-tag,
-.dark .presentation-view-slide pre code.hljs .hljs-template-tag,
-.dark .standard-view-slide pre code.hljs .hljs-template-variable,
-.dark .presentation-view-slide pre code.hljs .hljs-template-variable,
-.dark .standard-view-slide pre code.hljs .hljs-type,
-.dark .presentation-view-slide pre code.hljs .hljs-type,
-.dark .standard-view-slide pre code.hljs .hljs-addition,
-.dark .presentation-view-slide pre code.hljs .hljs-addition {
-  color: #34d399;
-}
-.dark .standard-view-slide pre code.hljs .hljs-comment,
-.dark .presentation-view-slide pre code.hljs .hljs-comment,
-.dark .standard-view-slide pre code.hljs .hljs-quote,
-.dark .presentation-view-slide pre code.hljs .hljs-quote,
-.dark .standard-view-slide pre code.hljs .hljs-deletion,
-.dark .presentation-view-slide pre code.hljs .hljs-deletion,
-.dark .standard-view-slide pre code.hljs .hljs-meta,
-.dark .presentation-view-slide pre code.hljs .hljs-meta {
-  color: #6b7280;
-  font-style: italic;
-}
-.dark .standard-view-slide pre code.hljs .hljs-number,
-.dark .presentation-view-slide pre code.hljs .hljs-number,
-.dark .standard-view-slide pre code.hljs .hljs-regexp,
-.dark .presentation-view-slide pre code.hljs .hljs-regexp,
-.dark .standard-view-slide pre code.hljs .hljs-symbol,
-.dark .presentation-view-slide pre code.hljs .hljs-symbol,
-.dark .standard-view-slide pre code.hljs .hljs-variable,
-.dark .presentation-view-slide pre code.hljs .hljs-variable,
-.dark .standard-view-slide pre code.hljs .hljs-template-variable,
-.dark .presentation-view-slide pre code.hljs .hljs-template-variable,
-.dark .standard-view-slide pre code.hljs .hljs-link,
-.dark .presentation-view-slide pre code.hljs .hljs-link,
-.dark .standard-view-slide pre code.hljs .hljs-selector-attr,
-.dark .presentation-view-slide pre code.hljs .hljs-selector-attr,
-.dark .standard-view-slide pre code.hljs .hljs-selector-pseudo,
-.dark .presentation-view-slide pre code.hljs .hljs-selector-pseudo {
-  color: #fbbf24;
-}
-.dark .standard-view-slide pre code.hljs .hljs-function,
-.dark .presentation-view-slide pre code.hljs .hljs-function,
-.dark .standard-view-slide pre code.hljs .hljs-title.function_,
-.dark .presentation-view-slide pre code.hljs .hljs-title.function_,
-.dark .standard-view-slide pre code.hljs .hljs-class,
-.dark .presentation-view-slide pre code.hljs .hljs-class,
-.dark .standard-view-slide pre code.hljs .hljs-title.class_,
-.dark .presentation-view-slide pre code.hljs .hljs-title.class_ {
-  color: #a78bfa;
-}
-.dark .standard-view-slide pre code.hljs .hljs-operator,
-.dark .presentation-view-slide pre code.hljs .hljs-operator {
-  color: #f472b6;
-}
-.dark .standard-view-slide pre code.hljs .hljs-punctuation,
-.dark .presentation-view-slide pre code.hljs .hljs-punctuation {
-  color: #e2e8f0;
-}
+/* Highlight.js syntax highlighting colors are now handled by the theme CSS files */
+/* (atom-one-dark.min.css and atom-one-light.min.css) loaded dynamically via useHighlightTheme hook */
 
 /* Images - Enhanced with subtle border */
 /* Scoped to presentation views only */
