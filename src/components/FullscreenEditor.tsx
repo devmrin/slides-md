@@ -1,8 +1,7 @@
 import { useRef, useEffect, useState } from "react";
 import MonacoEditor from "@monaco-editor/react";
-import * as DropdownMenu from "@radix-ui/react-dropdown-menu";
 import { format } from "date-fns";
-import { MoreVertical, Trash2, FileText, Check } from "lucide-react";
+import { Trash2, Check } from "lucide-react";
 import { Button } from "../ui/Button";
 import { useFullscreen } from "../hooks/useFullscreen";
 
@@ -67,48 +66,30 @@ presenter: My team
         >
           Exit <span className="ml-1 text-xs opacity-70 hidden sm:inline">(ESC)</span>
         </Button>
-        <div className="flex gap-2">
+        <div className="flex gap-2 pb-3 sm:pb-4">
+          <Button
+            btnType="secondary"
+            className="px-3 py-1.5 sm:py-1 text-sm touch-manipulation"
+            onClick={handleCopySampleFrontmatter}
+          >
+            Copy <span className="ml-1 text-xs opacity-70 hidden sm:inline">Sample Frontmatter</span>
+            {isSampleCopied && <Check className="w-3.5 h-3.5 ml-1" />}
+          </Button>
           <Button
             btnType="secondary"
             className="px-3 py-1.5 sm:py-1 text-sm touch-manipulation"
             onClick={onCopy}
           >
-            Copy <span className="ml-1 text-xs opacity-70 hidden sm:inline">Content</span>
+            Copy <span className="ml-1 text-xs opacity-70 hidden sm:inline">Current Content</span>
           </Button>
-          <DropdownMenu.Root>
-            <DropdownMenu.Trigger asChild>
-              <Button
-                btnType="secondary"
-                className="px-3 py-1.5 sm:py-1 text-sm touch-manipulation"
-                title="Editor Actions"
-              >
-                <MoreVertical className="w-4 h-4" />
-              </Button>
-            </DropdownMenu.Trigger>
-            <DropdownMenu.Portal>
-              <DropdownMenu.Content
-                className="min-w-[180px] bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-700 rounded-md shadow-lg p-1 z-50"
-                sideOffset={5}
-                align="end"
-              >
-                <DropdownMenu.Item
-                  className="px-3 py-2 text-sm text-gray-900 dark:text-gray-100 rounded-sm cursor-pointer outline-none hover:bg-gray-100 dark:hover:bg-gray-700 focus:bg-gray-100 dark:focus:bg-gray-700 flex items-center gap-2"
-                  onSelect={handleCopySampleFrontmatter}
-                >
-                  <FileText className="w-4 h-4" />
-                  <span>Copy Sample Frontmatter</span>
-                  {isSampleCopied && <Check className="w-3.5 h-3.5 ml-auto" />}
-                </DropdownMenu.Item>
-                <DropdownMenu.Item
-                  className="px-3 py-2 text-sm text-gray-900 dark:text-gray-100 rounded-sm cursor-pointer outline-none hover:bg-gray-100 dark:hover:bg-gray-700 focus:bg-gray-100 dark:focus:bg-gray-700 flex items-center gap-2"
-                  onSelect={onClear}
-                >
-                  <Trash2 className="w-4 h-4" />
-                  <span>Clear Editor</span>
-                </DropdownMenu.Item>
-              </DropdownMenu.Content>
-            </DropdownMenu.Portal>
-          </DropdownMenu.Root>
+          <Button
+            btnType="secondary"
+            className="px-3 py-1.5 sm:py-1 text-sm touch-manipulation flex items-center gap-1.5"
+            onClick={onClear}
+          >
+            <Trash2 className="w-4 h-4" />
+            <span className="hidden sm:inline">Clear</span>
+          </Button>
         </div>
       </div>
       {/* Editor area */}
