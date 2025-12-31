@@ -77,6 +77,19 @@ export function PresentationsTable({ presentations, onDelete }: PresentationsTab
         ),
       },
       {
+        id: "createdAt",
+        header: "Created At",
+        accessorFn: (row) => row.createdAt,
+        cell: ({ getValue }) => {
+          const timestamp = getValue() as number;
+          return (
+            <div className="text-sm text-gray-500 dark:text-gray-400">
+              {format(new Date(timestamp), "MMM d, yyyy")}
+            </div>
+          );
+        },
+      },
+      {
         id: "updatedAt",
         header: "Updated At",
         accessorFn: (row) => row.updatedAt,
@@ -124,48 +137,41 @@ export function PresentationsTable({ presentations, onDelete }: PresentationsTab
   return (
     <>
       <div className="overflow-x-auto">
-        <table className="w-full border-collapse">
-          <thead>
-            {table.getHeaderGroups().map((headerGroup) => (
-              <tr key={headerGroup.id} className="border-b border-gray-300 dark:border-gray-700">
-                {headerGroup.headers.map((header) => (
-                  <th
-                    key={header.id}
-                    className="px-4 py-3 text-left text-xs font-semibold text-gray-600 dark:text-gray-400 uppercase tracking-wider bg-white dark:bg-gray-800"
-                    style={{
-                      width: header.id === "delete" ? 64 : undefined,
-                    }}
-                  >
-                    {header.isPlaceholder
-                      ? null
-                      : flexRender(header.column.columnDef.header, header.getContext())}
-                  </th>
-                ))}
-              </tr>
-            ))}
-          </thead>
-          <tbody>
-            {table.getRowModel().rows.map((row) => (
-              <tr
-                key={row.id}
-                className="border-b border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 hover:bg-gray-50 dark:hover:bg-gray-700/50 cursor-pointer transition-colors"
-                onClick={() => handleRowClick(row.original)}
-              >
-                {row.getVisibleCells().map((cell) => (
-                  <td
-                    key={cell.id}
-                    className="px-4 py-3"
-                    style={{
-                      width: cell.column.id === "delete" ? 64 : undefined,
-                    }}
-                  >
-                    {flexRender(cell.column.columnDef.cell, cell.getContext())}
-                  </td>
-                ))}
-              </tr>
-            ))}
-          </tbody>
-        </table>
+        <div className="w-full">
+          {/* Header */}
+          <div
+            className="grid border-b border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-800"
+            style={{ gridTemplateColumns: "160px 1fr 120px 120px 100px" }}
+          >
+            {table.getHeaderGroups().map((headerGroup) =>
+              headerGroup.headers.map((header) => (
+                <div
+                  key={header.id}
+                  className="px-4 py-3 text-left text-xs font-semibold text-gray-600 dark:text-gray-400 uppercase tracking-wider"
+                >
+                  {header.isPlaceholder
+                    ? null
+                    : flexRender(header.column.columnDef.header, header.getContext())}
+                </div>
+              ))
+            )}
+          </div>
+          {/* Rows */}
+          {table.getRowModel().rows.map((row) => (
+            <div
+              key={row.id}
+              className="grid border-b border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 hover:bg-gray-50 dark:hover:bg-gray-700/50 cursor-pointer transition-colors"
+              style={{ gridTemplateColumns: "160px 1fr 120px 120px 100px" }}
+              onClick={() => handleRowClick(row.original)}
+            >
+              {row.getVisibleCells().map((cell) => (
+                <div key={cell.id} className="px-4 py-3">
+                  {flexRender(cell.column.columnDef.cell, cell.getContext())}
+                </div>
+              ))}
+            </div>
+          ))}
+        </div>
       </div>
 
       {deleteTarget && (
