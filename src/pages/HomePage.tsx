@@ -212,13 +212,18 @@ export function HomePage() {
         <div className="flex-1 overflow-y-auto p-6">
           {presentations.length === 0 ? (
             <div className="flex flex-col items-center justify-center h-full text-center">
+              <img
+                src="/no-ppt.svg"
+                alt="No presentations"
+                className="w-auto h-24 mb-6"
+              />
               <p className="text-xl text-gray-600 dark:text-gray-400 mb-4">
-                No presentations yet
+                No presentations yet?
               </p>
               <div className="flex flex-col sm:flex-row gap-3 items-center">
                 <Button
                   onClick={() => setCreateDialogOpen(true)}
-                  className="px-3 py-1 text-xs sm:text-sm border rounded border-gray-400 dark:border-gray-600 text-gray-900 dark:text-gray-100 bg-white dark:bg-gray-900 hover:bg-gray-50 dark:hover:bg-gray-800 flex items-center gap-2"
+                  className="px-3 py-1 text-xs sm:text-sm border rounded border-gray-400 dark:border-gray-300 text-gray-900 dark:text-gray-900 bg-white dark:bg-white hover:bg-gray-50 dark:hover:bg-gray-100 flex items-center gap-2"
                 >
                   <Plus className="w-4 h-4" />
                   Create Your First Presentation
