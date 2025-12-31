@@ -36,12 +36,12 @@ export function Editor({
   };
 
   const handleCopySampleFrontmatter = () => {
-    const sampleFrontmatter = `===/===
+    const sampleFrontmatter = `@@@
 title: Sample presentation
 description: Add presentation description
 date: ${format(new Date(), "yyyyMMdd")}
 presenter: My team
-===/===
+@@@
 `;
     navigator.clipboard.writeText(sampleFrontmatter);
     setIsSampleCopied(true);

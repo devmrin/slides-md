@@ -69,11 +69,11 @@ This command verifies code quality by running ESLint and TypeScript type checkin
 * Add optional frontmatter at the beginning:
 
   ```
-  ===/===
+  @@@
   title: My Talk Title
   presenter: Your Name
   description: Short description
-  ===/===
+  @@@
   ```
 * Enter presentation mode by selecting Present or pressing Cmd+Enter.
 * Navigate with the arrow keys. Press R to reset, T to toggle the theme, and ESC to exit presentation mode.
@@ -98,7 +98,7 @@ This command verifies code quality by running ESLint and TypeScript type checkin
     * `useFullscreen.ts` - Browser fullscreen API wrapper
     * `useLocalStorage.ts` - LocalStorage hook for preferences
   * `utils/` - Utility functions
-    * `parseFrontmatter.ts` - Frontmatter parser (`===/===` delimiter)
+    * `parseFrontmatter.ts` - Frontmatter parser (`@@@` delimiter)
     * `cn.ts` - className utility (clsx + tailwind-merge)
   * `db/` - Database layer
     * `adapter.ts` - Database adapter interface (abstraction)

@@ -51,7 +51,7 @@ src/
 │   └── useSlides.ts        # Markdown → slides parser (frontmatter + split)
 ├── utils/                  # Utility functions
 │   ├── cn.ts               # className merger (clsx + tailwind-merge)
-│   └── parseFrontmatter.ts # Frontmatter parser (===/=== delimiter)
+│   └── parseFrontmatter.ts # Frontmatter parser (@@@ delimiter)
 ├── db/                     # Database layer
 │   ├── adapter.ts          # DatabaseAdapter interface (abstraction)
 │   ├── index.ts            # Singleton db instance export
@@ -169,7 +169,7 @@ Keyboard navigation (arrows) → updates currentSlide
 **Purpose:** Parse markdown into frontmatter and slides array
 
 **Logic:**
-1. Calls `parseFrontmatter` to extract `===/===` delimited metadata
+1. Calls `parseFrontmatter` to extract `@@@` delimited metadata
 2. Splits remaining content by `===` to create slides
 3. Filters trailing empty slides (keeps intentional empty slides)
 4. If frontmatter exists, prepends `"__TITLE_SLIDE__"` marker
@@ -252,16 +252,16 @@ interface Presentation {
 
 ### Frontmatter Format
 
-**Delimiter:** `===/===` (not standard YAML `---`)
+**Delimiter:** `@@@` (not standard YAML `---`)
 
 **Example:**
 ```
-===/===
+@@@
 title: My Presentation
 date: 2025-01-01
 presenter: Your Name
 description: A brief summary
-===/===
+@@@
 ```
 
 **Key Aliases:** `parseFrontmatter` normalizes keys:

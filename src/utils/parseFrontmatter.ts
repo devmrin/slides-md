@@ -18,7 +18,7 @@ export function parseFrontmatter(text: string): {
   frontmatter: Record<string, string>;
   content: string;
 } {
-  const frontmatterRegex = /^===\/===([\s\S]*?)===\/===/;
+  const frontmatterRegex = /^@@@([\s\S]*?)@@@/;
   const match = text.match(frontmatterRegex);
 
   if (!match) return { frontmatter: {}, content: text };

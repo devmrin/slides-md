@@ -15,12 +15,12 @@ Respond with a single text document for slides.md.
 
 2. Frontmatter
 Start with:
-  ===/===
+  @@@
   title: ...
   date: YYYY-MM-DD
   presenter: ...
   description: ...
-  ===/===
+  @@@
 
 3. Slide separation
 Separate slides with a line containing exactly:
@@ -53,12 +53,12 @@ Output only the deck content.
   };
 
   const handleCopyFrontmatter = async () => {
-    const sampleFrontmatter = `===/===
+    const sampleFrontmatter = `@@@
 title: Sample presentation
 description: Add presentation description
 date: ${format(new Date(), "yyyyMMdd")}
 presenter: My team
-===/===
+@@@
 `;
     try {
       await navigator.clipboard.writeText(sampleFrontmatter);
@@ -113,7 +113,7 @@ presenter: My team
                   Frontmatter (Optional)
                 </h2>
                 <p className="leading-relaxed">
-                  add metadata at the top of your file using the <code className="px-1.5 py-0.5 bg-gray-100 dark:bg-gray-700 rounded text-xs font-mono">===/===</code> delimiter:
+                  add metadata at the top of your file using the <code className="px-1.5 py-0.5 bg-gray-100 dark:bg-gray-700 rounded text-xs font-mono">@@@</code> delimiter:
                 </p>
 
                 <div className="relative mt-3 p-4 bg-gray-900 dark:bg-gray-950 rounded-lg text-xs overflow-x-auto border border-gray-700 dark:border-gray-600 font-mono text-gray-100 dark:text-gray-200 whitespace-pre">
@@ -129,12 +129,12 @@ presenter: My team
                       <Copy className="w-4 h-4" />
                     )}
                   </Button>
-                  {`===/===
+                  {`@@@
 title: Sample presentation
 description: Add presentation description
 date: ${format(new Date(), "yyyyMMdd")}
 presenter: My team
-===/===`}
+@@@`}
                 </div>
 
                 <p className="leading-relaxed">
