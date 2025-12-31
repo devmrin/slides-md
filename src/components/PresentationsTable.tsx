@@ -46,6 +46,10 @@ export function PresentationsTable({ presentations, onDelete, onEdit }: Presenta
   const [editTarget, setEditTarget] = useState<Presentation | null>(null);
 
   const handleRowClick = (presentation: Presentation) => {
+    // Prevent navigation if a dialog is open
+    if (deleteDialogOpen !== null || editDialogOpen !== null) {
+      return;
+    }
     navigate({ to: "/presentation/$id", params: { id: presentation.id } });
   };
 
@@ -74,6 +78,20 @@ export function PresentationsTable({ presentations, onDelete, onEdit }: Presenta
       onEdit(editTarget.id, newName);
       setEditTarget(null);
       setEditDialogOpen(null);
+    }
+  };
+
+  const handleDeleteDialogChange = (open: boolean) => {
+    if (!open) {
+      setDeleteDialogOpen(null);
+      setDeleteTarget(null);
+    }
+  };
+
+  const handleEditDialogChange = (open: boolean) => {
+    if (!open) {
+      setEditDialogOpen(null);
+      setEditTarget(null);
     }
   };
 
@@ -202,12 +220,7 @@ export function PresentationsTable({ presentations, onDelete, onEdit }: Presenta
       {deleteTarget && (
         <DeleteConfirmationDialog
           open={deleteDialogOpen === deleteTarget.id}
-          onOpenChange={(open) => {
-            if (!open) {
-              setDeleteDialogOpen(null);
-              setDeleteTarget(null);
-            }
-          }}
+          onOpenChange={handleDeleteDialogChange}
           onConfirm={handleConfirmDelete}
           presentationName={deleteTarget.name}
         />
@@ -216,12 +229,7 @@ export function PresentationsTable({ presentations, onDelete, onEdit }: Presenta
       {editTarget && (
         <EditPresentationNameDialog
           open={editDialogOpen === editTarget.id}
-          onOpenChange={(open) => {
-            if (!open) {
-              setEditDialogOpen(null);
-              setEditTarget(null);
-            }
-          }}
+          onOpenChange={handleEditDialogChange}
           currentName={editTarget.name}
           onSave={handleConfirmEdit}
         />

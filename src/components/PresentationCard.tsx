@@ -22,6 +22,10 @@ export function PresentationCard({ presentation, onDelete, onEdit }: Presentatio
   const [editDialogOpen, setEditDialogOpen] = useState(false);
 
   const handleClick = () => {
+    // Prevent navigation if a dialog is open
+    if (deleteDialogOpen || editDialogOpen) {
+      return;
+    }
     navigate({ to: "/presentation/$id", params: { id: presentation.id } });
   };
 
