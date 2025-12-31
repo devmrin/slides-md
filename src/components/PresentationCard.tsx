@@ -1,9 +1,11 @@
+import { useState } from "react";
 import { useNavigate } from "@tanstack/react-router";
 import { Trash2 } from "lucide-react";
 import { format } from "date-fns";
 import { Slide } from "./Slide";
 import { useSlides } from "../hooks/useSlides";
 import { Button } from "../ui/Button";
+import { DeleteConfirmationDialog } from "./DeleteConfirmationDialog";
 import type { Presentation } from "../db/adapter";
 
 interface PresentationCardProps {
@@ -15,6 +17,7 @@ export function PresentationCard({ presentation, onDelete }: PresentationCardPro
   const navigate = useNavigate();
   const { frontmatter, slides } = useSlides(presentation.markdown);
   const firstSlide = slides[0] || "";
+  const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
 
   const handleClick = () => {
     navigate({ to: "/presentation/$id", params: { id: presentation.id } });
@@ -22,9 +25,11 @@ export function PresentationCard({ presentation, onDelete }: PresentationCardPro
 
   const handleDelete = (e: React.MouseEvent) => {
     e.stopPropagation();
-    if (window.confirm(`Are you sure you want to delete "${presentation.name}"?`)) {
-      onDelete(presentation.id);
-    }
+    setDeleteDialogOpen(true);
+  };
+
+  const handleConfirmDelete = () => {
+    onDelete(presentation.id);
   };
 
   const formattedDate = format(new Date(presentation.updatedAt), "MMM d, yyyy");
@@ -53,7 +58,7 @@ export function PresentationCard({ presentation, onDelete }: PresentationCardPro
           </h3>
           <Button
             onClick={handleDelete}
-            className="p-1.5 text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/20 rounded shrink-0"
+            className="p-1.5 text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700 rounded shrink-0"
             title="Delete presentation"
           >
             <Trash2 className="w-4 h-4" />
@@ -61,6 +66,13 @@ export function PresentationCard({ presentation, onDelete }: PresentationCardPro
         </div>
         <p className="text-xs text-gray-500 dark:text-gray-400">{formattedDate}</p>
       </div>
+
+      <DeleteConfirmationDialog
+        open={deleteDialogOpen}
+        onOpenChange={setDeleteDialogOpen}
+        onConfirm={handleConfirmDelete}
+        presentationName={presentation.name}
+      />
     </div>
   );
 }

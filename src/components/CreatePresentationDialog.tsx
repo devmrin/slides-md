@@ -99,17 +99,11 @@ export function CreatePresentationDialog({
 
               <div className="flex justify-end gap-2">
                 <Dialog.Close asChild>
-                  <Button
-                    type="button"
-                    className="px-3 py-1 border rounded border-gray-400 dark:border-gray-600 text-gray-900 dark:text-gray-100 bg-white dark:bg-gray-900 hover:bg-gray-50 dark:hover:bg-gray-800"
-                  >
+                  <Button type="button" btnType="secondary">
                     Cancel
                   </Button>
                 </Dialog.Close>
-                <Button
-                  type="submit"
-                  className="px-3 py-1 border rounded border-gray-400 dark:border-gray-600 text-gray-900 dark:text-gray-100 bg-white dark:bg-gray-900 hover:bg-gray-50 dark:hover:bg-gray-800"
-                >
+                <Button type="submit" btnType="primary">
                   Create
                 </Button>
               </div>
