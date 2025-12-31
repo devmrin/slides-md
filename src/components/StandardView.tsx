@@ -1,10 +1,10 @@
-import { useState } from "react";
 import { Editor } from "./Editor";
 import { Slide } from "./Slide";
 import { Director } from "./Director";
 import { Button } from "../ui/Button";
 import { AppHeader } from "./AppHeader";
 import { StandardViewNav } from "./StandardViewNav";
+import { useLocalStorage } from "../hooks/useLocalStorage";
 
 interface StandardViewProps {
   markdown: string;
@@ -43,7 +43,8 @@ export function StandardView({
   presentationName,
   onEditName,
 }: StandardViewProps) {
-  const [isEditorExpanded, setIsEditorExpanded] = useState(true);
+  const [isEditorExpandedRaw, setIsEditorExpanded] = useLocalStorage("isEditorExpanded", true);
+  const isEditorExpanded = isEditorExpandedRaw ?? true;
 
   return (
     <div className="h-screen flex flex-col bg-gray-50 dark:bg-gray-900 text-gray-900 dark:text-gray-100 relative">

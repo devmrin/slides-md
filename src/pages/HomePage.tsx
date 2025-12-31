@@ -19,7 +19,7 @@ export function HomePage() {
   const [presentations, setPresentations] = useState<Presentation[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [createDialogOpen, setCreateDialogOpen] = useState(false);
-  const [viewMode, setViewMode] = useLocalStorage("homeViewMode", "gallery" as "gallery" | "list");
+  const [viewMode, setViewMode] = useLocalStorage("homeViewMode", "gallery");
   const [isDark, setIsDarkRaw] = useLocalStorage("theme", false);
 
   const isDarkValue = isDark ?? false;
