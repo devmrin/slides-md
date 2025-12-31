@@ -8,6 +8,7 @@ interface PresentationViewProps {
   currentSlide: number;
   slides: string[];
   frontmatter?: Record<string, string>;
+  imageOnlySlides: Set<number>;
   prevSlide: () => void;
   nextSlide: () => void;
   setIsFullscreen: (value: boolean) => void;
@@ -20,6 +21,7 @@ export function PresentationView({
   currentSlide,
   slides,
   frontmatter,
+  imageOnlySlides,
   prevSlide,
   nextSlide,
   setIsFullscreen,
@@ -40,6 +42,7 @@ export function PresentationView({
   }, [isFullscreen, requestFullscreenOnly]);
 
   const isTitle = slides[currentSlide] === "__TITLE_SLIDE__";
+  const isImageOnly = imageOnlySlides.has(currentSlide);
   
   return (
     <div 
@@ -70,14 +73,17 @@ export function PresentationView({
         </div>
       </div>
       <div className="flex-1 overflow-y-auto overflow-x-hidden">
-        <div className={`presentation-view-slide px-4 sm:px-12 flex ${
+        <div className={`presentation-view-slide flex ${
           isTitle
-            ? "min-h-full items-center justify-center p-4 sm:p-12"
-            : "pt-[25vh] pb-12 justify-center"
+            ? "min-h-full items-center justify-center p-4 sm:p-12 px-4 sm:px-12"
+            : isImageOnly
+            ? "min-h-full items-center justify-center p-0"
+            : "pt-[25vh] pb-12 justify-center px-4 sm:px-12"
         }`}>
           <Slide
             slide={slides[currentSlide]}
             isTitle={isTitle}
+            isImageOnly={isImageOnly}
             frontmatter={frontmatter}
           />
         </div>

@@ -184,6 +184,7 @@ More content`}
                 <ul className="list-disc list-inside space-y-1 ml-4 text-gray-700 dark:text-gray-300">
                   <li>headings, lists, blockquotes</li>
                   <li>fenced code blocks with syntax highlighting</li>
+                  <li>image-only slides fill the entire slide area</li>
                 </ul>
               </section>
 

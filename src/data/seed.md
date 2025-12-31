@@ -25,6 +25,10 @@ description: An overview of React Server Components and their architectural impl
 
 ===
 
+![rsc-architecture](https://images.ctfassets.net/e5382hct74si/6BZdqyxU26iA3AYmnnuMl8/a70c1b6f55c10aae42df9b16ae8200d5/With_React.png)
+
+===
+
 # Server vs Client Components
 
 - Server Components handle data and rendering

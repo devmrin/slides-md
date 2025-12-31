@@ -13,6 +13,7 @@ interface StandardViewProps {
   setCurrentSlide: (slide: number) => void;
   slides: string[];
   frontmatter?: Record<string, string>;
+  imageOnlySlides: Set<number>;
   isDark: boolean;
   setIsDark: (value: boolean | ((prev: boolean) => boolean)) => void;
   toggleFullscreen: () => void;
@@ -32,6 +33,7 @@ export function StandardView({
   setCurrentSlide,
   slides,
   frontmatter,
+  imageOnlySlides,
   isDark,
   setIsDark,
   toggleFullscreen,
@@ -94,14 +96,17 @@ export function StandardView({
               </Button>
             </div>
           </div>
-          <div className={`standard-view-slide flex-1 overflow-auto px-4 sm:px-8 flex text-gray-900 dark:text-gray-100 ${
+          <div className={`standard-view-slide flex-1 overflow-auto flex text-gray-900 dark:text-gray-100 ${
             slides[currentSlide] === "__TITLE_SLIDE__"
-              ? "items-center justify-center p-4 sm:p-8"
-              : "pt-[25vh] pb-8 justify-center"
+              ? "items-center justify-center p-4 sm:p-8 px-4 sm:px-8"
+              : imageOnlySlides.has(currentSlide)
+              ? "items-center justify-center p-0"
+              : "pt-[25vh] pb-8 justify-center px-4 sm:px-8"
           }`}>
             <Slide
               slide={slides[currentSlide]}
               isTitle={slides[currentSlide] === "__TITLE_SLIDE__"}
+              isImageOnly={imageOnlySlides.has(currentSlide)}
               frontmatter={frontmatter}
             />
           </div>

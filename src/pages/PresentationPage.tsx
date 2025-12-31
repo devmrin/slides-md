@@ -39,7 +39,7 @@ export function PresentationPage() {
     }
   }, [setIsDarkRaw]);
 
-  const { frontmatter, slides } = useSlides(markdown);
+  const { frontmatter, slides, imageOnlySlides } = useSlides(markdown);
 
   // Load presentation from IndexedDB on mount
   useEffect(() => {
@@ -203,6 +203,7 @@ export function PresentationPage() {
         currentSlide={currentSlide}
         slides={slides}
         frontmatter={frontmatter}
+        imageOnlySlides={imageOnlySlides}
         prevSlide={prevSlide}
         nextSlide={nextSlide}
         setIsFullscreen={setIsFullscreen}
@@ -237,6 +238,7 @@ export function PresentationPage() {
         setCurrentSlide={setCurrentSlide}
         slides={slides}
         frontmatter={frontmatter}
+        imageOnlySlides={imageOnlySlides}
         isDark={isDarkValue}
         setIsDark={setIsDark}
         toggleFullscreen={() => setIsFullscreen(true)}

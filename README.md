@@ -14,6 +14,7 @@
 * Live Markdown editing with immediate slide preview.
 * Fullscreen presentation mode with keyboard controls.
 * Frontmatter support for titles, descriptions, and presenter information.
+* Image-only slides automatically fill the entire slide area.
 * Adjustable editor and preview panes.
 * Light and dark theme options.
 * Quick actions to copy the Markdown or clear the editor content.
