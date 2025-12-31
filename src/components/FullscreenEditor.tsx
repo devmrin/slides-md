@@ -1,5 +1,8 @@
-import { useRef, useEffect } from "react";
+import { useRef, useEffect, useState } from "react";
 import MonacoEditor from "@monaco-editor/react";
+import * as DropdownMenu from "@radix-ui/react-dropdown-menu";
+import { format } from "date-fns";
+import { MoreVertical, Trash2, FileText, Check } from "lucide-react";
 import { Button } from "../ui/Button";
 import { useFullscreen } from "../hooks/useFullscreen";
 
@@ -27,6 +30,20 @@ export function FullscreenEditor({
   const containerRef = useRef<HTMLDivElement>(null);
   const hasRequestedFullscreen = useRef(false);
   const { requestFullscreenOnly } = useFullscreen(containerRef, isEditorFullscreen, setIsEditorFullscreen);
+  const [isSampleCopied, setIsSampleCopied] = useState(false);
+
+  const handleCopySampleFrontmatter = () => {
+    const sampleFrontmatter = `===/===
+title: Sample presentation
+description: Add presentation description
+date: ${format(new Date(), "yyyyMMdd")}
+presenter: My team
+===/===
+`;
+    navigator.clipboard.writeText(sampleFrontmatter);
+    setIsSampleCopied(true);
+    setTimeout(() => setIsSampleCopied(false), 2000);
+  };
 
   // Request fullscreen when component mounts with isEditorFullscreen=true
   useEffect(() => {
@@ -54,17 +71,44 @@ export function FullscreenEditor({
           <Button
             btnType="secondary"
             className="px-3 py-1.5 sm:py-1 text-sm touch-manipulation"
-            onClick={onClear}
-          >
-            Clear <span className="ml-1 text-xs opacity-70 hidden sm:inline">Editor</span>
-          </Button>
-          <Button
-            btnType="secondary"
-            className="px-3 py-1.5 sm:py-1 text-sm touch-manipulation"
             onClick={onCopy}
           >
             Copy <span className="ml-1 text-xs opacity-70 hidden sm:inline">Content</span>
           </Button>
+          <DropdownMenu.Root>
+            <DropdownMenu.Trigger asChild>
+              <Button
+                btnType="secondary"
+                className="px-3 py-1.5 sm:py-1 text-sm touch-manipulation"
+                title="Editor Actions"
+              >
+                <MoreVertical className="w-4 h-4" />
+              </Button>
+            </DropdownMenu.Trigger>
+            <DropdownMenu.Portal>
+              <DropdownMenu.Content
+                className="min-w-[180px] bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-700 rounded-md shadow-lg p-1 z-50"
+                sideOffset={5}
+                align="end"
+              >
+                <DropdownMenu.Item
+                  className="px-3 py-2 text-sm text-gray-900 dark:text-gray-100 rounded-sm cursor-pointer outline-none hover:bg-gray-100 dark:hover:bg-gray-700 focus:bg-gray-100 dark:focus:bg-gray-700 flex items-center gap-2"
+                  onSelect={handleCopySampleFrontmatter}
+                >
+                  <FileText className="w-4 h-4" />
+                  <span>Copy Sample Frontmatter</span>
+                  {isSampleCopied && <Check className="w-3.5 h-3.5 ml-auto" />}
+                </DropdownMenu.Item>
+                <DropdownMenu.Item
+                  className="px-3 py-2 text-sm text-gray-900 dark:text-gray-100 rounded-sm cursor-pointer outline-none hover:bg-gray-100 dark:hover:bg-gray-700 focus:bg-gray-100 dark:focus:bg-gray-700 flex items-center gap-2"
+                  onSelect={onClear}
+                >
+                  <Trash2 className="w-4 h-4" />
+                  <span>Clear Editor</span>
+                </DropdownMenu.Item>
+              </DropdownMenu.Content>
+            </DropdownMenu.Portal>
+          </DropdownMenu.Root>
         </div>
       </div>
       {/* Editor area */}
