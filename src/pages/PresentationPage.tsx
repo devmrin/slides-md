@@ -22,6 +22,7 @@ export function PresentationPage() {
   const [isFullscreen, setIsFullscreen] = useState<boolean>(false);
   const [isEditorFullscreen, setIsEditorFullscreen] = useState<boolean>(false);
   const [isDark, setIsDarkRaw] = useLocalStorage("theme", false);
+  const [focusSlideInput, setFocusSlideInput] = useState<(() => void) | undefined>(undefined);
   
   // Ensure isDark is always boolean (not undefined)
   const isDarkValue = isDark ?? false;
@@ -145,6 +146,7 @@ export function PresentationPage() {
     setIsEditorFullscreen,
     setIsDark,
     setCurrentSlide,
+    focusSlideInput,
   });
 
   // Copy editor content
@@ -210,6 +212,9 @@ export function PresentationPage() {
         setIsDark={setIsDark}
         setCurrentSlide={setCurrentSlide}
         isFullscreen={isFullscreen}
+        onFocusInputReady={(focusFn) => {
+          setFocusSlideInput(() => focusFn);
+        }}
       />
     );
   }

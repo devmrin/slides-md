@@ -136,6 +136,7 @@ export function StandardView({
             slidesLength={slides.length}
             prevSlide={prevSlide}
             nextSlide={nextSlide}
+            setCurrentSlide={setCurrentSlide}
             frontmatter={frontmatter}
             onToggleTheme={() => setIsDark(!isDark)}
           />

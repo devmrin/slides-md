@@ -9,6 +9,7 @@ interface UseKeyboardNavigationProps {
   setIsEditorFullscreen: (value: boolean) => void;
   setIsDark: (updater: (prev: boolean) => boolean) => void;
   setCurrentSlide: (slide: number) => void;
+  focusSlideInput?: () => void;
 }
 
 export function useKeyboardNavigation({
@@ -20,6 +21,7 @@ export function useKeyboardNavigation({
   setIsEditorFullscreen,
   setIsDark,
   setCurrentSlide,
+  focusSlideInput,
 }: UseKeyboardNavigationProps) {
   useEffect(() => {
     const handler = (e: KeyboardEvent) => {
@@ -59,9 +61,17 @@ export function useKeyboardNavigation({
       if (isFullscreen && (e.key === "t" || e.key === "T")) {
         setIsDark((d) => !d);
       }
+      // J to focus slide input in fullscreen
+      if (isFullscreen && (e.key === "j" || e.key === "J") && focusSlideInput) {
+        // Don't focus if user is already typing in an input
+        if (!isEditing) {
+          e.preventDefault();
+          focusSlideInput();
+        }
+      }
     };
     window.addEventListener("keydown", handler);
     return () => window.removeEventListener("keydown", handler);
-  }, [nextSlide, prevSlide, isFullscreen, setIsFullscreen, isEditorFullscreen, setIsEditorFullscreen, setIsDark, setCurrentSlide]);
+  }, [nextSlide, prevSlide, isFullscreen, setIsFullscreen, isEditorFullscreen, setIsEditorFullscreen, setIsDark, setCurrentSlide, focusSlideInput]);
 }
 

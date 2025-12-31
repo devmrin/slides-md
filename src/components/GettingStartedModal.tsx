@@ -242,6 +242,10 @@ More content`}
                         <kbd className="px-2 py-1 bg-gray-100 dark:bg-gray-700 rounded text-xs border border-gray-300 dark:border-gray-600 text-gray-800 dark:text-gray-200 font-mono font-medium">R</kbd>
                         <span>reset deck</span>
                       </li>
+                      <li className="flex items-center gap-2">
+                        <kbd className="px-2 py-1 bg-gray-100 dark:bg-gray-700 rounded text-xs border border-gray-300 dark:border-gray-600 text-gray-800 dark:text-gray-200 font-mono font-medium">J</kbd>
+                        <span>jump to slide (focus input)</span>
+                      </li>
                     </ul>
                   </div>
                 </div>

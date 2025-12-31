@@ -15,6 +15,7 @@ interface PresentationViewProps {
   setIsDark: (updater: boolean | ((prev: boolean) => boolean)) => void;
   setCurrentSlide: (slide: number) => void;
   isFullscreen: boolean;
+  onFocusInputReady?: (focusFn: () => void) => void;
 }
 
 export function PresentationView({
@@ -28,6 +29,7 @@ export function PresentationView({
   setIsDark,
   setCurrentSlide,
   isFullscreen,
+  onFocusInputReady,
 }: PresentationViewProps) {
   const containerRef = useRef<HTMLDivElement>(null);
   const hasRequestedFullscreen = useRef(false);
@@ -93,10 +95,12 @@ export function PresentationView({
         slidesLength={slides.length}
         prevSlide={prevSlide}
         nextSlide={nextSlide}
+        setCurrentSlide={setCurrentSlide}
         frontmatter={frontmatter}
         isFullscreen={true}
         onExitFullscreen={() => setIsFullscreen(false)}
         onToggleTheme={() => setIsDark((d) => !d)}
+        onFocusInputReady={onFocusInputReady}
       />
     </div>
   );

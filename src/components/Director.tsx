@@ -5,10 +5,12 @@ interface DirectorProps {
   slidesLength: number;
   prevSlide: () => void;
   nextSlide: () => void;
+  setCurrentSlide: (slide: number) => void;
   frontmatter?: Record<string, string>;
   isFullscreen?: boolean;
   onExitFullscreen?: () => void;
   onToggleTheme?: () => void;
+  onFocusInputReady?: (focusFn: () => void) => void;
 }
 
 export function Director(props: DirectorProps) {
