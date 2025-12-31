@@ -36,7 +36,9 @@
 }
 
 /* Typography - Enhanced with better contrast and spacing */
-h1 { 
+/* Scoped to presentation views only */
+.standard-view-slide h1,
+.presentation-view-slide h1 { 
   font-size: 2.5rem; 
   font-weight: 700; 
   margin: 1.5rem 0; 
@@ -44,11 +46,13 @@ h1 {
   color: #111827;
   letter-spacing: -0.02em;
 }
-.dark h1 {
+.dark .standard-view-slide h1,
+.dark .presentation-view-slide h1 {
   color: #f9fafb;
 }
 
-h2 { 
+.standard-view-slide h2,
+.presentation-view-slide h2 { 
   font-size: 2rem; 
   font-weight: 700; 
   margin: 1.25rem 0; 
@@ -56,107 +60,134 @@ h2 {
   color: #1f2937;
   letter-spacing: -0.01em;
 }
-.dark h2 {
+.dark .standard-view-slide h2,
+.dark .presentation-view-slide h2 {
   color: #f3f4f6;
 }
 
-h3 { 
+.standard-view-slide h3,
+.presentation-view-slide h3 { 
   font-size: 1.75rem; 
   font-weight: 600; 
   margin: 1rem 0; 
   line-height: 1.3; 
   color: #374151;
 }
-.dark h3 {
+.dark .standard-view-slide h3,
+.dark .presentation-view-slide h3 {
   color: #e5e7eb;
 }
 
-h4 { 
+.standard-view-slide h4,
+.presentation-view-slide h4 { 
   font-size: 1.5rem; 
   font-weight: 600; 
   margin: 0.875rem 0; 
   line-height: 1.4; 
   color: #4b5563;
 }
-.dark h4 {
+.dark .standard-view-slide h4,
+.dark .presentation-view-slide h4 {
   color: #d1d5db;
 }
 
-h5 { 
+.standard-view-slide h5,
+.presentation-view-slide h5 { 
   font-size: 1.25rem; 
   font-weight: 600; 
   margin: 0.75rem 0; 
   line-height: 1.4; 
   color: #6b7280;
 }
-.dark h5 {
+.dark .standard-view-slide h5,
+.dark .presentation-view-slide h5 {
   color: #9ca3af;
 }
 
-h6 { 
+.standard-view-slide h6,
+.presentation-view-slide h6 { 
   font-size: 1.125rem; 
   font-weight: 600; 
   margin: 0.625rem 0; 
   line-height: 1.4; 
   color: #6b7280;
 }
-.dark h6 {
+.dark .standard-view-slide h6,
+.dark .presentation-view-slide h6 {
   color: #9ca3af;
 }
 
 /* Lists - Enhanced styling */
-ul, ol { 
+/* Scoped to presentation views only */
+.standard-view-slide ul,
+.presentation-view-slide ul,
+.standard-view-slide ol,
+.presentation-view-slide ol { 
   margin: 1rem 0; 
   padding-left: 2rem; 
 }
-ul { 
+.standard-view-slide ul,
+.presentation-view-slide ul { 
   list-style: disc; 
 }
-ol { 
+.standard-view-slide ol,
+.presentation-view-slide ol { 
   list-style: decimal; 
 }
-li { 
+.standard-view-slide li,
+.presentation-view-slide li { 
   margin: 0.5rem 0; 
   line-height: 1.7; 
   color: #374151;
 }
-.dark li {
+.dark .standard-view-slide li,
+.dark .presentation-view-slide li {
   color: #e5e7eb;
 }
 
 /* Todo items / Task lists */
-.todo-item {
+/* Scoped to presentation views only */
+.standard-view-slide .todo-item,
+.presentation-view-slide .todo-item {
   display: flex;
   align-items: center;
   gap: 0.5rem;
   margin: 0.5rem 0;
 }
-.todo-item input[type="checkbox"] {
+.standard-view-slide .todo-item input[type="checkbox"],
+.presentation-view-slide .todo-item input[type="checkbox"] {
   width: 1.125rem;
   height: 1.125rem;
   accent-color: #2563eb;
   cursor: default;
   flex-shrink: 0;
 }
-.dark .todo-item input[type="checkbox"] {
+.dark .standard-view-slide .todo-item input[type="checkbox"],
+.dark .presentation-view-slide .todo-item input[type="checkbox"] {
   accent-color: #60a5fa;
 }
 
 /* GFM task list styling (- [ ] items) */
-ul.contains-task-list,
-ul:has(> li > input[type="checkbox"]) {
+.standard-view-slide ul.contains-task-list,
+.presentation-view-slide ul.contains-task-list,
+.standard-view-slide ul:has(> li > input[type="checkbox"]),
+.presentation-view-slide ul:has(> li > input[type="checkbox"]) {
   list-style: none;
   padding-left: 0;
 }
-li.task-list-item,
-li:has(> input[type="checkbox"]) {
+.standard-view-slide li.task-list-item,
+.presentation-view-slide li.task-list-item,
+.standard-view-slide li:has(> input[type="checkbox"]),
+.presentation-view-slide li:has(> input[type="checkbox"]) {
   display: flex;
   align-items: center;
   gap: 0.5rem;
   list-style: none;
 }
-li.task-list-item input[type="checkbox"],
-li > input[type="checkbox"] {
+.standard-view-slide li.task-list-item input[type="checkbox"],
+.presentation-view-slide li.task-list-item input[type="checkbox"],
+.standard-view-slide li > input[type="checkbox"],
+.presentation-view-slide li > input[type="checkbox"] {
   width: 1.125rem;
   height: 1.125rem;
   accent-color: #2563eb;
@@ -164,13 +195,17 @@ li > input[type="checkbox"] {
   flex-shrink: 0;
   margin: 0;
 }
-.dark li.task-list-item input[type="checkbox"],
-.dark li > input[type="checkbox"] {
+.dark .standard-view-slide li.task-list-item input[type="checkbox"],
+.dark .presentation-view-slide li.task-list-item input[type="checkbox"],
+.dark .standard-view-slide li > input[type="checkbox"],
+.dark .presentation-view-slide li > input[type="checkbox"] {
   accent-color: #60a5fa;
 }
 
 /* Blockquotes - More prominent and beautiful */
-blockquote { 
+/* Scoped to presentation views only */
+.standard-view-slide blockquote,
+.presentation-view-slide blockquote { 
   border-left: 4px solid #9ca3af;
   background-color: #f9fafb;
   padding: 1rem 1.5rem; 
@@ -179,23 +214,28 @@ blockquote {
   color: #4b5563;
   font-style: italic;
 }
-.dark blockquote {
+.dark .standard-view-slide blockquote,
+.dark .presentation-view-slide blockquote {
   border-left-color: #6b7280;
   background-color: #1f2937;
   color: #d1d5db;
 }
-blockquote.nested {
+.standard-view-slide blockquote.nested,
+.presentation-view-slide blockquote.nested {
   margin-left: 1rem;
   border-left-color: #d1d5db;
   background-color: #f3f4f6;
 }
-.dark blockquote.nested {
+.dark .standard-view-slide blockquote.nested,
+.dark .presentation-view-slide blockquote.nested {
   border-left-color: #4b5563;
   background-color: #111827;
 }
 
 /* Tables - Enhanced with better borders and contrast */
-table {
+/* Scoped to presentation views only */
+.standard-view-slide table,
+.presentation-view-slide table {
   border-collapse: collapse;
   width: 100%;
   margin: 1.5rem 0;
@@ -203,47 +243,62 @@ table {
   border-radius: 0.5rem;
   overflow: hidden;
 }
-.dark table {
+.dark .standard-view-slide table,
+.dark .presentation-view-slide table {
   border-color: #374151;
 }
 
-th, td {
+.standard-view-slide th,
+.presentation-view-slide th,
+.standard-view-slide td,
+.presentation-view-slide td {
   border: 1px solid #e5e7eb;
   padding: 0.75rem 1rem;
   text-align: left;
 }
-.dark th, .dark td {
+.dark .standard-view-slide th,
+.dark .presentation-view-slide th,
+.dark .standard-view-slide td,
+.dark .presentation-view-slide td {
   border-color: #374151;
 }
 
-th {
+.standard-view-slide th,
+.presentation-view-slide th {
   background-color: #f9fafb;
   font-weight: 600;
   color: #111827;
 }
-.dark th {
+.dark .standard-view-slide th,
+.dark .presentation-view-slide th {
   background-color: #1f2937;
   color: #f9fafb;
 }
 
-td {
+.standard-view-slide td,
+.presentation-view-slide td {
   background-color: #ffffff;
   color: #374151;
 }
-.dark td {
+.dark .standard-view-slide td,
+.dark .presentation-view-slide td {
   background-color: #111827;
   color: #e5e7eb;
 }
 
-tr:nth-child(even) td {
+.standard-view-slide tr:nth-child(even) td,
+.presentation-view-slide tr:nth-child(even) td {
   background-color: #f9fafb;
 }
-.dark tr:nth-child(even) td {
+.dark .standard-view-slide tr:nth-child(even) td,
+.dark .presentation-view-slide tr:nth-child(even) td {
   background-color: #1a1f2e;
 }
 
 /* Code blocks - Enhanced with better contrast */
-pre {
+/* Scoped to presentation views only */
+.standard-view-slide pre,
+.presentation-view-slide pre {
   background-color: #1f2937;
   padding: 1.25rem;
   border-radius: 0.5rem;
@@ -252,7 +307,8 @@ pre {
   border: 1px solid #374151;
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
 }
-.dark pre {
+.dark .standard-view-slide pre,
+.dark .presentation-view-slide pre {
   background-color: #0f172a;
   border-color: #1e293b;
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
@@ -271,22 +327,31 @@ pre {
   overflow-x: auto;
 }
 
-code {
+/* Scoped to presentation views only */
+.standard-view-slide code,
+.presentation-view-slide code {
   font-family: 'SF Mono', 'Monaco', 'Inconsolata', 'Fira Code', 'Courier New', monospace;
   font-size: 0.9em;
 }
 
-pre code {
+.standard-view-slide pre code,
+.presentation-view-slide pre code {
   background: none;
   padding: 0;
   color: #e5e7eb;
 }
-.dark pre code {
+.dark .standard-view-slide pre code,
+.dark .presentation-view-slide pre code {
   color: #cbd5e1;
 }
 
 /* Inline code - More prominent */
-p code, li code, td code {
+.standard-view-slide p code,
+.presentation-view-slide p code,
+.standard-view-slide li code,
+.presentation-view-slide li code,
+.standard-view-slide td code,
+.presentation-view-slide td code {
   background-color: #f3f4f6;
   padding: 0.2rem 0.5rem;
   border-radius: 0.375rem;
@@ -295,132 +360,209 @@ p code, li code, td code {
   border: 1px solid #e5e7eb;
   font-weight: 500;
 }
-.dark p code, .dark li code, .dark td code {
+.dark .standard-view-slide p code,
+.dark .presentation-view-slide p code,
+.dark .standard-view-slide li code,
+.dark .presentation-view-slide li code,
+.dark .standard-view-slide td code,
+.dark .presentation-view-slide td code {
   background-color: #1f2937;
   color: #f87171;
   border-color: #374151;
 }
 
 /* Highlight.js syntax highlighting - Light mode */
-pre code.hljs {
+/* Scoped to presentation views only */
+.standard-view-slide pre code.hljs,
+.presentation-view-slide pre code.hljs {
   background: #1f2937;
   color: #e5e7eb;
 }
-pre code.hljs .hljs-keyword,
-pre code.hljs .hljs-selector-tag,
-pre code.hljs .hljs-built_in,
-pre code.hljs .hljs-name,
-pre code.hljs .hljs-tag {
+.standard-view-slide pre code.hljs .hljs-keyword,
+.presentation-view-slide pre code.hljs .hljs-keyword,
+.standard-view-slide pre code.hljs .hljs-selector-tag,
+.presentation-view-slide pre code.hljs .hljs-selector-tag,
+.standard-view-slide pre code.hljs .hljs-built_in,
+.presentation-view-slide pre code.hljs .hljs-built_in,
+.standard-view-slide pre code.hljs .hljs-name,
+.presentation-view-slide pre code.hljs .hljs-name,
+.standard-view-slide pre code.hljs .hljs-tag,
+.presentation-view-slide pre code.hljs .hljs-tag {
   color: #60a5fa;
 }
-pre code.hljs .hljs-string,
-pre code.hljs .hljs-title,
-pre code.hljs .hljs-section,
-pre code.hljs .hljs-attribute,
-pre code.hljs .hljs-literal,
-pre code.hljs .hljs-template-tag,
-pre code.hljs .hljs-template-variable,
-pre code.hljs .hljs-type,
-pre code.hljs .hljs-addition {
+.standard-view-slide pre code.hljs .hljs-string,
+.presentation-view-slide pre code.hljs .hljs-string,
+.standard-view-slide pre code.hljs .hljs-title,
+.presentation-view-slide pre code.hljs .hljs-title,
+.standard-view-slide pre code.hljs .hljs-section,
+.presentation-view-slide pre code.hljs .hljs-section,
+.standard-view-slide pre code.hljs .hljs-attribute,
+.presentation-view-slide pre code.hljs .hljs-attribute,
+.standard-view-slide pre code.hljs .hljs-literal,
+.presentation-view-slide pre code.hljs .hljs-literal,
+.standard-view-slide pre code.hljs .hljs-template-tag,
+.presentation-view-slide pre code.hljs .hljs-template-tag,
+.standard-view-slide pre code.hljs .hljs-template-variable,
+.presentation-view-slide pre code.hljs .hljs-template-variable,
+.standard-view-slide pre code.hljs .hljs-type,
+.presentation-view-slide pre code.hljs .hljs-type,
+.standard-view-slide pre code.hljs .hljs-addition,
+.presentation-view-slide pre code.hljs .hljs-addition {
   color: #34d399;
 }
-pre code.hljs .hljs-comment,
-pre code.hljs .hljs-quote,
-pre code.hljs .hljs-deletion,
-pre code.hljs .hljs-meta {
+.standard-view-slide pre code.hljs .hljs-comment,
+.presentation-view-slide pre code.hljs .hljs-comment,
+.standard-view-slide pre code.hljs .hljs-quote,
+.presentation-view-slide pre code.hljs .hljs-quote,
+.standard-view-slide pre code.hljs .hljs-deletion,
+.presentation-view-slide pre code.hljs .hljs-deletion,
+.standard-view-slide pre code.hljs .hljs-meta,
+.presentation-view-slide pre code.hljs .hljs-meta {
   color: #9ca3af;
   font-style: italic;
 }
-pre code.hljs .hljs-number,
-pre code.hljs .hljs-regexp,
-pre code.hljs .hljs-symbol,
-pre code.hljs .hljs-variable,
-pre code.hljs .hljs-template-variable,
-pre code.hljs .hljs-link,
-pre code.hljs .hljs-selector-attr,
-pre code.hljs .hljs-selector-pseudo {
+.standard-view-slide pre code.hljs .hljs-number,
+.presentation-view-slide pre code.hljs .hljs-number,
+.standard-view-slide pre code.hljs .hljs-regexp,
+.presentation-view-slide pre code.hljs .hljs-regexp,
+.standard-view-slide pre code.hljs .hljs-symbol,
+.presentation-view-slide pre code.hljs .hljs-symbol,
+.standard-view-slide pre code.hljs .hljs-variable,
+.presentation-view-slide pre code.hljs .hljs-variable,
+.standard-view-slide pre code.hljs .hljs-template-variable,
+.presentation-view-slide pre code.hljs .hljs-template-variable,
+.standard-view-slide pre code.hljs .hljs-link,
+.presentation-view-slide pre code.hljs .hljs-link,
+.standard-view-slide pre code.hljs .hljs-selector-attr,
+.presentation-view-slide pre code.hljs .hljs-selector-attr,
+.standard-view-slide pre code.hljs .hljs-selector-pseudo,
+.presentation-view-slide pre code.hljs .hljs-selector-pseudo {
   color: #fbbf24;
 }
-pre code.hljs .hljs-function,
-pre code.hljs .hljs-title.function_,
-pre code.hljs .hljs-class,
-pre code.hljs .hljs-title.class_ {
+.standard-view-slide pre code.hljs .hljs-function,
+.presentation-view-slide pre code.hljs .hljs-function,
+.standard-view-slide pre code.hljs .hljs-title.function_,
+.presentation-view-slide pre code.hljs .hljs-title.function_,
+.standard-view-slide pre code.hljs .hljs-class,
+.presentation-view-slide pre code.hljs .hljs-class,
+.standard-view-slide pre code.hljs .hljs-title.class_,
+.presentation-view-slide pre code.hljs .hljs-title.class_ {
   color: #a78bfa;
 }
-pre code.hljs .hljs-operator {
+.standard-view-slide pre code.hljs .hljs-operator,
+.presentation-view-slide pre code.hljs .hljs-operator {
   color: #f472b6;
 }
-pre code.hljs .hljs-punctuation {
+.standard-view-slide pre code.hljs .hljs-punctuation,
+.presentation-view-slide pre code.hljs .hljs-punctuation {
   color: #cbd5e1;
 }
 
 /* Highlight.js syntax highlighting - Dark mode */
-.dark pre code.hljs {
+.dark .standard-view-slide pre code.hljs,
+.dark .presentation-view-slide pre code.hljs {
   background: #0f172a;
   color: #cbd5e1;
 }
-.dark pre code.hljs .hljs-keyword,
-.dark pre code.hljs .hljs-selector-tag,
-.dark pre code.hljs .hljs-built_in,
-.dark pre code.hljs .hljs-name,
-.dark pre code.hljs .hljs-tag {
+.dark .standard-view-slide pre code.hljs .hljs-keyword,
+.dark .presentation-view-slide pre code.hljs .hljs-keyword,
+.dark .standard-view-slide pre code.hljs .hljs-selector-tag,
+.dark .presentation-view-slide pre code.hljs .hljs-selector-tag,
+.dark .standard-view-slide pre code.hljs .hljs-built_in,
+.dark .presentation-view-slide pre code.hljs .hljs-built_in,
+.dark .standard-view-slide pre code.hljs .hljs-name,
+.dark .presentation-view-slide pre code.hljs .hljs-name,
+.dark .standard-view-slide pre code.hljs .hljs-tag,
+.dark .presentation-view-slide pre code.hljs .hljs-tag {
   color: #60a5fa;
 }
-.dark pre code.hljs .hljs-string,
-.dark pre code.hljs .hljs-title,
-.dark pre code.hljs .hljs-section,
-.dark pre code.hljs .hljs-attribute,
-.dark pre code.hljs .hljs-literal,
-.dark pre code.hljs .hljs-template-tag,
-.dark pre code.hljs .hljs-template-variable,
-.dark pre code.hljs .hljs-type,
-.dark pre code.hljs .hljs-addition {
+.dark .standard-view-slide pre code.hljs .hljs-string,
+.dark .presentation-view-slide pre code.hljs .hljs-string,
+.dark .standard-view-slide pre code.hljs .hljs-title,
+.dark .presentation-view-slide pre code.hljs .hljs-title,
+.dark .standard-view-slide pre code.hljs .hljs-section,
+.dark .presentation-view-slide pre code.hljs .hljs-section,
+.dark .standard-view-slide pre code.hljs .hljs-attribute,
+.dark .presentation-view-slide pre code.hljs .hljs-attribute,
+.dark .standard-view-slide pre code.hljs .hljs-literal,
+.dark .presentation-view-slide pre code.hljs .hljs-literal,
+.dark .standard-view-slide pre code.hljs .hljs-template-tag,
+.dark .presentation-view-slide pre code.hljs .hljs-template-tag,
+.dark .standard-view-slide pre code.hljs .hljs-template-variable,
+.dark .presentation-view-slide pre code.hljs .hljs-template-variable,
+.dark .standard-view-slide pre code.hljs .hljs-type,
+.dark .presentation-view-slide pre code.hljs .hljs-type,
+.dark .standard-view-slide pre code.hljs .hljs-addition,
+.dark .presentation-view-slide pre code.hljs .hljs-addition {
   color: #34d399;
 }
-.dark pre code.hljs .hljs-comment,
-.dark pre code.hljs .hljs-quote,
-.dark pre code.hljs .hljs-deletion,
-.dark pre code.hljs .hljs-meta {
+.dark .standard-view-slide pre code.hljs .hljs-comment,
+.dark .presentation-view-slide pre code.hljs .hljs-comment,
+.dark .standard-view-slide pre code.hljs .hljs-quote,
+.dark .presentation-view-slide pre code.hljs .hljs-quote,
+.dark .standard-view-slide pre code.hljs .hljs-deletion,
+.dark .presentation-view-slide pre code.hljs .hljs-deletion,
+.dark .standard-view-slide pre code.hljs .hljs-meta,
+.dark .presentation-view-slide pre code.hljs .hljs-meta {
   color: #6b7280;
   font-style: italic;
 }
-.dark pre code.hljs .hljs-number,
-.dark pre code.hljs .hljs-regexp,
-.dark pre code.hljs .hljs-symbol,
-.dark pre code.hljs .hljs-variable,
-.dark pre code.hljs .hljs-template-variable,
-.dark pre code.hljs .hljs-link,
-.dark pre code.hljs .hljs-selector-attr,
-.dark pre code.hljs .hljs-selector-pseudo {
+.dark .standard-view-slide pre code.hljs .hljs-number,
+.dark .presentation-view-slide pre code.hljs .hljs-number,
+.dark .standard-view-slide pre code.hljs .hljs-regexp,
+.dark .presentation-view-slide pre code.hljs .hljs-regexp,
+.dark .standard-view-slide pre code.hljs .hljs-symbol,
+.dark .presentation-view-slide pre code.hljs .hljs-symbol,
+.dark .standard-view-slide pre code.hljs .hljs-variable,
+.dark .presentation-view-slide pre code.hljs .hljs-variable,
+.dark .standard-view-slide pre code.hljs .hljs-template-variable,
+.dark .presentation-view-slide pre code.hljs .hljs-template-variable,
+.dark .standard-view-slide pre code.hljs .hljs-link,
+.dark .presentation-view-slide pre code.hljs .hljs-link,
+.dark .standard-view-slide pre code.hljs .hljs-selector-attr,
+.dark .presentation-view-slide pre code.hljs .hljs-selector-attr,
+.dark .standard-view-slide pre code.hljs .hljs-selector-pseudo,
+.dark .presentation-view-slide pre code.hljs .hljs-selector-pseudo {
   color: #fbbf24;
 }
-.dark pre code.hljs .hljs-function,
-.dark pre code.hljs .hljs-title.function_,
-.dark pre code.hljs .hljs-class,
-.dark pre code.hljs .hljs-title.class_ {
+.dark .standard-view-slide pre code.hljs .hljs-function,
+.dark .presentation-view-slide pre code.hljs .hljs-function,
+.dark .standard-view-slide pre code.hljs .hljs-title.function_,
+.dark .presentation-view-slide pre code.hljs .hljs-title.function_,
+.dark .standard-view-slide pre code.hljs .hljs-class,
+.dark .presentation-view-slide pre code.hljs .hljs-class,
+.dark .standard-view-slide pre code.hljs .hljs-title.class_,
+.dark .presentation-view-slide pre code.hljs .hljs-title.class_ {
   color: #a78bfa;
 }
-.dark pre code.hljs .hljs-operator {
+.dark .standard-view-slide pre code.hljs .hljs-operator,
+.dark .presentation-view-slide pre code.hljs .hljs-operator {
   color: #f472b6;
 }
-.dark pre code.hljs .hljs-punctuation {
+.dark .standard-view-slide pre code.hljs .hljs-punctuation,
+.dark .presentation-view-slide pre code.hljs .hljs-punctuation {
   color: #e2e8f0;
 }
 
 /* Images - Enhanced with subtle border */
-img {
+/* Scoped to presentation views only */
+.standard-view-slide img,
+.presentation-view-slide img {
   max-width: 100%;
   height: auto;
   margin: 1.5rem 0;
   border-radius: 0.5rem;
   box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
 }
-.dark img {
+.dark .standard-view-slide img,
+.dark .presentation-view-slide img {
   box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.3), 0 2px 4px -1px rgba(0, 0, 0, 0.2);
 }
 
 /* Links - More vibrant and visible */
-a {
+/* Scoped to presentation views only */
+.standard-view-slide a,
+.presentation-view-slide a {
   color: #2563eb;
   text-decoration: underline;
   text-decoration-color: #93c5fd;
@@ -428,63 +570,83 @@ a {
   transition: all 0.2s ease;
   font-weight: 500;
 }
-.dark a {
+.dark .standard-view-slide a,
+.dark .presentation-view-slide a {
   color: #60a5fa;
   text-decoration-color: #3b82f6;
 }
-a:hover {
+.standard-view-slide a:hover,
+.presentation-view-slide a:hover {
   color: #1d4ed8;
   text-decoration-color: #2563eb;
 }
-.dark a:hover {
+.dark .standard-view-slide a:hover,
+.dark .presentation-view-slide a:hover {
   color: #93c5fd;
   text-decoration-color: #60a5fa;
 }
 
 /* Paragraphs and text - Better contrast */
-p { 
+/* Scoped to presentation views only */
+.standard-view-slide p,
+.presentation-view-slide p { 
   margin: 0.875rem 0; 
   line-height: 1.7; 
   color: #374151;
 }
-.dark p {
+.dark .standard-view-slide p,
+.dark .presentation-view-slide p {
   color: #e5e7eb;
 }
 
-strong { 
+.standard-view-slide strong,
+.presentation-view-slide strong { 
   font-weight: 700; 
   color: #111827;
 }
-.dark strong {
+.dark .standard-view-slide strong,
+.dark .presentation-view-slide strong {
   color: #f9fafb;
 }
 
-em { 
+.standard-view-slide em,
+.presentation-view-slide em { 
   font-style: italic; 
   color: #4b5563;
 }
-.dark em {
+.dark .standard-view-slide em,
+.dark .presentation-view-slide em {
   color: #d1d5db;
 }
 
 /* Horizontal rules */
-hr {
+/* Scoped to presentation views only */
+.standard-view-slide hr,
+.presentation-view-slide hr {
   border: none;
   border-top: 2px solid #e5e7eb;
   margin: 2rem 0;
 }
-.dark hr {
+.dark .standard-view-slide hr,
+.dark .presentation-view-slide hr {
   border-top-color: #374151;
 }
 
 /* Markdown container - ensure proper text rendering */
-div[class*="markdown"], 
-div[class*="slide"],
-article {
+/* Scoped to presentation views only */
+.standard-view-slide div[class*="markdown"], 
+.presentation-view-slide div[class*="markdown"], 
+.standard-view-slide div[class*="slide"],
+.presentation-view-slide div[class*="slide"],
+.standard-view-slide article,
+.presentation-view-slide article {
   color: #374151;
 }
-.dark div[class*="markdown"], 
-.dark div[class*="slide"],
-.dark article {
+.dark .standard-view-slide div[class*="markdown"], 
+.dark .presentation-view-slide div[class*="markdown"], 
+.dark .standard-view-slide div[class*="slide"],
+.dark .presentation-view-slide div[class*="slide"],
+.dark .standard-view-slide article,
+.dark .presentation-view-slide article {
   color: #e5e7eb;
 }

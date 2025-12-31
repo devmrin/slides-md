@@ -8,6 +8,7 @@ const STORAGE_KEY = "slides-md-user-preferences";
  */
 export interface UserPreferences {
   theme?: boolean;
+  homeViewMode?: "gallery" | "list";
   [key: string]: unknown;
 }
 

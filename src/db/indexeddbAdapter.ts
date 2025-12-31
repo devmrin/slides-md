@@ -1,7 +1,5 @@
 import Dexie, { type Table } from "dexie";
 import type { DatabaseAdapter, Presentation } from "./adapter";
-import initialMarkdown from "../data/seed.md?raw";
-import { parseFrontmatter } from "../utils/parseFrontmatter";
 
 /**
  * Dexie database schema
@@ -19,11 +17,6 @@ class SlidesDatabase extends Dexie {
 
 
 /**
- * Default presentation ID
- */
-const DEFAULT_PRESENTATION_ID = "default";
-
-/**
  * IndexedDB adapter implementation using Dexie.js
  */
 export class IndexedDBAdapter implements DatabaseAdapter {
@@ -35,29 +28,15 @@ export class IndexedDBAdapter implements DatabaseAdapter {
   }
 
   /**
-   * Initialize the database and seed initial data if needed
+   * Initialize the database (no auto-seeding - HomePage handles empty state)
    */
   async initialize(): Promise<void> {
     if (this.initialized) {
       return;
     }
 
-    // Check if we have any presentations
-    const count = await this.db.presentations.count();
-    
-    if (count === 0) {
-      // Seed initial data from seed.md
-      const { frontmatter } = parseFrontmatter(initialMarkdown);
-      const now = Date.now();
-      await this.db.presentations.add({
-        id: DEFAULT_PRESENTATION_ID,
-        name: frontmatter.title || "Untitled Presentation",
-        markdown: initialMarkdown,
-        createdAt: now,
-        updatedAt: now,
-      });
-    }
-
+    // Just ensure database is ready
+    // HomePage will handle empty state and let users create their first presentation
     this.initialized = true;
   }
 
@@ -94,13 +73,6 @@ export class IndexedDBAdapter implements DatabaseAdapter {
   async deletePresentation(id: string): Promise<void> {
     await this.initialize();
     await this.db.presentations.delete(id);
-  }
-
-  /**
-   * Get the default presentation ID
-   */
-  getDefaultPresentationId(): string {
-    return DEFAULT_PRESENTATION_ID;
   }
 }
 

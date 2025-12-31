@@ -1,7 +1,7 @@
 import { useRef, useEffect } from "react";
 import { Slide } from "./Slide";
 import { Director } from "./Director";
-import { Button } from "./Button";
+import { Button } from "../ui/Button";
 import { useFullscreen } from "../hooks/useFullscreen";
 
 interface PresentationViewProps {

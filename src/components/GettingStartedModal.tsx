@@ -1,7 +1,7 @@
 import * as Dialog from "@radix-ui/react-dialog";
 import { X, Copy, Check } from "lucide-react";
 import { useState } from "react";
-import { Button } from "./Button";
+import { Button } from "../ui/Button";
 
 export function GettingStartedModal() {
   const [copied, setCopied] = useState(false);
@@ -65,13 +65,13 @@ Output only the deck content.
         <Dialog.Content className="fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-white dark:bg-gray-800 rounded-lg shadow-xl w-full max-w-2xl max-h-[85vh] overflow-y-auto z-50 border border-gray-300 dark:border-gray-700">
           <div className="p-6 relative">
             <Dialog.Close asChild>
-              <button
-                className="absolute top-4 right-4 sm:top-6 sm:right-6 p-2 sm:p-2.5 rounded-md text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors touch-manipulation"
+              <Button
+                className="absolute top-4 right-4 sm:top-6 sm:right-6 p-2 sm:p-2.5 text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700 touch-manipulation"
                 aria-label="Close"
                 type="button"
               >
                 <X className="w-5 h-5 sm:w-6 sm:h-6" />
-              </button>
+              </Button>
             </Dialog.Close>
             <Dialog.Title className="text-2xl font-bold mb-6 text-gray-900 dark:text-gray-100 pr-12 sm:pr-16">
               Getting Started with slides.md
@@ -214,9 +214,9 @@ More content`}
                 </p>
 
                 <div className="relative bg-gray-900 dark:bg-gray-950 rounded-lg p-4 border border-gray-700 dark:border-gray-600 text-sm font-mono text-gray-100 dark:text-gray-200 whitespace-pre-wrap">
-                  <button
+                  <Button
                     onClick={handleCopy}
-                    className="absolute top-3 right-3 p-2 rounded-md text-gray-400 hover:text-gray-100 dark:hover:text-gray-200 hover:bg-gray-800 dark:hover:bg-gray-900 transition-colors"
+                    className="absolute top-3 right-3 p-2 text-gray-400 hover:text-gray-100 dark:hover:text-gray-200 hover:bg-gray-800 dark:hover:bg-gray-900"
                     aria-label="Copy prompt to clipboard"
                     type="button"
                   >
@@ -225,7 +225,7 @@ More content`}
                     ) : (
                       <Copy className="w-4 h-4" />
                     )}
-                  </button>
+                  </Button>
                   {llmPrompt}
                 </div>
               </section>
@@ -234,7 +234,7 @@ More content`}
             <div className="mt-8 flex justify-end  pt-6">
               <Dialog.Close asChild>
                 <Button
-                  className="px-4 py-2 text-sm border rounded-md border-gray-300 dark:border-gray-600 text-gray-900 dark:text-gray-100 bg-white dark:bg-gray-800 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors"
+                  className="px-3 py-1 border rounded border-gray-400 dark:border-gray-600 text-gray-900 dark:text-gray-100 bg-white dark:bg-gray-900 hover:bg-gray-50 dark:hover:bg-gray-800"
                 >
                   Close
                 </Button>
