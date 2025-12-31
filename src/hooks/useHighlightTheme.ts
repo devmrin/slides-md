@@ -1,4 +1,5 @@
 import { useEffect } from "react";
+import hljs from "highlight.js";
 
 /**
  * Hook to dynamically load highlight.js theme CSS based on dark mode
@@ -9,6 +10,9 @@ import { useEffect } from "react";
  * appropriate highlight.js theme CSS file. The href is updated when theme changes.
  * 
  * CSS files are served from /hljs-themes/ (copied to public directory)
+ * 
+ * After the CSS loads, we re-run highlight.js on all code blocks to ensure
+ * the new theme styles are applied to already-highlighted code.
  */
 export function useHighlightTheme(isDark: boolean) {
   useEffect(() => {
@@ -27,6 +31,13 @@ export function useHighlightTheme(isDark: boolean) {
     themeLink.type = "text/css";
     themeLink.href = `/hljs-themes/${themeName}.min.css`;
     themeLink.setAttribute("data-theme", themeName);
+    
+    // After CSS loads, re-highlight all code blocks to apply new theme styles
+    themeLink.onload = () => {
+      document.querySelectorAll("pre code").forEach((block) => {
+        hljs.highlightElement(block as HTMLElement);
+      });
+    };
     
     // Append to head
     document.head.appendChild(themeLink);
