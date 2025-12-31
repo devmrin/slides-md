@@ -1,5 +1,5 @@
 import * as Dialog from "@radix-ui/react-dialog";
-import { X, Copy, Check } from "lucide-react";
+import { X, Copy, Check, ArrowUpRight } from "lucide-react";
 import { useState } from "react";
 import { format } from "date-fns";
 import { Button } from "../ui/Button";
@@ -270,7 +270,19 @@ More content`}
               </section>
             </div>
 
-            <div className="mt-8 flex justify-end  pt-6">
+            <div className="mt-8 flex justify-between items-center pt-6">
+              <span className="text-sm text-gray-700 dark:text-gray-300">
+                Crafted with ♥ by{" "}
+                <a
+                  href="https://mrinmay.dev"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-gray-700 dark:text-gray-300 hover:text-gray-900 dark:hover:text-gray-100 underline decoration-dotted transition-colors inline-flex items-center gap-1"
+                >
+                  Mrinmay
+                  <ArrowUpRight className="w-3 h-3" />
+                </a>
+              </span>
               <Dialog.Close asChild>
                 <Button
                   className="px-3 py-1 border rounded border-gray-400 dark:border-gray-600 text-gray-900 dark:text-gray-100 bg-white dark:bg-gray-900 hover:bg-gray-50 dark:hover:bg-gray-800"
