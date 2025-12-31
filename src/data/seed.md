@@ -1,7 +1,7 @@
 ===/===
 title: React Server Components Architecture
 by: Engineering Team
-date: 2025-12-31
+date: 2026-01-01
 description: An overview of React Server Components and their architectural implications
 ===/===
 

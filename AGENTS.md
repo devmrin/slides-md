@@ -230,11 +230,11 @@ const [theme, setTheme] = useLocalStorage("theme", false);
 
 **Flow:**
 1. `IndexedDBAdapter.initialize()` called on first access
-2. Checks if any presentations exist
-3. If empty, seeds from `src/data/seed.md`
-4. Creates default presentation with id: `"default"`
+2. Database is initialized and ready for use
+3. No auto-seeding - HomePage handles empty state
+4. Users create presentations manually, each with a UUID as the id
 
-**Key Detail:** Initialization is lazy and idempotent (uses `initialized` flag)
+**Key Detail:** Initialization is lazy and idempotent (uses `initialized` flag). All presentations use UUIDs for their IDs (generated via `generateUUID()` from `src/utils/uuid.ts`).
 
 ### Presentation Model
 
