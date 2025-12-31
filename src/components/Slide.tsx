@@ -134,16 +134,16 @@ export function Slide({ slide, isTitle, frontmatter }: SlideProps) {
       <div className="text-center max-w-full sm:max-w-4xl flex flex-col items-center">
         <h1 className="text-4xl sm:text-6xl font-bold">{frontmatter.title}</h1>
         {frontmatter.description && (
-          <p className="text-base sm:text-xl opacity-70 mt-4 sm:mt-5">{frontmatter.description}</p>
+          <p className="text-base sm:text-xl opacity-70">{frontmatter.description}</p>
         )}
-        <div className="mt-8 sm:mt-10 space-y-1">
+        <div className="mt-6 sm:mt-8 space-y-0.5">
           {frontmatter.presenter && (
-            <p className="text-sm sm:text-lg font-medium opacity-60">
+            <p className="text-sm sm:text-lg font-medium opacity-60 italic">
               by {frontmatter.presenter}
             </p>
           )}
           {frontmatter.date && (
-            <p className="text-sm sm:text-base italic opacity-40 tracking-wide">{formatDate(frontmatter.date)}</p>
+            <p className="text-sm sm:text-base opacity-40 -mt-1">{formatDate(frontmatter.date)}</p>
           )}
         </div>
       </div>
