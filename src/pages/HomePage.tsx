@@ -161,7 +161,7 @@ export function HomePage() {
       <div className="flex-1 flex flex-col overflow-hidden">
         {/* Top bar with controls */}
         {presentations.length > 0 && (
-          <div className="px-6 py-4 border-b border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-800 flex items-center justify-between">
+          <div className="px-6 py-4 border-b border-gray-300 dark:border-gray-700 bg-gray-100 dark:bg-gray-800 flex items-center justify-between">
             <div className="flex items-center gap-4">
               <Button
                 onClick={() => setCreateDialogOpen(true)}
