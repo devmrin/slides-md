@@ -5,6 +5,7 @@ import { useSlides } from "../hooks/useSlides";
 import { DeleteConfirmationDialog } from "./DeleteConfirmationDialog";
 import { EditPresentationNameDialog } from "./EditPresentationNameDialog";
 import { PresentationActionDropdown } from "./PresentationActionDropdown";
+import { exportToPptx } from "../utils/exportPptx";
 import type { Presentation } from "../db/adapter";
 
 interface PresentationCardProps {
@@ -51,6 +52,20 @@ export function PresentationCard({
     onDelete(presentation.id);
   };
 
+  const handleExport = async () => {
+    try {
+      await exportToPptx(
+        presentation.name,
+        presentation.markdown,
+        slides,
+        frontmatter
+      );
+    } catch (error) {
+      console.error("Error exporting to PPTX:", error);
+      alert("Failed to export presentation. Please try again.");
+    }
+  };
+
   return (
     <div
       className="bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-700 rounded-lg overflow-hidden cursor-pointer hover:shadow-lg transition-shadow"
@@ -79,6 +94,7 @@ export function PresentationCard({
               onDelete={onDelete}
               onEdit={onEdit}
               onDuplicate={onDuplicate}
+              onExport={handleExport}
               onEditClick={handleEdit}
               onDeleteClick={handleDelete}
             />

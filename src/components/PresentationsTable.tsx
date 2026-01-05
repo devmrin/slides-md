@@ -12,6 +12,8 @@ import { useSlides } from "../hooks/useSlides";
 import { DeleteConfirmationDialog } from "./DeleteConfirmationDialog";
 import { EditPresentationNameDialog } from "./EditPresentationNameDialog";
 import { PresentationActionDropdown } from "./PresentationActionDropdown";
+import { exportToPptx } from "../utils/exportPptx";
+import { parseFrontmatter } from "../utils/parseFrontmatter";
 import type { Presentation } from "../db/adapter";
 
 interface PresentationsTableProps {
@@ -61,6 +63,58 @@ export function PresentationsTable({
   const handleDeleteClick = (presentation: Presentation) => {
     setDeleteTarget(presentation);
     setDeleteDialogOpen(presentation.id);
+  };
+
+  const handleExport = async (presentation: Presentation) => {
+    try {
+      // Parse markdown manually to avoid using hooks outside of component
+      const { frontmatter, content } = parseFrontmatter(presentation.markdown);
+      const rawParts = content.split(/(===.*)/);
+      const slides: string[] = [];
+
+      let currentSlideContent = "";
+
+      for (let i = 0; i < rawParts.length; i++) {
+        const part = rawParts[i].trim();
+
+        if (part.startsWith("===")) {
+          if (currentSlideContent.trim() || slides.length > 0) {
+            slides.push(currentSlideContent.trim());
+          }
+          currentSlideContent = "";
+        } else if (part) {
+          currentSlideContent += (currentSlideContent ? "\n\n" : "") + part;
+        }
+      }
+
+      // Add the last slide
+      if (currentSlideContent.trim()) {
+        slides.push(currentSlideContent.trim());
+      }
+
+      // Filter out trailing empty slides
+      let lastNonEmptyIndex = slides.length - 1;
+      while (lastNonEmptyIndex >= 0 && slides[lastNonEmptyIndex] === "") {
+        lastNonEmptyIndex--;
+      }
+      const filteredSlides = slides.slice(0, lastNonEmptyIndex + 1);
+
+      // Add title slide marker if frontmatter exists
+      const finalSlides =
+        Object.keys(frontmatter).length > 0
+          ? ["__TITLE_SLIDE__", ...filteredSlides]
+          : filteredSlides;
+
+      await exportToPptx(
+        presentation.name,
+        presentation.markdown,
+        finalSlides,
+        frontmatter
+      );
+    } catch (error) {
+      console.error("Error exporting to PPTX:", error);
+      alert("Failed to export presentation. Please try again.");
+    }
   };
 
   const handleConfirmDelete = () => {
@@ -156,6 +210,7 @@ export function PresentationsTable({
                 onDelete={onDelete}
                 onEdit={onEdit}
                 onDuplicate={onDuplicate}
+                onExport={() => handleExport(presentation)}
                 onEditClick={() => handleEditClick(presentation)}
                 onDeleteClick={() => handleDeleteClick(presentation)}
               />

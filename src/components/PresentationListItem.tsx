@@ -1,9 +1,11 @@
 import { useState } from "react";
 import { useNavigate } from "@tanstack/react-router";
 import { format } from "date-fns";
+import { useSlides } from "../hooks/useSlides";
 import { DeleteConfirmationDialog } from "./DeleteConfirmationDialog";
 import { EditPresentationNameDialog } from "./EditPresentationNameDialog";
 import { PresentationActionDropdown } from "./PresentationActionDropdown";
+import { exportToPptx } from "../utils/exportPptx";
 import type { Presentation } from "../db/adapter";
 
 interface PresentationListItemProps {
@@ -20,6 +22,7 @@ export function PresentationListItem({
   onDuplicate,
 }: PresentationListItemProps) {
   const navigate = useNavigate();
+  const { frontmatter, slides } = useSlides(presentation.markdown);
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
   const [editDialogOpen, setEditDialogOpen] = useState(false);
 
@@ -48,6 +51,20 @@ export function PresentationListItem({
     onDelete(presentation.id);
   };
 
+  const handleExport = async () => {
+    try {
+      await exportToPptx(
+        presentation.name,
+        presentation.markdown,
+        slides,
+        frontmatter
+      );
+    } catch (error) {
+      console.error("Error exporting to PPTX:", error);
+      alert("Failed to export presentation. Please try again.");
+    }
+  };
+
   const formattedDate = format(new Date(presentation.updatedAt), "MMM d, yyyy");
 
   return (
@@ -68,6 +85,7 @@ export function PresentationListItem({
         onDelete={onDelete}
         onEdit={onEdit}
         onDuplicate={onDuplicate}
+        onExport={handleExport}
         onEditClick={handleEdit}
         onDeleteClick={handleDelete}
       />
