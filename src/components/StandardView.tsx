@@ -155,6 +155,7 @@ export function StandardView({
             }`}
           >
             <Slide
+              key={currentSlide}
               slide={slides[currentSlide]}
               isTitle={slides[currentSlide] === "__TITLE_SLIDE__"}
               isImageOnly={imageOnlySlides.has(currentSlide)}

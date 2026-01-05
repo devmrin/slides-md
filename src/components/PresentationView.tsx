@@ -99,6 +99,7 @@ export function PresentationView({
           className={`presentation-view-slide flex-1 overflow-hidden flex items-center justify-center p-0`}
         >
           <Slide
+            key={currentSlide}
             slide={slides[currentSlide]}
             isTitle={isTitle}
             isImageOnly={isImageOnly}
@@ -128,6 +129,7 @@ export function PresentationView({
             }`}
           >
             <Slide
+              key={currentSlide}
               slide={slides[currentSlide]}
               isTitle={isTitle}
               isImageOnly={isImageOnly}
