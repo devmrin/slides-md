@@ -295,8 +295,7 @@
   background-color: #1a1f2e;
 }
 
-/* Code blocks - Layout and structure only */
-/* Colors are handled by highlight.js themes (atom-one-dark/atom-one-light) */
+/* Code blocks - With themed borders and backgrounds */
 /* Scoped to presentation views only */
 .standard-view-slide pre,
 .presentation-view-slide pre {
@@ -304,9 +303,13 @@
   border-radius: 0.5rem;
   overflow-x: auto;
   margin: 1.5rem 0;
-  border: 1px solid transparent;
-  /* Let highlight.js theme handle background - don't override */
-  background: inherit;
+  border: 1px solid #e5e7eb;
+  background-color: #f9fafb;
+}
+.dark .standard-view-slide pre,
+.dark .presentation-view-slide pre {
+  border-color: #374151;
+  background-color: #1f2937;
 }
 
 /* Fixed width code blocks in slideshow views */
