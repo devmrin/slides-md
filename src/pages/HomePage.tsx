@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { useNavigate } from "@tanstack/react-router";
 import { Plus, Grid3x3, List, ImagePlus } from "lucide-react";
 import { AppHeader } from "../components/AppHeader";
@@ -25,16 +25,19 @@ export function HomePage() {
   const [isDark, setIsDarkRaw] = useLocalStorage("theme", false);
 
   const isDarkValue = isDark ?? false;
-  const setIsDark = (value: boolean | ((prev: boolean) => boolean)) => {
-    if (typeof value === "function") {
-      setIsDarkRaw((prev) => {
-        const prevValue = prev ?? false;
-        return value(prevValue);
-      });
-    } else {
-      setIsDarkRaw(value);
-    }
-  };
+  const setIsDark = useCallback(
+    (value: boolean | ((prev: boolean) => boolean)) => {
+      if (typeof value === "function") {
+        setIsDarkRaw((prev) => {
+          const prevValue = prev ?? false;
+          return value(prevValue);
+        });
+      } else {
+        setIsDarkRaw(value);
+      }
+    },
+    [setIsDarkRaw]
+  );
 
   useEffect(() => {
     loadPresentations();
@@ -48,7 +51,7 @@ export function HomePage() {
     }
   }, [isDarkValue]);
 
-  // Keyboard shortcut: Command/Control+N to create new presentation
+  // Keyboard shortcuts: Command/Control+N to create new presentation, Command/Control+M for Media Library, Command/Control+T for theme toggle
   useEffect(() => {
     const handler = (e: KeyboardEvent) => {
       // Don't handle if user is typing in an input/textarea
@@ -70,10 +73,22 @@ export function HomePage() {
           setCreateDialogOpen(true);
         }
       }
+
+      // Command+M or Control+M to open Media Library
+      if ((e.metaKey || e.ctrlKey) && (e.key === "m" || e.key === "M")) {
+        e.preventDefault();
+        setMediaLibraryOpen(true);
+      }
+
+      // Command+T or Control+T to toggle theme
+      if ((e.metaKey || e.ctrlKey) && (e.key === "t" || e.key === "T")) {
+        e.preventDefault();
+        setIsDark((prev) => !prev);
+      }
     };
     window.addEventListener("keydown", handler);
     return () => window.removeEventListener("keydown", handler);
-  }, [presentations.length]);
+  }, [presentations.length, setIsDark]);
 
   const loadPresentations = async () => {
     try {
@@ -226,8 +241,8 @@ export function HomePage() {
                 className="px-3 py-1 text-xs sm:text-sm border rounded border-gray-400 dark:border-gray-600 text-gray-900 dark:text-gray-100 bg-white dark:bg-gray-900 hover:bg-gray-50 dark:hover:bg-gray-800 flex items-center gap-2"
               >
                 <ImagePlus className="w-4 h-4" />
-                <span className="hidden sm:inline">Media Library</span>
-                <span className="sm:hidden">Media</span>
+                <span className="hidden sm:inline">Media Library (^M)</span>
+                <span className="sm:hidden">Media (^M)</span>
               </Button>
               {presentations.length >= MAX_PRESENTATIONS && (
                 <span className="text-sm text-gray-500 dark:text-gray-400">

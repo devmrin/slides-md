@@ -164,6 +164,47 @@ export function PresentationPage() {
     focusSlideInput,
   });
 
+  // Keyboard shortcuts: Command/Control+M for Media Library, Command/Control+H for Home
+  useEffect(() => {
+    const handler = (e: KeyboardEvent) => {
+      // Don't handle if user is typing in an input/textarea
+      const activeElement = document.activeElement;
+      const isEditing =
+        activeElement &&
+        (activeElement.tagName === "INPUT" ||
+          activeElement.tagName === "TEXTAREA" ||
+          activeElement.hasAttribute("contenteditable"));
+
+      if (isEditing) {
+        return; // Let the input handle the key
+      }
+
+      // Command+M or Control+M to open Media Library (only in standard view)
+      if (
+        !isFullscreen &&
+        !isEditorFullscreen &&
+        (e.metaKey || e.ctrlKey) &&
+        (e.key === "m" || e.key === "M")
+      ) {
+        e.preventDefault();
+        setMediaLibraryOpen(true);
+      }
+
+      // Command+H or Control+H to go home (only in standard view)
+      if (
+        !isFullscreen &&
+        !isEditorFullscreen &&
+        (e.metaKey || e.ctrlKey) &&
+        (e.key === "h" || e.key === "H")
+      ) {
+        e.preventDefault();
+        navigate({ to: "/" });
+      }
+    };
+    window.addEventListener("keydown", handler);
+    return () => window.removeEventListener("keydown", handler);
+  }, [isFullscreen, isEditorFullscreen, navigate]);
+
   // Memoize the onFocusInputReady callback to prevent infinite loops
   const handleFocusInputReady = useCallback((focusFn: () => void) => {
     setFocusSlideInput(() => focusFn);

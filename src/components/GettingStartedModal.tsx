@@ -451,17 +451,6 @@ This slide has custom layout and styling`}
                 </ul>
               </section>
 
-              {/* Presentation Mode */}
-              <section>
-                <h2 className="text-xl font-semibold mb-3 text-gray-900 dark:text-gray-100">
-                  Presenting
-                </h2>
-                <p className="leading-relaxed">
-                  click "Present" to enter fullscreen. use arrow keys or
-                  on-screen controls to navigate.
-                </p>
-              </section>
-
               {/* Keyboard Shortcuts */}
               <section>
                 <h2 className="text-xl font-semibold mb-3 text-gray-900 dark:text-gray-100">
@@ -471,20 +460,46 @@ This slide has custom layout and styling`}
                 <div className="space-y-4">
                   <div>
                     <h3 className="text-sm font-semibold mb-2 text-gray-900 dark:text-gray-100">
-                      standard view
+                      home page
                     </h3>
                     <ul className="text-sm list-disc list-inside space-y-2 ml-4 text-gray-700 dark:text-gray-300">
                       <li className="flex items-center gap-2">
                         <kbd className="px-2 py-1 bg-gray-100 dark:bg-gray-700 rounded text-xs border border-gray-300 dark:border-gray-600 text-gray-800 dark:text-gray-200 font-mono font-medium">
-                          ⌘↵
+                          ^N
                         </kbd>
-                        <span>present (fullscreen)</span>
+                        <span>new presentation</span>
+                      </li>
+                      <li className="flex items-center gap-2">
+                        <kbd className="px-2 py-1 bg-gray-100 dark:bg-gray-700 rounded text-xs border border-gray-300 dark:border-gray-600 text-gray-800 dark:text-gray-200 font-mono font-medium">
+                          ^M
+                        </kbd>
+                        <span>media library</span>
                       </li>
                       <li className="flex items-center gap-2">
                         <kbd className="px-2 py-1 bg-gray-100 dark:bg-gray-700 rounded text-xs border border-gray-300 dark:border-gray-600 text-gray-800 dark:text-gray-200 font-mono font-medium">
                           ^T
                         </kbd>
-                        <span>toggle dark mode</span>
+                        <span>toggle theme</span>
+                      </li>
+                    </ul>
+                  </div>
+
+                  <div>
+                    <h3 className="text-sm font-semibold mb-2 text-gray-900 dark:text-gray-100">
+                      standard view
+                    </h3>
+                    <ul className="text-sm list-disc list-inside space-y-2 ml-4 text-gray-700 dark:text-gray-300">
+                      <li className="flex items-center gap-2">
+                        <kbd className="px-2 py-1 bg-gray-100 dark:bg-gray-700 rounded text-xs border border-gray-300 dark:border-gray-600 text-gray-800 dark:text-gray-200 font-mono font-medium">
+                          ^H
+                        </kbd>
+                        <span>back to home</span>
+                      </li>
+                      <li className="flex items-center gap-2">
+                        <kbd className="px-2 py-1 bg-gray-100 dark:bg-gray-700 rounded text-xs border border-gray-300 dark:border-gray-600 text-gray-800 dark:text-gray-200 font-mono font-medium">
+                          ⌘↵
+                        </kbd>
+                        <span>present (fullscreen)</span>
                       </li>
                     </ul>
                   </div>

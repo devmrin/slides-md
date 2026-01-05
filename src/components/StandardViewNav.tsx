@@ -27,18 +27,18 @@ export function StandardViewNav({
           <Button
             onClick={() => navigate({ to: "/" })}
             className="px-2 py-1 text-xs border rounded border-gray-400 dark:border-gray-600 text-gray-900 dark:text-gray-100 bg-white dark:bg-gray-900 hover:bg-gray-50 dark:hover:bg-gray-800 touch-manipulation flex items-center gap-1"
-            title="Back to Home"
+            title="Back to Home (^H)"
           >
-            <ArrowLeft className="w-3.5 h-3.5 sm:w-4 sm:h-4" /> Home
+            <ArrowLeft className="w-3.5 h-3.5 sm:w-4 sm:h-4" /> Home (^H)
           </Button>
           {onOpenMediaLibrary && (
             <Button
               onClick={onOpenMediaLibrary}
               className="px-2 py-1 text-xs border rounded border-gray-400 dark:border-gray-600 text-gray-900 dark:text-gray-100 bg-white dark:bg-gray-900 hover:bg-gray-50 dark:hover:bg-gray-800 touch-manipulation flex items-center gap-1"
-              title="Media Library"
+              title="Media Library (^M)"
             >
               <ImagePlus className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
-              <span className="hidden sm:inline">Media</span>
+              <span className="hidden sm:inline">Media (^M)</span>
             </Button>
           )}
           {presentationName && (
