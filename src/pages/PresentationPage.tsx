@@ -14,6 +14,7 @@ import { PresentationView } from "../components/PresentationView";
 import { FullscreenEditor } from "../components/FullscreenEditor";
 import { StandardView } from "../components/StandardView";
 import { EditPresentationNameDialog } from "../components/EditPresentationNameDialog";
+import { MediaLibraryModal } from "../components/MediaLibraryModal";
 import { db } from "../db";
 
 export function PresentationPage() {
@@ -23,6 +24,7 @@ export function PresentationPage() {
   const [presentationName, setPresentationName] = useState<string>("");
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [editNameDialogOpen, setEditNameDialogOpen] = useState(false);
+  const [mediaLibraryOpen, setMediaLibraryOpen] = useState(false);
   const saveTimeoutRef = useRef<number | null>(null);
 
   const [currentSlide, setCurrentSlide] = useState<number>(0);
@@ -258,6 +260,7 @@ export function PresentationPage() {
         setMarkdown={handleMarkdownChange}
         currentSlide={currentSlide}
         setCurrentSlide={setCurrentSlide}
+        onOpenMediaLibrary={() => setMediaLibraryOpen(true)}
         slides={slides}
         slideConfigs={slideConfigs}
         frontmatter={frontmatter}
@@ -278,6 +281,10 @@ export function PresentationPage() {
         onOpenChange={setEditNameDialogOpen}
         currentName={presentationName}
         onSave={handleSaveName}
+      />
+      <MediaLibraryModal
+        open={mediaLibraryOpen}
+        onOpenChange={setMediaLibraryOpen}
       />
     </>
   );

@@ -1,16 +1,23 @@
 import Dexie, { type Table } from "dexie";
-import type { DatabaseAdapter, Presentation } from "./adapter";
+import type { DatabaseAdapter, Presentation, MediaItem } from "./adapter";
 
 /**
  * Dexie database schema
  */
 class SlidesDatabase extends Dexie {
   presentations!: Table<Presentation, string>;
+  media!: Table<MediaItem, string>;
 
   constructor() {
     super("SlidesMD");
+    // Version 1: presentations only
     this.version(1).stores({
       presentations: "id, name, createdAt, updatedAt",
+    });
+    // Version 2: add media support
+    this.version(2).stores({
+      presentations: "id, name, createdAt, updatedAt",
+      media: "id, filename, createdAt, size",
     });
   }
 }
@@ -73,6 +80,42 @@ export class IndexedDBAdapter implements DatabaseAdapter {
   async deletePresentation(id: string): Promise<void> {
     await this.initialize();
     await this.db.presentations.delete(id);
+  }
+
+  async getMedia(id: string): Promise<MediaItem | undefined> {
+    await this.initialize();
+    return await this.db.media.get(id);
+  }
+
+  async saveMedia(
+    media: Omit<MediaItem, "createdAt"> & Partial<Pick<MediaItem, "createdAt">>
+  ): Promise<MediaItem> {
+    await this.initialize();
+
+    const now = Date.now();
+    const existing = await this.db.media.get(media.id);
+
+    const fullMedia: MediaItem = {
+      id: media.id,
+      filename: media.filename,
+      mimeType: media.mimeType,
+      size: media.size,
+      dataUrl: media.dataUrl,
+      createdAt: existing?.createdAt ?? media.createdAt ?? now,
+    };
+
+    await this.db.media.put(fullMedia);
+    return fullMedia;
+  }
+
+  async getAllMedia(): Promise<MediaItem[]> {
+    await this.initialize();
+    return await this.db.media.orderBy("createdAt").reverse().toArray();
+  }
+
+  async deleteMedia(id: string): Promise<void> {
+    await this.initialize();
+    await this.db.media.delete(id);
   }
 }
 

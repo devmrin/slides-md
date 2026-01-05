@@ -1,5 +1,5 @@
 import { useNavigate } from "@tanstack/react-router";
-import { ArrowLeft, Pencil } from "lucide-react";
+import { ArrowLeft, Pencil, ImagePlus } from "lucide-react";
 import { Button } from "../ui/Button";
 import { Switch } from "../ui/Switch";
 
@@ -8,6 +8,7 @@ interface StandardViewNavProps {
   onEditName?: () => void;
   isEditorExpanded: boolean;
   onToggleEditorExpand: () => void;
+  onOpenMediaLibrary?: () => void;
 }
 
 export function StandardViewNav({
@@ -15,6 +16,7 @@ export function StandardViewNav({
   onEditName,
   isEditorExpanded,
   onToggleEditorExpand,
+  onOpenMediaLibrary,
 }: StandardViewNavProps) {
   const navigate = useNavigate();
 
@@ -29,6 +31,16 @@ export function StandardViewNav({
           >
             <ArrowLeft className="w-3.5 h-3.5 sm:w-4 sm:h-4" /> Home
           </Button>
+          {onOpenMediaLibrary && (
+            <Button
+              onClick={onOpenMediaLibrary}
+              className="px-2 py-1 text-xs border rounded border-gray-400 dark:border-gray-600 text-gray-900 dark:text-gray-100 bg-white dark:bg-gray-900 hover:bg-gray-50 dark:hover:bg-gray-800 touch-manipulation flex items-center gap-1"
+              title="Media Library"
+            >
+              <ImagePlus className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
+              <span className="hidden sm:inline">Media</span>
+            </Button>
+          )}
           {presentationName && (
             <>
               {onEditName ? (
@@ -42,13 +54,18 @@ export function StandardViewNav({
                   <Pencil className="w-3 h-3 shrink-0" />
                 </button>
               ) : (
-                <span className="text-xs sm:text-sm truncate">{presentationName}</span>
+                <span className="text-xs sm:text-sm truncate">
+                  {presentationName}
+                </span>
               )}
             </>
           )}
         </div>
         <div className="flex items-center gap-2">
-          <label className="text-xs text-gray-600 dark:text-gray-400" htmlFor="editor-toggle">
+          <label
+            className="text-xs text-gray-600 dark:text-gray-400"
+            htmlFor="editor-toggle"
+          >
             Show Editor
           </label>
           <Switch
@@ -61,4 +78,3 @@ export function StandardViewNav({
     </div>
   );
 }
-

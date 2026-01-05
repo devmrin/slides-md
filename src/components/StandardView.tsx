@@ -28,6 +28,7 @@ interface StandardViewProps {
   nextSlide: () => void;
   presentationName?: string;
   onEditName?: () => void;
+  onOpenMediaLibrary?: () => void;
 }
 
 export function StandardView({
@@ -49,6 +50,7 @@ export function StandardView({
   nextSlide,
   presentationName,
   onEditName,
+  onOpenMediaLibrary,
 }: StandardViewProps) {
   const [isEditorExpandedRaw, setIsEditorExpanded] = useLocalStorage(
     "isEditorExpanded",
@@ -65,6 +67,7 @@ export function StandardView({
         onEditName={onEditName}
         isEditorExpanded={isEditorExpanded}
         onToggleEditorExpand={() => setIsEditorExpanded(!isEditorExpanded)}
+        onOpenMediaLibrary={onOpenMediaLibrary}
       />
 
       <div className="flex-1 flex overflow-hidden">

@@ -3,10 +3,11 @@ import {
   type TokenizerExtension,
   type RendererExtension,
 } from "marked";
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import hljs from "highlight.js";
 import type { Tokens } from "marked";
 import { format } from "date-fns";
+import { db } from "../db";
 
 function formatDate(dateStr: string): string {
   try {
@@ -134,6 +135,36 @@ export function Slide({
   config,
 }: SlideProps) {
   const contentRef = useRef<HTMLDivElement>(null);
+  const [resolvedSlide, setResolvedSlide] = useState(slide);
+
+  // Resolve media:// URLs to data URLs from IndexedDB
+  useEffect(() => {
+    const resolveMediaUrls = async () => {
+      const mediaRegex = /!\[([^\]]*)\]\(media:\/\/([a-f0-9-]+)\)/g;
+      let resolved = slide;
+      const matches = [...slide.matchAll(mediaRegex)];
+
+      for (const match of matches) {
+        const [fullMatch, altText, mediaId] = match;
+        try {
+          const mediaItem = await db.getMedia(mediaId);
+          if (mediaItem) {
+            // Replace media:// URL with actual data URL
+            resolved = resolved.replace(
+              fullMatch,
+              `![${altText}](${mediaItem.dataUrl})`
+            );
+          }
+        } catch (error) {
+          console.error(`Failed to resolve media://${mediaId}:`, error);
+        }
+      }
+
+      setResolvedSlide(resolved);
+    };
+
+    resolveMediaUrls();
+  }, [slide]);
 
   useEffect(() => {
     // Add hljs class to code blocks and highlight them after rendering
@@ -201,7 +232,7 @@ export function Slide({
     >
       <div
         ref={contentRef}
-        dangerouslySetInnerHTML={{ __html: marked(slide || "") }}
+        dangerouslySetInnerHTML={{ __html: marked(resolvedSlide || "") }}
       />
     </div>
   );

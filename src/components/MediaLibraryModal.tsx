@@ -1,0 +1,288 @@
+import { useState, useEffect, useRef } from "react";
+import * as Dialog from "@radix-ui/react-dialog";
+import { X, Upload, ImagePlus } from "lucide-react";
+import { db } from "../db";
+import type { MediaItem } from "../db/adapter";
+import { generateUUID } from "../utils/uuid";
+import { ImageActionDropdown } from "./ImageActionDropdown";
+import { ImageCarousel } from "./ImageCarousel";
+import {
+  MAX_MEDIA_ITEMS,
+  MAX_FILE_SIZE_BYTES,
+  ALLOWED_IMAGE_TYPES,
+  MAX_FILE_SIZE_MB,
+} from "../config/constants";
+
+interface MediaLibraryModalProps {
+  open: boolean;
+  onOpenChange: (open: boolean) => void;
+}
+
+export function MediaLibraryModal({
+  open,
+  onOpenChange,
+}: MediaLibraryModalProps) {
+  const [mediaItems, setMediaItems] = useState<MediaItem[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+  const [carouselOpen, setCarouselOpen] = useState(false);
+  const [carouselIndex, setCarouselIndex] = useState(0);
+  const fileInputRef = useRef<HTMLInputElement>(null);
+
+  // Load media items
+  useEffect(() => {
+    if (open) {
+      loadMedia();
+    }
+  }, [open]);
+
+  const loadMedia = async () => {
+    setIsLoading(true);
+    setError(null);
+    try {
+      const items = await db.getAllMedia();
+      setMediaItems(items);
+    } catch (err) {
+      console.error("Failed to load media:", err);
+      setError("Failed to load media library");
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const validateFile = (file: File): string | null => {
+    // Check file type
+    if (
+      !ALLOWED_IMAGE_TYPES.includes(
+        file.type as (typeof ALLOWED_IMAGE_TYPES)[number]
+      )
+    ) {
+      return `Invalid file type. Allowed types: ${ALLOWED_IMAGE_TYPES.join(
+        ", "
+      )}`;
+    }
+
+    // Check file size
+    if (file.size > MAX_FILE_SIZE_BYTES) {
+      return `File size exceeds ${MAX_FILE_SIZE_MB}MB limit`;
+    }
+
+    // Check total count
+    if (mediaItems.length >= MAX_MEDIA_ITEMS) {
+      return `Maximum of ${MAX_MEDIA_ITEMS} images allowed`;
+    }
+
+    return null;
+  };
+
+  const convertFileToDataUrl = (file: File): Promise<string> => {
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.onload = () => resolve(reader.result as string);
+      reader.onerror = () => reject(new Error("Failed to read file"));
+      reader.readAsDataURL(file);
+    });
+  };
+
+  const handleFileSelect = async (
+    event: React.ChangeEvent<HTMLInputElement>
+  ) => {
+    const files = event.target.files;
+    if (!files || files.length === 0) return;
+
+    setError(null);
+
+    for (let i = 0; i < files.length; i++) {
+      const file = files[i];
+
+      // Validate file
+      const validationError = validateFile(file);
+      if (validationError) {
+        setError(validationError);
+        continue;
+      }
+
+      try {
+        // Convert to data URL
+        const dataUrl = await convertFileToDataUrl(file);
+
+        // Save to database
+        const newMedia: Omit<MediaItem, "createdAt"> = {
+          id: generateUUID(),
+          filename: file.name,
+          mimeType: file.type,
+          size: file.size,
+          dataUrl,
+        };
+
+        await db.saveMedia(newMedia);
+      } catch (err) {
+        console.error("Failed to upload image:", err);
+        setError(`Failed to upload ${file.name}`);
+      }
+    }
+
+    // Reload media items
+    await loadMedia();
+
+    // Reset file input
+    if (fileInputRef.current) {
+      fileInputRef.current.value = "";
+    }
+  };
+
+  const handleDelete = async (id: string) => {
+    try {
+      await db.deleteMedia(id);
+      await loadMedia();
+    } catch (err) {
+      console.error("Failed to delete media:", err);
+      setError("Failed to delete image");
+    }
+  };
+
+  const handleImageClick = (index: number) => {
+    setCarouselIndex(index);
+    setCarouselOpen(true);
+  };
+
+  const formatFileSize = (bytes: number): string => {
+    if (bytes < 1024) return `${bytes} B`;
+    if (bytes < 1024 * 1024) return `${(bytes / 1024).toFixed(1)} KB`;
+    return `${(bytes / (1024 * 1024)).toFixed(1)} MB`;
+  };
+
+  return (
+    <>
+      <Dialog.Root open={open} onOpenChange={onOpenChange}>
+        <Dialog.Portal>
+          <Dialog.Overlay className="fixed inset-0 bg-black/50 dark:bg-black/70 z-40" />
+          <Dialog.Content
+            className="fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-white dark:bg-gray-800 rounded-lg shadow-xl w-full max-w-4xl max-h-[85vh] overflow-hidden z-50 border border-gray-300 dark:border-gray-700"
+            onPointerDownOutside={(e) => e.preventDefault()}
+            onEscapeKeyDown={(e) => e.preventDefault()}
+          >
+            <div className="flex flex-col h-full">
+              {/* Header */}
+              <div className="flex items-center justify-between p-6 border-b border-gray-200 dark:border-gray-700">
+                <div>
+                  <Dialog.Title className="text-xl font-semibold text-gray-900 dark:text-gray-100">
+                    Media Library
+                  </Dialog.Title>
+                  <Dialog.Description className="sr-only">
+                    Upload and manage images for your presentations
+                  </Dialog.Description>
+                  <p className="text-sm text-gray-600 dark:text-gray-400 mt-1">
+                    {mediaItems.length} / {MAX_MEDIA_ITEMS} images
+                  </p>
+                </div>
+                <button
+                  onClick={() => onOpenChange(false)}
+                  className="p-2 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg transition-colors touch-manipulation"
+                  aria-label="Close"
+                >
+                  <X className="w-5 h-5 text-gray-500 dark:text-gray-400" />
+                </button>
+              </div>
+
+              {/* Content */}
+              <div className="flex-1 overflow-y-auto p-6">
+                {error && (
+                  <div className="mb-4 p-3 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg text-red-700 dark:text-red-400 text-sm">
+                    {error}
+                  </div>
+                )}
+
+                {/* Upload section */}
+                <div className="mb-6">
+                  <input
+                    ref={fileInputRef}
+                    type="file"
+                    accept={ALLOWED_IMAGE_TYPES.join(",")}
+                    multiple
+                    onChange={handleFileSelect}
+                    className="hidden"
+                    id="media-file-input"
+                  />
+                  <label
+                    htmlFor="media-file-input"
+                    className="flex items-center justify-center gap-2 w-full p-8 border-2 border-dashed border-gray-300 dark:border-gray-600 rounded-lg hover:border-gray-400 dark:hover:border-gray-500 transition-colors cursor-pointer bg-gray-50 dark:bg-gray-900/50"
+                  >
+                    <Upload className="w-5 h-5 text-gray-500 dark:text-gray-400" />
+                    <span className="text-sm text-gray-700 dark:text-gray-300">
+                      Click to upload images (max {MAX_FILE_SIZE_MB}MB each)
+                    </span>
+                  </label>
+                  <p className="text-xs text-gray-500 dark:text-gray-400 mt-2 text-center">
+                    Supported formats: JPEG, PNG, GIF, WebP, SVG
+                  </p>
+                </div>
+
+                {/* Media grid */}
+                {isLoading ? (
+                  <div className="flex items-center justify-center py-12">
+                    <div className="text-gray-500 dark:text-gray-400">
+                      Loading...
+                    </div>
+                  </div>
+                ) : mediaItems.length === 0 ? (
+                  <div className="flex flex-col items-center justify-center py-12 text-center">
+                    <ImagePlus className="w-12 h-12 text-gray-400 dark:text-gray-600 mb-3" />
+                    <p className="text-gray-600 dark:text-gray-400 text-sm">
+                      No images yet. Upload your first image to get started.
+                    </p>
+                  </div>
+                ) : (
+                  <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4">
+                    {mediaItems.map((item, index) => (
+                      <div
+                        key={item.id}
+                        className="relative group aspect-square bg-gray-100 dark:bg-gray-900 rounded-lg overflow-hidden border border-gray-200 dark:border-gray-700 hover:border-gray-300 dark:hover:border-gray-600 transition-colors"
+                      >
+                        <button
+                          onClick={() => handleImageClick(index)}
+                          className="w-full h-full cursor-pointer focus:outline-none focus:ring-2 focus:ring-blue-500 rounded-lg"
+                        >
+                          <img
+                            src={item.dataUrl}
+                            alt={item.filename}
+                            className="w-full h-full object-cover"
+                          />
+                        </button>
+
+                        {/* Action dropdown */}
+                        <ImageActionDropdown
+                          media={item}
+                          onDelete={handleDelete}
+                        />
+
+                        {/* Image info overlay */}
+                        <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/70 to-transparent p-2 opacity-0 group-hover:opacity-100 transition-opacity">
+                          <p className="text-white text-xs font-medium truncate">
+                            {item.filename}
+                          </p>
+                          <p className="text-white/70 text-xs">
+                            {formatFileSize(item.size)}
+                          </p>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                )}
+              </div>
+            </div>
+          </Dialog.Content>
+        </Dialog.Portal>
+      </Dialog.Root>
+
+      {/* Carousel */}
+      {carouselOpen && (
+        <ImageCarousel
+          media={mediaItems}
+          initialIndex={carouselIndex}
+          onClose={() => setCarouselOpen(false)}
+        />
+      )}
+    </>
+  );
+}

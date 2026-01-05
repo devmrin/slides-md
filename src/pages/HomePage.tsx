@@ -1,8 +1,9 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "@tanstack/react-router";
-import { Plus, Grid3x3, List } from "lucide-react";
+import { Plus, Grid3x3, List, ImagePlus } from "lucide-react";
 import { AppHeader } from "../components/AppHeader";
 import { CreatePresentationDialog } from "../components/CreatePresentationDialog";
+import { MediaLibraryModal } from "../components/MediaLibraryModal";
 import { PresentationCard } from "../components/PresentationCard";
 import { PresentationsTable } from "../components/PresentationsTable";
 import { Button } from "../ui/Button";
@@ -19,6 +20,7 @@ export function HomePage() {
   const [presentations, setPresentations] = useState<Presentation[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [createDialogOpen, setCreateDialogOpen] = useState(false);
+  const [mediaLibraryOpen, setMediaLibraryOpen] = useState(false);
   const [viewMode, setViewMode] = useLocalStorage("homeViewMode", "gallery");
   const [isDark, setIsDarkRaw] = useLocalStorage("theme", false);
 
@@ -189,6 +191,14 @@ export function HomePage() {
                 <span className="hidden sm:inline">New Presentation (^N)</span>
                 <span className="sm:hidden">New Presentation</span>
               </Button>
+              <Button
+                onClick={() => setMediaLibraryOpen(true)}
+                className="px-3 py-1 text-xs sm:text-sm border rounded border-gray-400 dark:border-gray-600 text-gray-900 dark:text-gray-100 bg-white dark:bg-gray-900 hover:bg-gray-50 dark:hover:bg-gray-800 flex items-center gap-2"
+              >
+                <ImagePlus className="w-4 h-4" />
+                <span className="hidden sm:inline">Media Library</span>
+                <span className="sm:hidden">Media</span>
+              </Button>
               {presentations.length >= MAX_PRESENTATIONS && (
                 <span className="text-sm text-gray-500 dark:text-gray-400">
                   Maximum of {MAX_PRESENTATIONS} presentations reached
@@ -201,7 +211,9 @@ export function HomePage() {
               <Grid3x3 className="w-4 h-4 text-gray-600 dark:text-gray-400" />
               <Switch
                 checked={viewMode === "list"}
-                onCheckedChange={(checked) => setViewMode(checked ? "list" : "gallery")}
+                onCheckedChange={(checked) =>
+                  setViewMode(checked ? "list" : "gallery")
+                }
               />
               <List className="w-4 h-4 text-gray-600 dark:text-gray-400" />
             </div>
@@ -266,7 +278,11 @@ export function HomePage() {
         onCreate={handleCreate}
         currentCount={presentations.length}
       />
+
+      <MediaLibraryModal
+        open={mediaLibraryOpen}
+        onOpenChange={setMediaLibraryOpen}
+      />
     </div>
   );
 }
-

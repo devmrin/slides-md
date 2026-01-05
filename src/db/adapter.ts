@@ -12,6 +12,15 @@ export interface Presentation {
   updatedAt: number;
 }
 
+export interface MediaItem {
+  id: string;
+  filename: string;
+  mimeType: string;
+  size: number; // in bytes
+  dataUrl: string; // base64 encoded image data URL
+  createdAt: number;
+}
+
 export interface DatabaseAdapter {
   /**
    * Get a presentation by ID
@@ -32,5 +41,25 @@ export interface DatabaseAdapter {
    * Delete a presentation by ID
    */
   deletePresentation(id: string): Promise<void>;
+
+  /**
+   * Get a media item by ID
+   */
+  getMedia(id: string): Promise<MediaItem | undefined>;
+
+  /**
+   * Save a media item (creates if doesn't exist, updates if it does)
+   */
+  saveMedia(media: Omit<MediaItem, "createdAt"> & Partial<Pick<MediaItem, "createdAt">>): Promise<MediaItem>;
+
+  /**
+   * Get all media items
+   */
+  getAllMedia(): Promise<MediaItem[]>;
+
+  /**
+   * Delete a media item by ID
+   */
+  deleteMedia(id: string): Promise<void>;
 }
 
