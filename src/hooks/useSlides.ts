@@ -5,6 +5,7 @@ export interface SlideConfig {
   align?: "top" | "center" | "bottom";
   text?: "left" | "center" | "right";
   size?: "xs" | "sm" | "base" | "lg" | "xl" | "2xl";
+  animate?: "none" | "fade-in" | "slide-in" | "zoom-in" | "bounce-in" | "ease-in-out";
 }
 
 /**
@@ -29,6 +30,8 @@ function parseSlideConfig(delimiterLine: string): SlideConfig {
       config.text = value as SlideConfig["text"];
     } else if (key === "size" && ["xs", "sm", "base", "lg", "xl", "2xl"].includes(value)) {
       config.size = value as SlideConfig["size"];
+    } else if (key === "animate" && ["none", "fade-in", "slide-in", "zoom-in", "bounce-in", "ease-in-out"].includes(value)) {
+      config.animate = value as SlideConfig["animate"];
     }
   }
   

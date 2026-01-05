@@ -124,6 +124,13 @@ interface SlideProps {
     align?: "top" | "center" | "bottom";
     text?: "left" | "center" | "right";
     size?: "xs" | "sm" | "base" | "lg" | "xl" | "2xl";
+    animate?:
+      | "none"
+      | "fade-in"
+      | "slide-in"
+      | "zoom-in"
+      | "bounce-in"
+      | "ease-in-out";
   };
 }
 
@@ -244,6 +251,7 @@ export function Slide({
   // Apply text and size config
   const textAlign = config?.text || "left";
   const size = config?.size || "base";
+  const animate = config?.animate || "none";
 
   // Map size to Tailwind classes with responsive variants
   const sizeClasses = {
@@ -262,11 +270,23 @@ export function Slide({
     right: "text-right",
   };
 
+  // Map animation to CSS classes
+  const animationClasses = {
+    none: "",
+    "fade-in": "animate-fade-in",
+    "slide-in": "animate-slide-in",
+    "zoom-in": "animate-zoom-in",
+    "bounce-in": "animate-bounce-in",
+    "ease-in-out": "animate-ease-in-out",
+  };
+
   return (
     <div
       className={`${
         isImageOnly ? "image-only-slide" : "max-w-full sm:max-w-4xl"
-      } w-full ${sizeClasses[size]} ${textAlignClasses[textAlign]} break-words`}
+      } w-full ${sizeClasses[size]} ${textAlignClasses[textAlign]} ${
+        animationClasses[animate]
+      } break-words`}
     >
       <div
         ref={contentRef}

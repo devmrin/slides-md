@@ -213,7 +213,7 @@ More content`}
                 </p>
 
                 <div className="mt-3 p-4 bg-gray-900 dark:bg-gray-950 rounded-lg text-xs overflow-x-auto border border-gray-700 dark:border-gray-600 font-mono text-gray-100 dark:text-gray-200 whitespace-pre">
-                  {`=== align=top text=center size=lg
+                  {`=== align=top text=center size=lg animate=ease-in-out
 
 # Custom Styled Slide
 This slide has custom layout and styling`}
@@ -310,6 +310,53 @@ This slide has custom layout and styling`}
                         <code className="px-1 py-0.5 bg-gray-100 dark:bg-gray-700 rounded text-xs font-mono">
                           2xl
                         </code>
+                      </li>
+                    </ul>
+                  </div>
+
+                  <div>
+                    <p className="text-sm font-semibold text-gray-900 dark:text-gray-100">
+                      <code className="px-1.5 py-0.5 bg-gray-100 dark:bg-gray-700 rounded text-xs font-mono">
+                        animate
+                      </code>{" "}
+                      — slide animation
+                    </p>
+                    <ul className="text-sm list-disc list-inside ml-4 mt-1 text-gray-700 dark:text-gray-300">
+                      <li>
+                        <code className="px-1 py-0.5 bg-gray-100 dark:bg-gray-700 rounded text-xs font-mono">
+                          none
+                        </code>{" "}
+                        — no animation (default)
+                      </li>
+                      <li>
+                        <code className="px-1 py-0.5 bg-gray-100 dark:bg-gray-700 rounded text-xs font-mono">
+                          fade-in
+                        </code>{" "}
+                        — smooth fade-in effect
+                      </li>
+                      <li>
+                        <code className="px-1 py-0.5 bg-gray-100 dark:bg-gray-700 rounded text-xs font-mono">
+                          slide-in
+                        </code>{" "}
+                        — slide from left
+                      </li>
+                      <li>
+                        <code className="px-1 py-0.5 bg-gray-100 dark:bg-gray-700 rounded text-xs font-mono">
+                          zoom-in
+                        </code>{" "}
+                        — scale-up zoom effect
+                      </li>
+                      <li>
+                        <code className="px-1 py-0.5 bg-gray-100 dark:bg-gray-700 rounded text-xs font-mono">
+                          bounce-in
+                        </code>{" "}
+                        — bouncy entrance
+                      </li>
+                      <li>
+                        <code className="px-1 py-0.5 bg-gray-100 dark:bg-gray-700 rounded text-xs font-mono">
+                          ease-in-out
+                        </code>{" "}
+                        — smooth gradual transition
                       </li>
                     </ul>
                   </div>
