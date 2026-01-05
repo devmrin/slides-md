@@ -426,46 +426,11 @@
   align-items: center;
   justify-content: center;
   padding: 0;
-  position: relative;
-}
-
-/* Special handling for figure elements in image-only slides */
-.standard-view-slide .image-only-slide .image-with-alt,
-.presentation-view-slide .image-only-slide .image-with-alt {
-  width: 100%;
-  height: 100%;
-  margin: 0;
-  position: relative;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-/* Caption overlay for image-only slides */
-.standard-view-slide .image-only-slide .image-alt-caption,
-.presentation-view-slide .image-only-slide .image-alt-caption {
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  background: linear-gradient(to top, rgba(0, 0, 0, 0.7), transparent);
-  color: white;
-  padding: 2rem 2rem 1rem 2rem;
-  margin: 0;
-  font-size: 0.875rem;
-}
-
-.dark .standard-view-slide .image-only-slide .image-alt-caption,
-.dark .presentation-view-slide .image-only-slide .image-alt-caption {
-  background: linear-gradient(to top, rgba(0, 0, 0, 0.8), transparent);
-  color: #f3f4f6;
 }
 
 /* Make image-only slide styles more specific to override general image styles */
 .standard-view-slide .image-only-slide img,
-.presentation-view-slide .image-only-slide img,
-.standard-view-slide .image-only-slide .image-with-alt img,
-.presentation-view-slide .image-only-slide .image-with-alt img {
+.presentation-view-slide .image-only-slide img {
   width: 100%;
   height: 100%;
   object-fit: contain;

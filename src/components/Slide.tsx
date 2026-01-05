@@ -181,37 +181,39 @@ export function Slide({
 
       // Add alt text captions for images ONLY if alt text is explicitly provided
       // Images without alt text will NOT be wrapped or have captions shown
-      // This is intentional for presentations where images may be self-explanatory
-      contentRef.current
-        .querySelectorAll("img:not(.presentation-logo)")
-        .forEach((img) => {
-          const imageElement = img as HTMLImageElement;
-          const altText = imageElement.alt?.trim();
+      // Skip captions for image-only slides as they reduce UX in that context
+      if (!isImageOnly) {
+        contentRef.current
+          .querySelectorAll("img:not(.presentation-logo)")
+          .forEach((img) => {
+            const imageElement = img as HTMLImageElement;
+            const altText = imageElement.alt?.trim();
 
-          // Only proceed if alt text exists and is not empty
-          if (altText) {
-            // Check if we've already wrapped this image
-            const parent = imageElement.parentElement;
-            if (parent && !parent.classList.contains("image-with-alt")) {
-              // Create wrapper and caption
-              const wrapper = document.createElement("figure");
-              wrapper.className = "image-with-alt";
+            // Only proceed if alt text exists and is not empty
+            if (altText) {
+              // Check if we've already wrapped this image
+              const parent = imageElement.parentElement;
+              if (parent && !parent.classList.contains("image-with-alt")) {
+                // Create wrapper and caption
+                const wrapper = document.createElement("figure");
+                wrapper.className = "image-with-alt";
 
-              const caption = document.createElement("figcaption");
-              caption.className = "image-alt-caption";
-              caption.textContent = altText;
+                const caption = document.createElement("figcaption");
+                caption.className = "image-alt-caption";
+                caption.textContent = altText;
 
-              // Insert wrapper before image
-              imageElement.parentNode?.insertBefore(wrapper, imageElement);
+                // Insert wrapper before image
+                imageElement.parentNode?.insertBefore(wrapper, imageElement);
 
-              // Move image into wrapper
-              wrapper.appendChild(imageElement);
+                // Move image into wrapper
+                wrapper.appendChild(imageElement);
 
-              // Add caption after image
-              wrapper.appendChild(caption);
+                // Add caption after image
+                wrapper.appendChild(caption);
+              }
             }
-          }
-        });
+          });
+      }
     }
   }, [resolvedSlide, isImageOnly]);
 
