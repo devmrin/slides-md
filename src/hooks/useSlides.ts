@@ -4,7 +4,7 @@ import { parseFrontmatter } from "../utils/parseFrontmatter";
 export interface SlideConfig {
   align?: "top" | "center" | "bottom";
   text?: "left" | "center" | "right";
-  size?: "xs" | "sm" | "base" | "lg" | "xl" | "2xl";
+  size?: "xs" | "sm" | "base" | "lg" | "xl" | "2xl" | number;
   animate?: "none" | "fade-in" | "slide-in" | "zoom-in" | "bounce-in" | "ease-in-out";
 }
 
@@ -28,8 +28,15 @@ function parseSlideConfig(delimiterLine: string): SlideConfig {
       config.align = value as SlideConfig["align"];
     } else if (key === "text" && ["left", "center", "right"].includes(value)) {
       config.text = value as SlideConfig["text"];
-    } else if (key === "size" && ["xs", "sm", "base", "lg", "xl", "2xl"].includes(value)) {
-      config.size = value as SlideConfig["size"];
+    } else if (key === "size") {
+      // Try to parse as number first
+      const numValue = parseInt(value, 10);
+      if (!isNaN(numValue) && numValue > 0) {
+        config.size = numValue;
+      } else if (["xs", "sm", "base", "lg", "xl", "2xl"].includes(value)) {
+        config.size = value as SlideConfig["size"];
+      }
+      // If neither numeric nor valid string, skip (fallback to default)
     } else if (key === "animate" && ["none", "fade-in", "slide-in", "zoom-in", "bounce-in", "ease-in-out"].includes(value)) {
       config.animate = value as SlideConfig["animate"];
     }
@@ -67,7 +74,7 @@ function isImageOnlySlide(slide: string): boolean {
 
 export function useSlides(markdown: string) {
   return useMemo(() => {
-    const { frontmatter, content } = parseFrontmatter(markdown);
+    const { frontmatter, defaultSlideConfig, content } = parseFrontmatter(markdown);
     
     // Split by === but preserve delimiter lines to extract configs
     const rawParts = content.split(/(===.*)/);
@@ -84,7 +91,9 @@ export function useSlides(markdown: string) {
         // Save previous slide if it exists
         if (currentSlideContent.trim() || slides.length > 0) {
           slides.push(currentSlideContent.trim());
-          slideConfigs.push(currentConfig);
+          // Merge default config from frontmatter with per-slide config
+          // Per-slide config takes priority
+          slideConfigs.push({ ...defaultSlideConfig, ...currentConfig });
         }
         
         // Parse config from delimiter
@@ -98,7 +107,8 @@ export function useSlides(markdown: string) {
     // Add the last slide
     if (currentSlideContent.trim() || slides.length > 0) {
       slides.push(currentSlideContent.trim());
-      slideConfigs.push(currentConfig);
+      // Merge default config from frontmatter with per-slide config
+      slideConfigs.push({ ...defaultSlideConfig, ...currentConfig });
     }
     
     // Remove leading and trailing empty slides, but keep intentional empty slides
@@ -127,7 +137,7 @@ export function useSlides(markdown: string) {
     
     const finalConfigs =
       Object.keys(frontmatter).length > 0
-        ? [{}, ...contentConfigs] // Title slide gets empty config
+        ? [{}, ...contentConfigs] // Title slide gets empty config (ignores defaults)
         : contentConfigs;
     
     // Detect image-only slides

@@ -123,7 +123,7 @@ interface SlideProps {
   config?: {
     align?: "top" | "center" | "bottom";
     text?: "left" | "center" | "right";
-    size?: "xs" | "sm" | "base" | "lg" | "xl" | "2xl";
+    size?: "xs" | "sm" | "base" | "lg" | "xl" | "2xl" | number;
     animate?:
       | "none"
       | "fade-in"
@@ -254,7 +254,7 @@ export function Slide({
   const animate = config?.animate || "none";
 
   // Map size to Tailwind classes with responsive variants
-  const sizeClasses = {
+  const sizeClasses: Record<string, string> = {
     xs: "text-xs sm:text-sm leading-[1.25rem] sm:leading-[1.375rem]",
     sm: "text-sm sm:text-base leading-[1.375rem] sm:leading-[1.5rem]",
     base: "text-base sm:text-xl leading-[1.5rem] sm:leading-[1.875rem]",
@@ -262,6 +262,15 @@ export function Slide({
     xl: "text-xl sm:text-3xl leading-[1.875rem] sm:leading-[2.25rem]",
     "2xl": "text-2xl sm:text-4xl leading-[2rem] sm:leading-[2.5rem]",
   };
+
+  // Handle numeric size values
+  const sizeClass =
+    typeof size === "number" ? "" : sizeClasses[size] || sizeClasses.base;
+
+  const customSizeStyle =
+    typeof size === "number"
+      ? { fontSize: `${size}px`, lineHeight: `${size * 1.5}px` }
+      : undefined;
 
   // Map text alignment to Tailwind classes (can't use dynamic class names with Tailwind JIT)
   const textAlignClasses = {
@@ -284,9 +293,10 @@ export function Slide({
     <div
       className={`${
         isImageOnly ? "image-only-slide" : "max-w-full sm:max-w-4xl"
-      } w-full ${sizeClasses[size]} ${textAlignClasses[textAlign]} ${
+      } w-full ${sizeClass} ${textAlignClasses[textAlign]} ${
         animationClasses[animate]
       } break-words`}
+      style={customSizeStyle}
     >
       <div
         ref={contentRef}
