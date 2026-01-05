@@ -92,7 +92,7 @@ export default async function UserProfile() {
 - Improve performance by default
 - Enforce clearer separation of concerns
 
-=== size=lg 
+=== size=lg text=right
 
 # Q&A
 
