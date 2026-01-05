@@ -174,9 +174,55 @@ logo: https://example.com/logo.png
                   <code className="px-1.5 py-0.5 bg-gray-100 dark:bg-gray-700 rounded text-xs font-mono">
                     logo
                   </code>{" "}
-                  field (optional) displays a logo in the bottom-left corner of
-                  slides.
+                  field (optional) displays a logo on slides. customize it with:
                 </p>
+
+                <ul className="list-disc pl-6 mt-2 space-y-1">
+                  <li>
+                    <code className="px-1.5 py-0.5 bg-gray-100 dark:bg-gray-700 rounded text-xs font-mono">
+                      logo-position
+                    </code>{" "}
+                    -{" "}
+                    <code className="px-1.5 py-0.5 bg-gray-100 dark:bg-gray-700 rounded text-xs font-mono">
+                      left
+                    </code>{" "}
+                    (default) or{" "}
+                    <code className="px-1.5 py-0.5 bg-gray-100 dark:bg-gray-700 rounded text-xs font-mono">
+                      right
+                    </code>
+                  </li>
+                  <li>
+                    <code className="px-1.5 py-0.5 bg-gray-100 dark:bg-gray-700 rounded text-xs font-mono">
+                      logo-opacity
+                    </code>{" "}
+                    -{" "}
+                    <code className="px-1.5 py-0.5 bg-gray-100 dark:bg-gray-700 rounded text-xs font-mono">
+                      0
+                    </code>{" "}
+                    to{" "}
+                    <code className="px-1.5 py-0.5 bg-gray-100 dark:bg-gray-700 rounded text-xs font-mono">
+                      1
+                    </code>{" "}
+                    (default: 0.9)
+                  </li>
+                  <li>
+                    <code className="px-1.5 py-0.5 bg-gray-100 dark:bg-gray-700 rounded text-xs font-mono">
+                      logo-size
+                    </code>{" "}
+                    -{" "}
+                    <code className="px-1.5 py-0.5 bg-gray-100 dark:bg-gray-700 rounded text-xs font-mono">
+                      sm
+                    </code>
+                    ,{" "}
+                    <code className="px-1.5 py-0.5 bg-gray-100 dark:bg-gray-700 rounded text-xs font-mono">
+                      base
+                    </code>{" "}
+                    (default), or{" "}
+                    <code className="px-1.5 py-0.5 bg-gray-100 dark:bg-gray-700 rounded text-xs font-mono">
+                      lg
+                    </code>
+                  </li>
+                </ul>
               </section>
 
               {/* Global Slide Configuration */}

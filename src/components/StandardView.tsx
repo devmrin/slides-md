@@ -177,7 +177,20 @@ export function StandardView({
             <img
               src={frontmatter.logo}
               alt="Logo"
-              className="presentation-logo absolute bottom-[94px] left-4 h-10 w-auto opacity-90 z-10 shadow-none"
+              className={`presentation-logo absolute bottom-[94px] z-10 shadow-none ${
+                frontmatter.logoPosition === "right" ? "right-4" : "left-4"
+              } ${
+                frontmatter.logoSize === "sm"
+                  ? "h-8"
+                  : frontmatter.logoSize === "lg"
+                  ? "h-12"
+                  : "h-10"
+              } w-auto`}
+              style={{
+                opacity: frontmatter.logoOpacity
+                  ? parseFloat(frontmatter.logoOpacity)
+                  : 0.9,
+              }}
               onError={(e) => {
                 (e.target as HTMLImageElement).style.display = "none";
               }}

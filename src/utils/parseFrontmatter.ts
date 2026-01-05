@@ -14,6 +14,9 @@ const keyAliases: Record<string, string> = {
   authors: "presenter",
   by: "presenter",
   subtitle: "description",
+  "logo-position": "logoPosition",
+  "logo-opacity": "logoOpacity",
+  "logo-size": "logoSize",
 };
 
 // Config keys that should be extracted as default slide config
@@ -56,6 +59,29 @@ function validateConfigValue(key: string, value: string): string | number | unde
   return undefined;
 }
 
+/**
+ * Validates logo-specific properties
+ */
+function validateLogoProperty(key: string, value: string): string | number | undefined {
+  if (key === "logoPosition") {
+    return ["left", "right"].includes(value) ? value : undefined;
+  }
+  
+  if (key === "logoOpacity") {
+    const numValue = parseFloat(value);
+    if (!isNaN(numValue) && numValue >= 0 && numValue <= 1) {
+      return numValue;
+    }
+    return undefined;
+  }
+  
+  if (key === "logoSize") {
+    return ["sm", "base", "lg"].includes(value) ? value : undefined;
+  }
+  
+  return undefined;
+}
+
 export function parseFrontmatter(text: string): {
   frontmatter: Record<string, string>;
   defaultSlideConfig: SlideConfig;
@@ -94,6 +120,12 @@ export function parseFrontmatter(text: string): {
           } else if (normalizedKey === "animate") {
             defaultSlideConfig.animate = validatedValue as SlideConfig["animate"];
           }
+        }
+      } else if (["logoPosition", "logoOpacity", "logoSize"].includes(normalizedKey)) {
+        // Logo-specific properties
+        const validatedValue = validateLogoProperty(normalizedKey, value);
+        if (validatedValue !== undefined) {
+          frontmatter[normalizedKey] = String(validatedValue);
         }
       } else {
         // Regular frontmatter key
