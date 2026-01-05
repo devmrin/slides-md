@@ -1,6 +1,5 @@
 import { useMemo, useState } from "react";
 import { useNavigate } from "@tanstack/react-router";
-import { Trash2, Pencil } from "lucide-react";
 import { format } from "date-fns";
 import {
   useReactTable,
@@ -10,15 +9,16 @@ import {
 } from "@tanstack/react-table";
 import { Slide } from "./Slide";
 import { useSlides } from "../hooks/useSlides";
-import { Button } from "../ui/Button";
 import { DeleteConfirmationDialog } from "./DeleteConfirmationDialog";
 import { EditPresentationNameDialog } from "./EditPresentationNameDialog";
+import { PresentationActionDropdown } from "./PresentationActionDropdown";
 import type { Presentation } from "../db/adapter";
 
 interface PresentationsTableProps {
   presentations: Presentation[];
   onDelete: (id: string) => void;
   onEdit: (id: string, newName: string) => void;
+  onDuplicate: (id: string) => void;
 }
 
 function PreviewCell({ presentation }: { presentation: Presentation }) {
@@ -38,7 +38,12 @@ function PreviewCell({ presentation }: { presentation: Presentation }) {
   );
 }
 
-export function PresentationsTable({ presentations, onDelete, onEdit }: PresentationsTableProps) {
+export function PresentationsTable({
+  presentations,
+  onDelete,
+  onEdit,
+  onDuplicate,
+}: PresentationsTableProps) {
   const navigate = useNavigate();
   const [deleteDialogOpen, setDeleteDialogOpen] = useState<string | null>(null);
   const [deleteTarget, setDeleteTarget] = useState<Presentation | null>(null);
@@ -53,8 +58,7 @@ export function PresentationsTable({ presentations, onDelete, onEdit }: Presenta
     navigate({ to: "/presentation/$id", params: { id: presentation.id } });
   };
 
-  const handleDeleteClick = (e: React.MouseEvent, presentation: Presentation) => {
-    e.stopPropagation();
+  const handleDeleteClick = (presentation: Presentation) => {
     setDeleteTarget(presentation);
     setDeleteDialogOpen(presentation.id);
   };
@@ -67,8 +71,7 @@ export function PresentationsTable({ presentations, onDelete, onEdit }: Presenta
     }
   };
 
-  const handleEditClick = (e: React.MouseEvent, presentation: Presentation) => {
-    e.stopPropagation();
+  const handleEditClick = (presentation: Presentation) => {
     setEditTarget(presentation);
     setEditDialogOpen(presentation.id);
   };
@@ -144,30 +147,27 @@ export function PresentationsTable({ presentations, onDelete, onEdit }: Presenta
         cell: ({ row }) => {
           const presentation = row.original;
           return (
-            <div className="w-24 flex justify-end gap-1">
-              <Button
-                onClick={(e) => handleEditClick(e, presentation)}
-                className="p-1.5 text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700 rounded shrink-0"
-                title="Edit presentation name"
-              >
-                <Pencil className="w-4 h-4" />
-              </Button>
-              <Button
-                onClick={(e) => handleDeleteClick(e, presentation)}
-                className="p-1.5 text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700 rounded shrink-0"
-                title="Delete presentation"
-              >
-                <Trash2 className="w-4 h-4" />
-              </Button>
+            <div
+              className="w-12 flex justify-end"
+              onClick={(e) => e.stopPropagation()}
+            >
+              <PresentationActionDropdown
+                presentation={presentation}
+                onDelete={onDelete}
+                onEdit={onEdit}
+                onDuplicate={onDuplicate}
+                onEditClick={() => handleEditClick(presentation)}
+                onDeleteClick={() => handleDeleteClick(presentation)}
+              />
             </div>
           );
         },
-        size: 96,
-        minSize: 96,
-        maxSize: 96,
+        size: 48,
+        minSize: 48,
+        maxSize: 48,
       },
     ],
-    []
+    [onDelete, onEdit, onDuplicate]
   );
 
   // eslint-disable-next-line react-hooks/incompatible-library
@@ -194,7 +194,10 @@ export function PresentationsTable({ presentations, onDelete, onEdit }: Presenta
                 >
                   {header.isPlaceholder
                     ? null
-                    : flexRender(header.column.columnDef.header, header.getContext())}
+                    : flexRender(
+                        header.column.columnDef.header,
+                        header.getContext()
+                      )}
                 </div>
               ))
             )}
@@ -237,4 +240,3 @@ export function PresentationsTable({ presentations, onDelete, onEdit }: Presenta
     </>
   );
 }
-

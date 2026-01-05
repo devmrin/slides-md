@@ -1,20 +1,25 @@
 import { useState } from "react";
 import { useNavigate } from "@tanstack/react-router";
-import { Trash2, Pencil } from "lucide-react";
 import { Slide } from "./Slide";
 import { useSlides } from "../hooks/useSlides";
-import { Button } from "../ui/Button";
 import { DeleteConfirmationDialog } from "./DeleteConfirmationDialog";
 import { EditPresentationNameDialog } from "./EditPresentationNameDialog";
+import { PresentationActionDropdown } from "./PresentationActionDropdown";
 import type { Presentation } from "../db/adapter";
 
 interface PresentationCardProps {
   presentation: Presentation;
   onDelete: (id: string) => void;
   onEdit: (id: string, newName: string) => void;
+  onDuplicate: (id: string) => void;
 }
 
-export function PresentationCard({ presentation, onDelete, onEdit }: PresentationCardProps) {
+export function PresentationCard({
+  presentation,
+  onDelete,
+  onEdit,
+  onDuplicate,
+}: PresentationCardProps) {
   const navigate = useNavigate();
   const { frontmatter, slides } = useSlides(presentation.markdown);
   const firstSlide = slides[0] || "";
@@ -29,13 +34,11 @@ export function PresentationCard({ presentation, onDelete, onEdit }: Presentatio
     navigate({ to: "/presentation/$id", params: { id: presentation.id } });
   };
 
-  const handleEdit = (e: React.MouseEvent) => {
-    e.stopPropagation();
+  const handleEdit = () => {
     setEditDialogOpen(true);
   };
 
-  const handleDelete = (e: React.MouseEvent) => {
-    e.stopPropagation();
+  const handleDelete = () => {
     setDeleteDialogOpen(true);
   };
 
@@ -71,20 +74,14 @@ export function PresentationCard({ presentation, onDelete, onEdit }: Presentatio
             {presentation.name}
           </h3>
           <div className="flex items-center gap-1">
-            <Button
-              onClick={handleEdit}
-              className="p-1.5 text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700 rounded shrink-0"
-              title="Edit presentation name"
-            >
-              <Pencil className="w-4 h-4" />
-            </Button>
-            <Button
-              onClick={handleDelete}
-              className="p-1.5 text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700 rounded shrink-0"
-              title="Delete presentation"
-            >
-              <Trash2 className="w-4 h-4" />
-            </Button>
+            <PresentationActionDropdown
+              presentation={presentation}
+              onDelete={onDelete}
+              onEdit={onEdit}
+              onDuplicate={onDuplicate}
+              onEditClick={handleEdit}
+              onDeleteClick={handleDelete}
+            />
           </div>
         </div>
       </div>
@@ -104,4 +101,3 @@ export function PresentationCard({ presentation, onDelete, onEdit }: Presentatio
     </div>
   );
 }
-

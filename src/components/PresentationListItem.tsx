@@ -1,26 +1,51 @@
+import { useState } from "react";
 import { useNavigate } from "@tanstack/react-router";
-import { Trash2 } from "lucide-react";
 import { format } from "date-fns";
-import { Button } from "../ui/Button";
+import { DeleteConfirmationDialog } from "./DeleteConfirmationDialog";
+import { EditPresentationNameDialog } from "./EditPresentationNameDialog";
+import { PresentationActionDropdown } from "./PresentationActionDropdown";
 import type { Presentation } from "../db/adapter";
 
 interface PresentationListItemProps {
   presentation: Presentation;
   onDelete: (id: string) => void;
+  onEdit: (id: string, newName: string) => void;
+  onDuplicate: (id: string) => void;
 }
 
-export function PresentationListItem({ presentation, onDelete }: PresentationListItemProps) {
+export function PresentationListItem({
+  presentation,
+  onDelete,
+  onEdit,
+  onDuplicate,
+}: PresentationListItemProps) {
   const navigate = useNavigate();
+  const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
+  const [editDialogOpen, setEditDialogOpen] = useState(false);
 
   const handleClick = () => {
+    // Prevent navigation if a dialog is open
+    if (deleteDialogOpen || editDialogOpen) {
+      return;
+    }
     navigate({ to: "/presentation/$id", params: { id: presentation.id } });
   };
 
-  const handleDelete = (e: React.MouseEvent) => {
-    e.stopPropagation();
-    if (window.confirm(`Are you sure you want to delete "${presentation.name}"?`)) {
-      onDelete(presentation.id);
-    }
+  const handleEdit = () => {
+    setEditDialogOpen(true);
+  };
+
+  const handleDelete = () => {
+    setDeleteDialogOpen(true);
+  };
+
+  const handleConfirmEdit = (newName: string) => {
+    onEdit(presentation.id, newName);
+    setEditDialogOpen(false);
+  };
+
+  const handleConfirmDelete = () => {
+    onDelete(presentation.id);
   };
 
   const formattedDate = format(new Date(presentation.updatedAt), "MMM d, yyyy");
@@ -34,16 +59,31 @@ export function PresentationListItem({ presentation, onDelete }: PresentationLis
         <h3 className="font-semibold text-gray-900 dark:text-gray-100 truncate mb-1">
           {presentation.name}
         </h3>
-        <p className="text-xs text-gray-500 dark:text-gray-400">{formattedDate}</p>
+        <p className="text-xs text-gray-500 dark:text-gray-400">
+          {formattedDate}
+        </p>
       </div>
-      <Button
-        onClick={handleDelete}
-        className="p-1.5 text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/20 rounded flex-shrink-0"
-        title="Delete presentation"
-      >
-        <Trash2 className="w-4 h-4" />
-      </Button>
+      <PresentationActionDropdown
+        presentation={presentation}
+        onDelete={onDelete}
+        onEdit={onEdit}
+        onDuplicate={onDuplicate}
+        onEditClick={handleEdit}
+        onDeleteClick={handleDelete}
+      />
+
+      <EditPresentationNameDialog
+        open={editDialogOpen}
+        onOpenChange={setEditDialogOpen}
+        currentName={presentation.name}
+        onSave={handleConfirmEdit}
+      />
+      <DeleteConfirmationDialog
+        open={deleteDialogOpen}
+        onOpenChange={setDeleteDialogOpen}
+        onConfirm={handleConfirmDelete}
+        presentationName={presentation.name}
+      />
     </div>
   );
 }
-

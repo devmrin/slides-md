@@ -139,6 +139,36 @@ export function HomePage() {
     }
   };
 
+  const handleDuplicate = async (id: string) => {
+    try {
+      if (presentations.length >= MAX_PRESENTATIONS) {
+        alert(`Maximum of ${MAX_PRESENTATIONS} presentations allowed`);
+        return;
+      }
+
+      const original = await db.getPresentation(id);
+      if (!original) {
+        alert("Presentation not found");
+        return;
+      }
+
+      const newId = generateUUID();
+      const now = Date.now();
+      await db.savePresentation({
+        id: newId,
+        name: `${original.name} (Copy)`,
+        markdown: original.markdown,
+        createdAt: now,
+        updatedAt: now,
+      });
+
+      await loadPresentations();
+    } catch (error) {
+      console.error("Error duplicating presentation:", error);
+      alert("Failed to duplicate presentation");
+    }
+  };
+
   const handleViewSample = async () => {
     try {
       if (presentations.length >= MAX_PRESENTATIONS) {
@@ -257,6 +287,7 @@ export function HomePage() {
                   presentation={pres}
                   onDelete={handleDelete}
                   onEdit={handleEdit}
+                  onDuplicate={handleDuplicate}
                 />
               ))}
             </div>
@@ -266,6 +297,7 @@ export function HomePage() {
                 presentations={presentations}
                 onDelete={handleDelete}
                 onEdit={handleEdit}
+                onDuplicate={handleDuplicate}
               />
             </div>
           )}
