@@ -1,21 +1,24 @@
 import * as DropdownMenu from "@radix-ui/react-dropdown-menu";
-import { Copy, Trash2, MoreVertical } from "lucide-react";
+import { Copy, Trash2, MoreVertical, Edit3 } from "lucide-react";
 import type { MediaItem } from "../db/adapter";
 
 interface ImageActionDropdownProps {
   media: MediaItem;
   onDelete: (id: string) => void;
+  onEditAlt: (media: MediaItem) => void;
 }
 
 export function ImageActionDropdown({
   media,
   onDelete,
+  onEditAlt,
 }: ImageActionDropdownProps) {
   const copyMarkdownLink = async () => {
     try {
       // Use custom media:// scheme with media ID
       // This keeps the markdown clean and references the IndexedDB entry
-      const markdown = `![${media.filename}](media://${media.id})`;
+      const altText = media.alt || media.filename;
+      const markdown = `![${altText}](media://${media.id})`;
 
       await navigator.clipboard.writeText(markdown);
       // Could add toast notification here in future
@@ -55,6 +58,14 @@ export function ImageActionDropdown({
           >
             <Copy className="w-4 h-4" />
             Copy Markdown Link
+          </DropdownMenu.Item>
+
+          <DropdownMenu.Item
+            className="flex items-center gap-2 px-3 py-2 text-sm text-gray-700 dark:text-gray-300 rounded-md hover:bg-gray-100 dark:hover:bg-gray-700 cursor-pointer outline-none"
+            onSelect={() => onEditAlt(media)}
+          >
+            <Edit3 className="w-4 h-4" />
+            Edit Alt Text
           </DropdownMenu.Item>
 
           <DropdownMenu.Separator className="h-px bg-gray-200 dark:bg-gray-700 my-1" />

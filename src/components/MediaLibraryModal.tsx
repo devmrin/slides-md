@@ -6,6 +6,7 @@ import type { MediaItem } from "../db/adapter";
 import { generateUUID } from "../utils/uuid";
 import { ImageActionDropdown } from "./ImageActionDropdown";
 import { ImageCarousel } from "./ImageCarousel";
+import { EditAltDialog } from "./EditAltDialog";
 import {
   MAX_MEDIA_ITEMS,
   MAX_FILE_SIZE_BYTES,
@@ -27,6 +28,8 @@ export function MediaLibraryModal({
   const [error, setError] = useState<string | null>(null);
   const [carouselOpen, setCarouselOpen] = useState(false);
   const [carouselIndex, setCarouselIndex] = useState(0);
+  const [editAltOpen, setEditAltOpen] = useState(false);
+  const [editingMedia, setEditingMedia] = useState<MediaItem | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   // Load media items
@@ -146,6 +149,28 @@ export function MediaLibraryModal({
     setCarouselOpen(true);
   };
 
+  const handleEditAlt = (media: MediaItem) => {
+    setEditingMedia(media);
+    setEditAltOpen(true);
+  };
+
+  const handleSaveAlt = async (id: string, alt: string) => {
+    try {
+      const media = await db.getMedia(id);
+      if (!media) return;
+
+      await db.saveMedia({
+        ...media,
+        alt,
+      });
+
+      await loadMedia();
+    } catch (err) {
+      console.error("Failed to save alt text:", err);
+      throw err;
+    }
+  };
+
   const formatFileSize = (bytes: number): string => {
     if (bytes < 1024) return `${bytes} B`;
     if (bytes < 1024 * 1024) return `${(bytes / 1024).toFixed(1)} KB`;
@@ -159,8 +184,12 @@ export function MediaLibraryModal({
           <Dialog.Overlay className="fixed inset-0 bg-black/50 dark:bg-black/70 z-40" />
           <Dialog.Content
             className="fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-white dark:bg-gray-800 rounded-lg shadow-xl w-full max-w-4xl max-h-[85vh] overflow-hidden z-50 border border-gray-300 dark:border-gray-700"
-            onPointerDownOutside={(e) => e.preventDefault()}
-            onEscapeKeyDown={(e) => e.preventDefault()}
+            onPointerDownOutside={(e) => {
+              if (!carouselOpen) e.preventDefault();
+            }}
+            onEscapeKeyDown={(e) => {
+              if (!carouselOpen) e.preventDefault();
+            }}
           >
             <div className="flex flex-col h-full">
               {/* Header */}
@@ -254,6 +283,7 @@ export function MediaLibraryModal({
                         <ImageActionDropdown
                           media={item}
                           onDelete={handleDelete}
+                          onEditAlt={handleEditAlt}
                         />
 
                         {/* Image info overlay */}
@@ -261,6 +291,11 @@ export function MediaLibraryModal({
                           <p className="text-white text-xs font-medium truncate">
                             {item.filename}
                           </p>
+                          {item.alt && (
+                            <p className="text-white/80 text-xs italic truncate mt-0.5">
+                              {item.alt}
+                            </p>
+                          )}
                           <p className="text-white/70 text-xs">
                             {formatFileSize(item.size)}
                           </p>
@@ -281,6 +316,16 @@ export function MediaLibraryModal({
           media={mediaItems}
           initialIndex={carouselIndex}
           onClose={() => setCarouselOpen(false)}
+        />
+      )}
+
+      {/* Edit Alt Dialog */}
+      {editAltOpen && editingMedia && (
+        <EditAltDialog
+          open={editAltOpen}
+          onOpenChange={setEditAltOpen}
+          media={editingMedia}
+          onSave={handleSaveAlt}
         />
       )}
     </>

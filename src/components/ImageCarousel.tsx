@@ -50,7 +50,7 @@ export function ImageCarousel({
   }, []);
 
   return (
-    <div className="fixed inset-0 bg-black/95 z-50 flex items-center justify-center">
+    <div className="fixed inset-0 bg-black/95 z-[60] flex items-center justify-center">
       {/* Close button */}
       <button
         onClick={onClose}
@@ -86,14 +86,19 @@ export function ImageCarousel({
       <div className="max-w-[90vw] max-h-[90vh] flex items-center justify-center">
         <img
           src={currentMedia.dataUrl}
-          alt={currentMedia.filename}
+          alt={currentMedia.alt || currentMedia.filename}
           className="max-w-full max-h-[90vh] object-contain"
         />
       </div>
 
       {/* Image info */}
-      <div className="absolute bottom-4 left-1/2 transform -translate-x-1/2 bg-white/10 backdrop-blur-sm rounded-lg px-4 py-2 text-white text-sm">
+      <div className="absolute bottom-4 left-1/2 transform -translate-x-1/2 bg-white/10 backdrop-blur-sm rounded-lg px-4 py-2 text-white text-sm max-w-[90vw]">
         <div className="font-medium">{currentMedia.filename}</div>
+        {currentMedia.alt && (
+          <div className="text-xs text-gray-300 mt-1 italic">
+            {currentMedia.alt}
+          </div>
+        )}
         {media.length > 1 && (
           <div className="text-xs text-gray-300 mt-1">
             {currentIndex + 1} / {media.length}

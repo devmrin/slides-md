@@ -19,6 +19,11 @@ class SlidesDatabase extends Dexie {
       presentations: "id, name, createdAt, updatedAt",
       media: "id, filename, createdAt, size",
     });
+    // Version 3: add alt text support (no schema change needed, but bumping version)
+    this.version(3).stores({
+      presentations: "id, name, createdAt, updatedAt",
+      media: "id, filename, createdAt, size",
+    });
   }
 }
 
@@ -101,6 +106,7 @@ export class IndexedDBAdapter implements DatabaseAdapter {
       mimeType: media.mimeType,
       size: media.size,
       dataUrl: media.dataUrl,
+      alt: media.alt,
       createdAt: existing?.createdAt ?? media.createdAt ?? now,
     };
 

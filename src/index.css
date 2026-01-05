@@ -383,6 +383,38 @@
   box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.3), 0 2px 4px -1px rgba(0, 0, 0, 0.2);
 }
 
+/* Image alt text display as captions in presentation and standard views */
+.standard-view-slide .image-with-alt,
+.presentation-view-slide .image-with-alt {
+  display: block;
+  max-width: 100%;
+  margin: 1.5rem 0;
+}
+
+.standard-view-slide .image-with-alt img,
+.presentation-view-slide .image-with-alt img {
+  margin: 0;
+  display: block;
+}
+
+.standard-view-slide .image-alt-caption,
+.presentation-view-slide .image-alt-caption {
+  display: block;
+  text-align: center;
+  font-size: 0.75rem;
+  color: #6b7280;
+  font-style: italic;
+  margin-top: 0.5rem;
+  margin-bottom: 0;
+  line-height: 1.4;
+  padding: 0 0.5rem;
+}
+
+.dark .standard-view-slide .image-alt-caption,
+.dark .presentation-view-slide .image-alt-caption {
+  color: #9ca3af;
+}
+
 /* Image-only slides - fill entire container */
 .image-only-slide {
   width: 100%;
@@ -391,11 +423,46 @@
   align-items: center;
   justify-content: center;
   padding: 0;
+  position: relative;
+}
+
+/* Special handling for figure elements in image-only slides */
+.standard-view-slide .image-only-slide .image-with-alt,
+.presentation-view-slide .image-only-slide .image-with-alt {
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Caption overlay for image-only slides */
+.standard-view-slide .image-only-slide .image-alt-caption,
+.presentation-view-slide .image-only-slide .image-alt-caption {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: linear-gradient(to top, rgba(0, 0, 0, 0.7), transparent);
+  color: white;
+  padding: 2rem 2rem 1rem 2rem;
+  margin: 0;
+  font-size: 0.875rem;
+}
+
+.dark .standard-view-slide .image-only-slide .image-alt-caption,
+.dark .presentation-view-slide .image-only-slide .image-alt-caption {
+  background: linear-gradient(to top, rgba(0, 0, 0, 0.8), transparent);
+  color: #f3f4f6;
 }
 
 /* Make image-only slide styles more specific to override general image styles */
 .standard-view-slide .image-only-slide img,
-.presentation-view-slide .image-only-slide img {
+.presentation-view-slide .image-only-slide img,
+.standard-view-slide .image-only-slide .image-with-alt img,
+.presentation-view-slide .image-only-slide .image-with-alt img {
   width: 100%;
   height: 100%;
   object-fit: contain;
@@ -411,10 +478,11 @@
 }
 
 /* Remove margins and padding from wrapper elements in image-only slides */
-.standard-view-slide .image-only-slide p,
-.presentation-view-slide .image-only-slide p,
-.standard-view-slide .image-only-slide div,
-.presentation-view-slide .image-only-slide div {
+/* But preserve normal behavior for our figure elements */
+.standard-view-slide .image-only-slide p:not(.image-with-alt),
+.presentation-view-slide .image-only-slide p:not(.image-with-alt),
+.standard-view-slide .image-only-slide div:not(.image-with-alt),
+.presentation-view-slide .image-only-slide div:not(.image-with-alt) {
   margin: 0;
   padding: 0;
   width: 100%;

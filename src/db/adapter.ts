@@ -18,6 +18,7 @@ export interface MediaItem {
   mimeType: string;
   size: number; // in bytes
   dataUrl: string; // base64 encoded image data URL
+  alt?: string; // alternative text for accessibility
   createdAt: number;
 }
 
