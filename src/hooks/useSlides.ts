@@ -1,6 +1,40 @@
 import { useMemo } from "react";
 import { parseFrontmatter } from "../utils/parseFrontmatter";
 
+export interface SlideConfig {
+  align?: "top" | "center" | "bottom";
+  text?: "left" | "center" | "right";
+  size?: "xs" | "sm" | "base" | "lg" | "xl" | "2xl";
+}
+
+/**
+ * Parses slide delimiter attributes from a line like:
+ * === align=top text=right size=sm
+ * Returns parsed config or empty object if no valid attributes found
+ */
+function parseSlideConfig(delimiterLine: string): SlideConfig {
+  const config: SlideConfig = {};
+  
+  // Match key=value pairs in the delimiter line
+  const attrRegex = /(\w+)=([\w-]+)/g;
+  let match;
+  
+  while ((match = attrRegex.exec(delimiterLine)) !== null) {
+    const key = match[1];
+    const value = match[2];
+    
+    if (key === "align" && ["top", "center", "bottom"].includes(value)) {
+      config.align = value as SlideConfig["align"];
+    } else if (key === "text" && ["left", "center", "right"].includes(value)) {
+      config.text = value as SlideConfig["text"];
+    } else if (key === "size" && ["xs", "sm", "base", "lg", "xl", "2xl"].includes(value)) {
+      config.size = value as SlideConfig["size"];
+    }
+  }
+  
+  return config;
+}
+
 /**
  * Detects if a slide contains only an image (and no other content)
  * Checks if the slide content is just an image markdown syntax: ![alt](url) or <img>
@@ -31,29 +65,76 @@ function isImageOnlySlide(slide: string): boolean {
 export function useSlides(markdown: string) {
   return useMemo(() => {
     const { frontmatter, content } = parseFrontmatter(markdown);
-    const trimmedSlides = content.split("===").map((s) => s.trim());
-    // Remove leading and trailing empty slides, but keep intentional empty slides (between two === separators)
-    const contentSlides = trimmedSlides.filter((slide, index) => {
-      // Keep all slides except leading/trailing empty ones
-      if (slide.length > 0) return true;
-      // If empty, check if there are any non-empty slides both before AND after it
-      const hasContentBefore = trimmedSlides.slice(0, index).some((s) => s.length > 0);
-      const hasContentAfter = trimmedSlides.slice(index + 1).some((s) => s.length > 0);
-      return hasContentBefore && hasContentAfter;
+    
+    // Split by === but preserve delimiter lines to extract configs
+    const rawParts = content.split(/(===.*)/);
+    const slides: string[] = [];
+    const slideConfigs: SlideConfig[] = [];
+    
+    let currentSlideContent = "";
+    let currentConfig: SlideConfig = {};
+    
+    for (let i = 0; i < rawParts.length; i++) {
+      const part = rawParts[i].trim();
+      
+      if (part.startsWith("===")) {
+        // Save previous slide if it exists
+        if (currentSlideContent.trim() || slides.length > 0) {
+          slides.push(currentSlideContent.trim());
+          slideConfigs.push(currentConfig);
+        }
+        
+        // Parse config from delimiter
+        currentConfig = parseSlideConfig(part);
+        currentSlideContent = "";
+      } else if (part) {
+        currentSlideContent = part;
+      }
+    }
+    
+    // Add the last slide
+    if (currentSlideContent.trim() || slides.length > 0) {
+      slides.push(currentSlideContent.trim());
+      slideConfigs.push(currentConfig);
+    }
+    
+    // Remove leading and trailing empty slides, but keep intentional empty slides
+    const filteredIndices: number[] = [];
+    slides.forEach((slide, index) => {
+      if (slide.length > 0) {
+        filteredIndices.push(index);
+      } else {
+        // Keep empty slides that have content before and after
+        const hasContentBefore = slides.slice(0, index).some((s) => s.length > 0);
+        const hasContentAfter = slides.slice(index + 1).some((s) => s.length > 0);
+        if (hasContentBefore && hasContentAfter) {
+          filteredIndices.push(index);
+        }
+      }
     });
-    const slides =
+    
+    const contentSlides = filteredIndices.map((i) => slides[i]);
+    const contentConfigs = filteredIndices.map((i) => slideConfigs[i]);
+    
+    // Add title slide if frontmatter exists
+    const finalSlides =
       Object.keys(frontmatter).length > 0
         ? ["__TITLE_SLIDE__", ...contentSlides]
         : contentSlides;
     
+    const finalConfigs =
+      Object.keys(frontmatter).length > 0
+        ? [{}, ...contentConfigs] // Title slide gets empty config
+        : contentConfigs;
+    
     // Detect image-only slides
     const imageOnlySlides = new Set<number>();
-    slides.forEach((slide, index) => {
+    finalSlides.forEach((slide, index) => {
       if (slide !== "__TITLE_SLIDE__" && isImageOnlySlide(slide)) {
         imageOnlySlides.add(index);
       }
     });
     
-    return { frontmatter, slides, imageOnlySlides };
+    return { frontmatter, slides: finalSlides, slideConfigs: finalConfigs, imageOnlySlides };
   }, [markdown]);
 }

@@ -3,10 +3,12 @@ import { Slide } from "./Slide";
 import { Director } from "./Director";
 import { Button } from "../ui/Button";
 import { useFullscreen } from "../hooks/useFullscreen";
+import { type SlideConfig } from "../hooks/useSlides";
 
 interface PresentationViewProps {
   currentSlide: number;
   slides: string[];
+  slideConfigs: SlideConfig[];
   frontmatter?: Record<string, string>;
   imageOnlySlides: Set<number>;
   prevSlide: () => void;
@@ -21,6 +23,7 @@ interface PresentationViewProps {
 export function PresentationView({
   currentSlide,
   slides,
+  slideConfigs,
   frontmatter,
   imageOnlySlides,
   prevSlide,
@@ -33,11 +36,19 @@ export function PresentationView({
 }: PresentationViewProps) {
   const containerRef = useRef<HTMLDivElement>(null);
   const hasRequestedFullscreen = useRef(false);
-  const { requestFullscreenOnly } = useFullscreen(containerRef, isFullscreen, setIsFullscreen);
+  const { requestFullscreenOnly } = useFullscreen(
+    containerRef,
+    isFullscreen,
+    setIsFullscreen
+  );
 
   // Request fullscreen when component mounts with isFullscreen=true
   useEffect(() => {
-    if (isFullscreen && containerRef.current && !hasRequestedFullscreen.current) {
+    if (
+      isFullscreen &&
+      containerRef.current &&
+      !hasRequestedFullscreen.current
+    ) {
       hasRequestedFullscreen.current = true;
       requestFullscreenOnly();
     }
@@ -57,43 +68,71 @@ export function PresentationView({
           className="px-3 py-1.5 sm:py-1 text-sm border rounded border-gray-400 dark:border-gray-600 text-gray-900 dark:text-gray-100 bg-gray-50 dark:bg-gray-900 hover:bg-gray-100 dark:hover:bg-gray-800 touch-manipulation"
           onClick={() => setIsFullscreen(false)}
         >
-          Exit <span className="ml-1 text-xs opacity-70 hidden sm:inline">(ESC)</span>
+          Exit{" "}
+          <span className="ml-1 text-xs opacity-70 hidden sm:inline">
+            (ESC)
+          </span>
         </Button>
         <div className="flex gap-2">
           <Button
             className="px-3 py-1.5 sm:py-1 text-sm border rounded border-gray-400 dark:border-gray-600 text-gray-900 dark:text-gray-100 bg-gray-50 dark:bg-gray-900 hover:bg-gray-100 dark:hover:bg-gray-800 touch-manipulation"
             onClick={() => setCurrentSlide(0)}
           >
-            Reset <span className="ml-1 text-xs opacity-70 hidden sm:inline">(R)</span>
+            Reset{" "}
+            <span className="ml-1 text-xs opacity-70 hidden sm:inline">
+              (R)
+            </span>
           </Button>
           <Button
             className="px-3 py-1.5 sm:py-1 text-sm border rounded border-gray-400 dark:border-gray-600 text-gray-900 dark:text-gray-100 bg-gray-50 dark:bg-gray-900 hover:bg-gray-100 dark:hover:bg-gray-800 touch-manipulation"
             onClick={() => setIsDark((d) => !d)}
           >
-            Theme <span className="ml-1 text-xs opacity-70 hidden sm:inline">(T)</span>
+            Theme{" "}
+            <span className="ml-1 text-xs opacity-70 hidden sm:inline">
+              (T)
+            </span>
           </Button>
         </div>
       </div>
       {isImageOnly ? (
-        <div className={`presentation-view-slide flex-1 overflow-hidden flex items-center justify-center p-0`}>
+        <div
+          className={`presentation-view-slide flex-1 overflow-hidden flex items-center justify-center p-0`}
+        >
           <Slide
             slide={slides[currentSlide]}
             isTitle={isTitle}
             isImageOnly={isImageOnly}
             frontmatter={frontmatter}
+            config={slideConfigs[currentSlide]}
           />
         </div>
       ) : (
         <div className="flex-1 overflow-y-auto overflow-x-hidden">
-          <div className={`presentation-view-slide flex ${isTitle
-            ? "min-h-full items-center justify-center p-4 sm:p-12 px-4 sm:px-12"
-            : "pt-[25vh] pb-12 justify-center px-4 sm:px-12"
-            }`}>
+          <div
+            className={`presentation-view-slide flex ${
+              isTitle
+                ? "min-h-full items-center justify-center p-4 sm:p-12 px-4 sm:px-12"
+                : (() => {
+                    const config = slideConfigs[currentSlide] || {};
+                    const align = config.align || "center";
+                    let classes = "justify-center px-4 sm:px-12 ";
+                    if (align === "top") {
+                      classes += "pt-8 pb-12";
+                    } else if (align === "center") {
+                      classes += "pt-[25vh] pb-12";
+                    } else if (align === "bottom") {
+                      classes += "pb-12 items-end";
+                    }
+                    return classes;
+                  })()
+            }`}
+          >
             <Slide
               slide={slides[currentSlide]}
               isTitle={isTitle}
               isImageOnly={isImageOnly}
               frontmatter={frontmatter}
+              config={slideConfigs[currentSlide]}
             />
           </div>
         </div>
@@ -124,4 +163,3 @@ export function PresentationView({
     </div>
   );
 }
-

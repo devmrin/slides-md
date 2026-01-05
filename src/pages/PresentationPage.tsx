@@ -1,4 +1,11 @@
-import { useState, useCallback, useEffect, useRef, type Dispatch, type SetStateAction } from "react";
+import {
+  useState,
+  useCallback,
+  useEffect,
+  useRef,
+  type Dispatch,
+  type SetStateAction,
+} from "react";
 import { useParams, useNavigate } from "@tanstack/react-router";
 import { useSlides } from "../hooks/useSlides";
 import { useKeyboardNavigation } from "../hooks/useKeyboardNavigation";
@@ -22,25 +29,31 @@ export function PresentationPage() {
   const [isFullscreen, setIsFullscreen] = useState<boolean>(false);
   const [isEditorFullscreen, setIsEditorFullscreen] = useState<boolean>(false);
   const [isDark, setIsDarkRaw] = useLocalStorage("theme", false);
-  const [focusSlideInput, setFocusSlideInput] = useState<(() => void) | undefined>(undefined);
-  
+  const [focusSlideInput, setFocusSlideInput] = useState<
+    (() => void) | undefined
+  >(undefined);
+
   // Ensure isDark is always boolean (not undefined)
   const isDarkValue = isDark ?? false;
-  
-  // Create a type-safe wrapper for setIsDark that ensures boolean type
-  const setIsDark: Dispatch<SetStateAction<boolean>> = useCallback((value) => {
-    if (typeof value === "function") {
-      setIsDarkRaw((prev) => {
-        const prevValue = prev ?? false;
-        const newValue = value(prevValue);
-        return newValue;
-      });
-    } else {
-      setIsDarkRaw(value);
-    }
-  }, [setIsDarkRaw]);
 
-  const { frontmatter, slides, imageOnlySlides } = useSlides(markdown);
+  // Create a type-safe wrapper for setIsDark that ensures boolean type
+  const setIsDark: Dispatch<SetStateAction<boolean>> = useCallback(
+    (value) => {
+      if (typeof value === "function") {
+        setIsDarkRaw((prev) => {
+          const prevValue = prev ?? false;
+          const newValue = value(prevValue);
+          return newValue;
+        });
+      } else {
+        setIsDarkRaw(value);
+      }
+    },
+    [setIsDarkRaw]
+  );
+
+  const { frontmatter, slides, slideConfigs, imageOnlySlides } =
+    useSlides(markdown);
 
   // Load presentation from IndexedDB on mount
   useEffect(() => {
@@ -50,7 +63,7 @@ export function PresentationPage() {
       try {
         setIsLoading(true);
         const presentation = await db.getPresentation(id);
-        
+
         if (isMounted) {
           if (presentation) {
             setMarkdown(presentation.markdown);
@@ -209,6 +222,7 @@ export function PresentationPage() {
       <PresentationView
         currentSlide={currentSlide}
         slides={slides}
+        slideConfigs={slideConfigs}
         frontmatter={frontmatter}
         imageOnlySlides={imageOnlySlides}
         prevSlide={prevSlide}
@@ -245,6 +259,7 @@ export function PresentationPage() {
         currentSlide={currentSlide}
         setCurrentSlide={setCurrentSlide}
         slides={slides}
+        slideConfigs={slideConfigs}
         frontmatter={frontmatter}
         imageOnlySlides={imageOnlySlides}
         isDark={isDarkValue}
@@ -267,4 +282,3 @@ export function PresentationPage() {
     </>
   );
 }
-

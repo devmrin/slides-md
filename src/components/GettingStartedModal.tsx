@@ -97,17 +97,22 @@ logo: https://example.com/logo.png
               Overview
             </Dialog.Title>
             <Dialog.Description className="sr-only">
-              Guide on how to use slides.md to create and present markdown presentations
+              Guide on how to use slides.md to create and present markdown
+              presentations
             </Dialog.Description>
 
             <div className="space-y-6 text-gray-700 dark:text-gray-300">
-
               {/* Overview */}
               <section>
                 <p className="leading-relaxed">
-                  <span className="font-bold">✱ slides.md</span> turns markdown into presentations.
+                  <span className="font-bold">✱ slides.md</span> turns markdown
+                  into presentations.
                   <br />
-                  add optional frontmatter for metadata, separate slides with <code className="px-1.5 py-0.5 bg-gray-100 dark:bg-gray-700 rounded text-xs font-mono">===</code>, and you're done.
+                  add optional frontmatter for metadata, separate slides with{" "}
+                  <code className="px-1.5 py-0.5 bg-gray-100 dark:bg-gray-700 rounded text-xs font-mono">
+                    ===
+                  </code>
+                  , and you're done.
                 </p>
               </section>
 
@@ -117,10 +122,14 @@ logo: https://example.com/logo.png
                   Multiple Presentations
                 </h2>
                 <p className="leading-relaxed">
-                  create and manage multiple presentations from the home page. click "New Presentation" or press <kbd className="px-2 py-1 bg-gray-100 dark:bg-gray-700 rounded text-xs border border-gray-300 dark:border-gray-600 text-gray-800 dark:text-gray-200 font-mono font-medium">^N</kbd> to create a new deck.</p>
+                  create and manage multiple presentations from the home page.
+                  click "New Presentation" or press{" "}
+                  <kbd className="px-2 py-1 bg-gray-100 dark:bg-gray-700 rounded text-xs border border-gray-300 dark:border-gray-600 text-gray-800 dark:text-gray-200 font-mono font-medium">
+                    ^N
+                  </kbd>{" "}
+                  to create a new deck.
+                </p>
               </section>
-
-
 
               {/* Frontmatter */}
               <section>
@@ -128,7 +137,11 @@ logo: https://example.com/logo.png
                   Frontmatter (Optional)
                 </h2>
                 <p className="leading-relaxed">
-                  add metadata at the beginning of your editor using the <code className="px-1.5 py-0.5 bg-gray-100 dark:bg-gray-700 rounded text-xs font-mono">@@@</code> delimiter:
+                  add metadata at the beginning of your editor using the{" "}
+                  <code className="px-1.5 py-0.5 bg-gray-100 dark:bg-gray-700 rounded text-xs font-mono">
+                    @@@
+                  </code>{" "}
+                  delimiter:
                 </p>
 
                 <div className="relative mt-3 p-4 bg-gray-900 dark:bg-gray-950 rounded-lg text-xs overflow-x-auto border border-gray-700 dark:border-gray-600 font-mono text-gray-100 dark:text-gray-200 whitespace-pre">
@@ -157,7 +170,12 @@ logo: https://example.com/logo.png
                   <br />
                   this adds a title slide to your presentation.
                   <br />
-                  the <code className="px-1.5 py-0.5 bg-gray-100 dark:bg-gray-700 rounded text-xs font-mono">logo</code> field (optional) displays a logo in the bottom-left corner of slides.
+                  the{" "}
+                  <code className="px-1.5 py-0.5 bg-gray-100 dark:bg-gray-700 rounded text-xs font-mono">
+                    logo
+                  </code>{" "}
+                  field (optional) displays a logo in the bottom-left corner of
+                  slides.
                 </p>
               </section>
 
@@ -167,7 +185,11 @@ logo: https://example.com/logo.png
                   Slide Separation
                 </h2>
                 <p className="leading-relaxed">
-                  use <code className="px-1.5 py-0.5 bg-gray-100 dark:bg-gray-700 rounded text-xs font-mono">===</code> delimiter in content to separate slides:
+                  use{" "}
+                  <code className="px-1.5 py-0.5 bg-gray-100 dark:bg-gray-700 rounded text-xs font-mono">
+                    ===
+                  </code>{" "}
+                  delimiter in content to separate slides:
                 </p>
 
                 <div className="mt-3 p-4 bg-gray-900 dark:bg-gray-950 rounded-lg text-xs overflow-x-auto border border-gray-700 dark:border-gray-600 font-mono text-gray-100 dark:text-gray-200 whitespace-pre">
@@ -178,6 +200,119 @@ Content here
 
 # Second Slide
 More content`}
+                </div>
+              </section>
+
+              {/* Per-Slide Configuration */}
+              <section>
+                <h2 className="text-xl font-semibold mb-3 text-gray-900 dark:text-gray-100">
+                  Per-Slide Configuration
+                </h2>
+                <p className="leading-relaxed">
+                  add optional styling attributes to the slide delimiter:
+                </p>
+
+                <div className="mt-3 p-4 bg-gray-900 dark:bg-gray-950 rounded-lg text-xs overflow-x-auto border border-gray-700 dark:border-gray-600 font-mono text-gray-100 dark:text-gray-200 whitespace-pre">
+                  {`=== align=top text=center size=lg
+
+# Custom Styled Slide
+This slide has custom layout and styling`}
+                </div>
+
+                <div className="mt-4 space-y-3">
+                  <div>
+                    <p className="text-sm font-semibold text-gray-900 dark:text-gray-100">
+                      <code className="px-1.5 py-0.5 bg-gray-100 dark:bg-gray-700 rounded text-xs font-mono">
+                        align
+                      </code>{" "}
+                      — vertical alignment
+                    </p>
+                    <ul className="text-sm list-disc list-inside ml-4 mt-1 text-gray-700 dark:text-gray-300">
+                      <li>
+                        <code className="px-1 py-0.5 bg-gray-100 dark:bg-gray-700 rounded text-xs font-mono">
+                          top
+                        </code>{" "}
+                        — minimal top padding
+                      </li>
+                      <li>
+                        <code className="px-1 py-0.5 bg-gray-100 dark:bg-gray-700 rounded text-xs font-mono">
+                          center
+                        </code>{" "}
+                        — centered vertically (default)
+                      </li>
+                      <li>
+                        <code className="px-1 py-0.5 bg-gray-100 dark:bg-gray-700 rounded text-xs font-mono">
+                          bottom
+                        </code>{" "}
+                        — aligned to bottom
+                      </li>
+                    </ul>
+                  </div>
+
+                  <div>
+                    <p className="text-sm font-semibold text-gray-900 dark:text-gray-100">
+                      <code className="px-1.5 py-0.5 bg-gray-100 dark:bg-gray-700 rounded text-xs font-mono">
+                        text
+                      </code>{" "}
+                      — text alignment
+                    </p>
+                    <ul className="text-sm list-disc list-inside ml-4 mt-1 text-gray-700 dark:text-gray-300">
+                      <li>
+                        <code className="px-1 py-0.5 bg-gray-100 dark:bg-gray-700 rounded text-xs font-mono">
+                          left
+                        </code>{" "}
+                        — left aligned (default)
+                      </li>
+                      <li>
+                        <code className="px-1 py-0.5 bg-gray-100 dark:bg-gray-700 rounded text-xs font-mono">
+                          center
+                        </code>{" "}
+                        — center aligned
+                      </li>
+                      <li>
+                        <code className="px-1 py-0.5 bg-gray-100 dark:bg-gray-700 rounded text-xs font-mono">
+                          right
+                        </code>{" "}
+                        — right aligned
+                      </li>
+                    </ul>
+                  </div>
+
+                  <div>
+                    <p className="text-sm font-semibold text-gray-900 dark:text-gray-100">
+                      <code className="px-1.5 py-0.5 bg-gray-100 dark:bg-gray-700 rounded text-xs font-mono">
+                        size
+                      </code>{" "}
+                      — font size
+                    </p>
+                    <ul className="text-sm list-disc list-inside ml-4 mt-1 text-gray-700 dark:text-gray-300">
+                      <li>
+                        <code className="px-1 py-0.5 bg-gray-100 dark:bg-gray-700 rounded text-xs font-mono">
+                          xs
+                        </code>
+                        ,{" "}
+                        <code className="px-1 py-0.5 bg-gray-100 dark:bg-gray-700 rounded text-xs font-mono">
+                          sm
+                        </code>
+                        ,{" "}
+                        <code className="px-1 py-0.5 bg-gray-100 dark:bg-gray-700 rounded text-xs font-mono">
+                          base
+                        </code>{" "}
+                        (default),{" "}
+                        <code className="px-1 py-0.5 bg-gray-100 dark:bg-gray-700 rounded text-xs font-mono">
+                          lg
+                        </code>
+                        ,{" "}
+                        <code className="px-1 py-0.5 bg-gray-100 dark:bg-gray-700 rounded text-xs font-mono">
+                          xl
+                        </code>
+                        ,{" "}
+                        <code className="px-1 py-0.5 bg-gray-100 dark:bg-gray-700 rounded text-xs font-mono">
+                          2xl
+                        </code>
+                      </li>
+                    </ul>
+                  </div>
                 </div>
               </section>
 
@@ -199,7 +334,8 @@ More content`}
                   Presenting
                 </h2>
                 <p className="leading-relaxed">
-                  click "Present" to enter fullscreen. use arrow keys or on-screen controls to navigate.
+                  click "Present" to enter fullscreen. use arrow keys or
+                  on-screen controls to navigate.
                 </p>
               </section>
 
@@ -216,11 +352,15 @@ More content`}
                     </h3>
                     <ul className="text-sm list-disc list-inside space-y-2 ml-4 text-gray-700 dark:text-gray-300">
                       <li className="flex items-center gap-2">
-                        <kbd className="px-2 py-1 bg-gray-100 dark:bg-gray-700 rounded text-xs border border-gray-300 dark:border-gray-600 text-gray-800 dark:text-gray-200 font-mono font-medium">⌘↵</kbd>
+                        <kbd className="px-2 py-1 bg-gray-100 dark:bg-gray-700 rounded text-xs border border-gray-300 dark:border-gray-600 text-gray-800 dark:text-gray-200 font-mono font-medium">
+                          ⌘↵
+                        </kbd>
                         <span>present (fullscreen)</span>
                       </li>
                       <li className="flex items-center gap-2">
-                        <kbd className="px-2 py-1 bg-gray-100 dark:bg-gray-700 rounded text-xs border border-gray-300 dark:border-gray-600 text-gray-800 dark:text-gray-200 font-mono font-medium">^T</kbd>
+                        <kbd className="px-2 py-1 bg-gray-100 dark:bg-gray-700 rounded text-xs border border-gray-300 dark:border-gray-600 text-gray-800 dark:text-gray-200 font-mono font-medium">
+                          ^T
+                        </kbd>
                         <span>toggle dark mode</span>
                       </li>
                     </ul>
@@ -232,23 +372,33 @@ More content`}
                     </h3>
                     <ul className="text-sm list-disc list-inside space-y-2 ml-4 text-gray-700 dark:text-gray-300">
                       <li className="flex items-center gap-2">
-                        <kbd className="px-2 py-1 bg-gray-100 dark:bg-gray-700 rounded text-xs border border-gray-300 dark:border-gray-600 text-gray-800 dark:text-gray-200 font-mono font-medium">→</kbd>
+                        <kbd className="px-2 py-1 bg-gray-100 dark:bg-gray-700 rounded text-xs border border-gray-300 dark:border-gray-600 text-gray-800 dark:text-gray-200 font-mono font-medium">
+                          →
+                        </kbd>
                         <span>next slide</span>
                       </li>
                       <li className="flex items-center gap-2">
-                        <kbd className="px-2 py-1 bg-gray-100 dark:bg-gray-700 rounded text-xs border border-gray-300 dark:border-gray-600 text-gray-800 dark:text-gray-200 font-mono font-medium">←</kbd>
+                        <kbd className="px-2 py-1 bg-gray-100 dark:bg-gray-700 rounded text-xs border border-gray-300 dark:border-gray-600 text-gray-800 dark:text-gray-200 font-mono font-medium">
+                          ←
+                        </kbd>
                         <span>previous slide</span>
                       </li>
                       <li className="flex items-center gap-2">
-                        <kbd className="px-2 py-1 bg-gray-100 dark:bg-gray-700 rounded text-xs border border-gray-300 dark:border-gray-600 text-gray-800 dark:text-gray-200 font-mono font-medium">T</kbd>
+                        <kbd className="px-2 py-1 bg-gray-100 dark:bg-gray-700 rounded text-xs border border-gray-300 dark:border-gray-600 text-gray-800 dark:text-gray-200 font-mono font-medium">
+                          T
+                        </kbd>
                         <span>toggle theme</span>
                       </li>
                       <li className="flex items-center gap-2">
-                        <kbd className="px-2 py-1 bg-gray-100 dark:bg-gray-700 rounded text-xs border border-gray-300 dark:border-gray-600 text-gray-800 dark:text-gray-200 font-mono font-medium">R</kbd>
+                        <kbd className="px-2 py-1 bg-gray-100 dark:bg-gray-700 rounded text-xs border border-gray-300 dark:border-gray-600 text-gray-800 dark:text-gray-200 font-mono font-medium">
+                          R
+                        </kbd>
                         <span>reset deck</span>
                       </li>
                       <li className="flex items-center gap-2">
-                        <kbd className="px-2 py-1 bg-gray-100 dark:bg-gray-700 rounded text-xs border border-gray-300 dark:border-gray-600 text-gray-800 dark:text-gray-200 font-mono font-medium">J</kbd>
+                        <kbd className="px-2 py-1 bg-gray-100 dark:bg-gray-700 rounded text-xs border border-gray-300 dark:border-gray-600 text-gray-800 dark:text-gray-200 font-mono font-medium">
+                          J
+                        </kbd>
                         <span>jump to slide (focus input)</span>
                       </li>
                     </ul>
@@ -262,7 +412,8 @@ More content`}
                   LLM Prompt
                 </h2>
                 <p className="leading-relaxed mb-3">
-                  use this prompt to generate slides.md-compatible presentations:
+                  use this prompt to generate slides.md-compatible
+                  presentations:
                 </p>
 
                 <div className="relative bg-gray-900 dark:bg-gray-950 rounded-lg p-4 border border-gray-700 dark:border-gray-600 text-sm font-mono text-gray-100 dark:text-gray-200 whitespace-pre-wrap">
@@ -297,9 +448,7 @@ More content`}
                 </a>
               </span>
               <Dialog.Close asChild>
-                <Button
-                  className="px-3 py-1 border rounded border-gray-400 dark:border-gray-600 text-gray-900 dark:text-gray-100 bg-white dark:bg-gray-900 hover:bg-gray-50 dark:hover:bg-gray-800"
-                >
+                <Button className="px-3 py-1 border rounded border-gray-400 dark:border-gray-600 text-gray-900 dark:text-gray-100 bg-white dark:bg-gray-900 hover:bg-gray-50 dark:hover:bg-gray-800">
                   Close
                 </Button>
               </Dialog.Close>

@@ -5,6 +5,7 @@ import { Button } from "../ui/Button";
 import { AppHeader } from "./AppHeader";
 import { StandardViewNav } from "./StandardViewNav";
 import { useLocalStorage } from "../hooks/useLocalStorage";
+import { type SlideConfig } from "../hooks/useSlides";
 import * as DropdownMenu from "@radix-ui/react-dropdown-menu";
 import { MoreVertical, RotateCcw } from "lucide-react";
 
@@ -14,6 +15,7 @@ interface StandardViewProps {
   currentSlide: number;
   setCurrentSlide: (slide: number) => void;
   slides: string[];
+  slideConfigs: SlideConfig[];
   frontmatter?: Record<string, string>;
   imageOnlySlides: Set<number>;
   isDark: boolean;
@@ -34,6 +36,7 @@ export function StandardView({
   currentSlide,
   setCurrentSlide,
   slides,
+  slideConfigs,
   frontmatter,
   imageOnlySlides,
   isDark,
@@ -47,15 +50,15 @@ export function StandardView({
   presentationName,
   onEditName,
 }: StandardViewProps) {
-  const [isEditorExpandedRaw, setIsEditorExpanded] = useLocalStorage("isEditorExpanded", true);
+  const [isEditorExpandedRaw, setIsEditorExpanded] = useLocalStorage(
+    "isEditorExpanded",
+    true
+  );
   const isEditorExpanded = isEditorExpandedRaw ?? true;
 
   return (
     <div className="h-screen flex flex-col bg-gray-50 dark:bg-gray-900 text-gray-900 dark:text-gray-100 relative">
-      <AppHeader
-        isDark={isDark}
-        setIsDark={setIsDark}
-      />
+      <AppHeader isDark={isDark} setIsDark={setIsDark} />
 
       <StandardViewNav
         presentationName={presentationName}
@@ -66,7 +69,13 @@ export function StandardView({
 
       <div className="flex-1 flex overflow-hidden">
         {/* Editor - visible on desktop always (1200px+), on mobile only when editor is expanded */}
-        <div className={`${isEditorExpanded ? "flex" : "hidden"} min-[1200px]:flex ${isEditorExpanded ? "min-[1200px]:flex-1" : "min-[1200px]:w-0"} w-full`}>
+        <div
+          className={`${
+            isEditorExpanded ? "flex" : "hidden"
+          } min-[1200px]:flex ${
+            isEditorExpanded ? "min-[1200px]:flex-1" : "min-[1200px]:w-0"
+          } w-full`}
+        >
           <Editor
             markdown={markdown}
             setMarkdown={setMarkdown}
@@ -79,7 +88,11 @@ export function StandardView({
           />
         </div>
         {/* Preview - visible on desktop always (1200px+), on mobile only when editor is collapsed */}
-        <div className={`${!isEditorExpanded ? "flex" : "hidden"} min-[1200px]:flex min-[1200px]:flex-1 w-full flex-col bg-white dark:bg-gray-900 relative`}>
+        <div
+          className={`${
+            !isEditorExpanded ? "flex" : "hidden"
+          } min-[1200px]:flex min-[1200px]:flex-1 w-full flex-col bg-white dark:bg-gray-900 relative`}
+        >
           <div className="px-3 sm:px-4 py-2 border-b text-sm font-medium flex items-center justify-between gap-2 bg-gray-100 dark:bg-gray-800 text-gray-900 dark:text-gray-100 border-gray-300 dark:border-gray-700">
             <span>Preview</span>
             <div className="flex items-center gap-2">
@@ -117,17 +130,33 @@ export function StandardView({
               </DropdownMenu.Root>
             </div>
           </div>
-          <div className={`standard-view-slide flex-1 overflow-auto flex text-gray-900 dark:text-gray-100 ${slides[currentSlide] === "__TITLE_SLIDE__"
-            ? "items-center justify-center p-4 sm:p-8 px-4 sm:px-8"
-            : imageOnlySlides.has(currentSlide)
-              ? "items-center justify-center p-0"
-              : "pt-[25vh] pb-8 justify-center px-4 sm:px-8"
-            }`}>
+          <div
+            className={`standard-view-slide flex-1 overflow-auto flex text-gray-900 dark:text-gray-100 ${
+              slides[currentSlide] === "__TITLE_SLIDE__"
+                ? "items-center justify-center p-4 sm:p-8 px-4 sm:px-8"
+                : imageOnlySlides.has(currentSlide)
+                ? "items-center justify-center p-0"
+                : (() => {
+                    const config = slideConfigs[currentSlide] || {};
+                    const align = config.align || "center";
+                    let classes = "justify-center px-4 sm:px-8 ";
+                    if (align === "top") {
+                      classes += "pt-8 pb-8";
+                    } else if (align === "center") {
+                      classes += "pt-[25vh] pb-8";
+                    } else if (align === "bottom") {
+                      classes += "pb-8 items-end";
+                    }
+                    return classes;
+                  })()
+            }`}
+          >
             <Slide
               slide={slides[currentSlide]}
               isTitle={slides[currentSlide] === "__TITLE_SLIDE__"}
               isImageOnly={imageOnlySlides.has(currentSlide)}
               frontmatter={frontmatter}
+              config={slideConfigs[currentSlide]}
             />
           </div>
           <Director
@@ -155,4 +184,3 @@ export function StandardView({
     </div>
   );
 }
-

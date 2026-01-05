@@ -1,4 +1,8 @@
-import { marked, type TokenizerExtension, type RendererExtension } from "marked";
+import {
+  marked,
+  type TokenizerExtension,
+  type RendererExtension,
+} from "marked";
 import { useEffect, useRef } from "react";
 import hljs from "highlight.js";
 import type { Tokens } from "marked";
@@ -36,7 +40,10 @@ const standaloneTodoExtension: TokenizerExtension & RendererExtension = {
     return undefined;
   },
   renderer(token) {
-    const { checked, text } = token as unknown as { checked: boolean; text: string };
+    const { checked, text } = token as unknown as {
+      checked: boolean;
+      text: string;
+    };
     const checkbox = checked
       ? '<input type="checkbox" checked disabled>'
       : '<input type="checkbox" disabled>';
@@ -112,9 +119,20 @@ interface SlideProps {
   isTitle?: boolean;
   isImageOnly?: boolean;
   frontmatter?: Record<string, string>;
+  config?: {
+    align?: "top" | "center" | "bottom";
+    text?: "left" | "center" | "right";
+    size?: "xs" | "sm" | "base" | "lg" | "xl" | "2xl";
+  };
 }
 
-export function Slide({ slide, isTitle, isImageOnly, frontmatter }: SlideProps) {
+export function Slide({
+  slide,
+  isTitle,
+  isImageOnly,
+  frontmatter,
+  config,
+}: SlideProps) {
   const contentRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -135,7 +153,9 @@ export function Slide({ slide, isTitle, isImageOnly, frontmatter }: SlideProps) 
       <div className="text-center max-w-full sm:max-w-4xl flex flex-col items-center">
         <h1 className="text-4xl sm:text-6xl font-bold">{frontmatter.title}</h1>
         {frontmatter.description && (
-          <p className="text-base sm:text-xl opacity-70">{frontmatter.description}</p>
+          <p className="text-base sm:text-xl opacity-70">
+            {frontmatter.description}
+          </p>
         )}
         <div className="mt-6 sm:mt-8 space-y-0.5">
           {frontmatter.presenter && (
@@ -144,15 +164,45 @@ export function Slide({ slide, isTitle, isImageOnly, frontmatter }: SlideProps) 
             </p>
           )}
           {frontmatter.date && (
-            <p className="text-sm sm:text-base opacity-40 -mt-1">{formatDate(frontmatter.date)}</p>
+            <p className="text-sm sm:text-base opacity-40 -mt-1">
+              {formatDate(frontmatter.date)}
+            </p>
           )}
         </div>
       </div>
     );
   }
+  // Apply text and size config
+  const textAlign = config?.text || "left";
+  const size = config?.size || "base";
+
+  // Map size to Tailwind classes with responsive variants
+  const sizeClasses = {
+    xs: "text-xs sm:text-sm leading-[1.25rem] sm:leading-[1.375rem]",
+    sm: "text-sm sm:text-base leading-[1.375rem] sm:leading-[1.5rem]",
+    base: "text-base sm:text-xl leading-[1.5rem] sm:leading-[1.875rem]",
+    lg: "text-lg sm:text-2xl leading-[1.625rem] sm:leading-[2rem]",
+    xl: "text-xl sm:text-3xl leading-[1.875rem] sm:leading-[2.25rem]",
+    "2xl": "text-2xl sm:text-4xl leading-[2rem] sm:leading-[2.5rem]",
+  };
+
+  // Map text alignment to Tailwind classes (can't use dynamic class names with Tailwind JIT)
+  const textAlignClasses = {
+    left: "text-left",
+    center: "text-center",
+    right: "text-right",
+  };
+
   return (
-    <div className={`${isImageOnly ? "image-only-slide" : "max-w-full sm:max-w-4xl"} w-full text-base sm:text-xl leading-[1.5rem] sm:leading-[1.875rem] break-words`}>
-      <div ref={contentRef} dangerouslySetInnerHTML={{ __html: marked(slide || "") }} />
+    <div
+      className={`${
+        isImageOnly ? "image-only-slide" : "max-w-full sm:max-w-4xl"
+      } w-full ${sizeClasses[size]} ${textAlignClasses[textAlign]} break-words`}
+    >
+      <div
+        ref={contentRef}
+        dangerouslySetInnerHTML={{ __html: marked(slide || "") }}
+      />
     </div>
   );
 }

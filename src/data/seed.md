@@ -55,7 +55,7 @@ logo: https://upload.wikimedia.org/wikipedia/commons/thumb/a/a7/React-icon.svg/1
 - Leverages server-only credentials
 - Eliminates duplicated data logic
 
-===
+=== align=top
 
 # Server Component Example
 
@@ -92,7 +92,7 @@ export default async function UserProfile() {
 - Improve performance by default
 - Enforce clearer separation of concerns
 
-===
+=== size=lg 
 
 # Q&A
 
