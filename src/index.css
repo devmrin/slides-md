@@ -634,11 +634,11 @@
 
 
 /* Disable Monaco Editor hover tooltips to prevent collision with search UI */
-.monaco-hover,
+/* Scoped to Monaco editor only to avoid hiding Tailwind hover utilities */
 .monaco-editor .monaco-hover,
-.monaco-hover-content,
-div[class*="hover"],
-div[widgetid="editor.contrib.hover"] {
+.monaco-editor .monaco-hover-content,
+.monaco-editor div[class*="hover"],
+.monaco-editor div[widgetid="editor.contrib.hover"] {
   display: none !important;
   visibility: hidden !important;
   opacity: 0 !important;
