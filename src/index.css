@@ -631,3 +631,16 @@
 .dark .presentation-view-slide article {
   color: #e5e7eb;
 }
+
+
+/* Disable Monaco Editor hover tooltips to prevent collision with search UI */
+.monaco-hover,
+.monaco-editor .monaco-hover,
+.monaco-hover-content,
+div[class*="hover"],
+div[widgetid="editor.contrib.hover"] {
+  display: none !important;
+  visibility: hidden !important;
+  opacity: 0 !important;
+  pointer-events: none !important;
+}
