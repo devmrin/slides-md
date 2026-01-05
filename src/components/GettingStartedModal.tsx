@@ -179,6 +179,67 @@ logo: https://example.com/logo.png
                 </p>
               </section>
 
+              {/* Global Slide Configuration */}
+              <section>
+                <h2 className="text-xl font-semibold mb-3 text-gray-900 dark:text-gray-100">
+                  Global Slide Configuration
+                </h2>
+                <p className="leading-relaxed">
+                  set default styling for all slides in frontmatter. these can
+                  be overridden per-slide:
+                </p>
+
+                <div className="mt-3 p-4 bg-gray-900 dark:bg-gray-950 rounded-lg text-xs overflow-x-auto border border-gray-700 dark:border-gray-600 font-mono text-gray-100 dark:text-gray-200 whitespace-pre">
+                  {`@@@
+title: My Presentation
+align: top
+text: center
+size: 18
+animate: fade-in
+@@@`}
+                </div>
+
+                <p className="leading-relaxed mt-3">
+                  all slides will inherit these defaults unless overridden with
+                  per-slide configuration (see below).
+                  <br />
+                  <br />
+                  <strong>size</strong> accepts predefined values (
+                  <code className="px-1 py-0.5 bg-gray-100 dark:bg-gray-700 rounded text-xs font-mono">
+                    xs
+                  </code>
+                  ,{" "}
+                  <code className="px-1 py-0.5 bg-gray-100 dark:bg-gray-700 rounded text-xs font-mono">
+                    sm
+                  </code>
+                  ,{" "}
+                  <code className="px-1 py-0.5 bg-gray-100 dark:bg-gray-700 rounded text-xs font-mono">
+                    base
+                  </code>
+                  ,{" "}
+                  <code className="px-1 py-0.5 bg-gray-100 dark:bg-gray-700 rounded text-xs font-mono">
+                    lg
+                  </code>
+                  ,{" "}
+                  <code className="px-1 py-0.5 bg-gray-100 dark:bg-gray-700 rounded text-xs font-mono">
+                    xl
+                  </code>
+                  ,{" "}
+                  <code className="px-1 py-0.5 bg-gray-100 dark:bg-gray-700 rounded text-xs font-mono">
+                    2xl
+                  </code>
+                  ) or custom pixel values (e.g.,{" "}
+                  <code className="px-1 py-0.5 bg-gray-100 dark:bg-gray-700 rounded text-xs font-mono">
+                    14
+                  </code>
+                  ,{" "}
+                  <code className="px-1 py-0.5 bg-gray-100 dark:bg-gray-700 rounded text-xs font-mono">
+                    24
+                  </code>
+                  ).
+                </p>
+              </section>
+
               {/* Slide Separation */}
               <section>
                 <h2 className="text-xl font-semibold mb-3 text-gray-900 dark:text-gray-100">
@@ -206,10 +267,11 @@ More content`}
               {/* Per-Slide Configuration */}
               <section>
                 <h2 className="text-xl font-semibold mb-3 text-gray-900 dark:text-gray-100">
-                  Per-Slide Configuration
+                  Per-Slide Configuration (Override Defaults)
                 </h2>
                 <p className="leading-relaxed">
-                  add optional styling attributes to the slide delimiter:
+                  add optional styling attributes to the slide delimiter to
+                  override global defaults:
                 </p>
 
                 <div className="mt-3 p-4 bg-gray-900 dark:bg-gray-950 rounded-lg text-xs overflow-x-auto border border-gray-700 dark:border-gray-600 font-mono text-gray-100 dark:text-gray-200 whitespace-pre">
@@ -309,6 +371,20 @@ This slide has custom layout and styling`}
                         ,{" "}
                         <code className="px-1 py-0.5 bg-gray-100 dark:bg-gray-700 rounded text-xs font-mono">
                           2xl
+                        </code>
+                      </li>
+                      <li>
+                        or custom pixel values: e.g.,{" "}
+                        <code className="px-1 py-0.5 bg-gray-100 dark:bg-gray-700 rounded text-xs font-mono">
+                          14
+                        </code>
+                        ,{" "}
+                        <code className="px-1 py-0.5 bg-gray-100 dark:bg-gray-700 rounded text-xs font-mono">
+                          18
+                        </code>
+                        ,{" "}
+                        <code className="px-1 py-0.5 bg-gray-100 dark:bg-gray-700 rounded text-xs font-mono">
+                          24
                         </code>
                       </li>
                     </ul>
