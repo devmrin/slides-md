@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef } from "react";
 import * as Dialog from "@radix-ui/react-dialog";
-import { X, Upload, ImagePlus } from "lucide-react";
+import { X, Upload, Copy, Check } from "lucide-react";
 import { db } from "../db";
 import type { MediaItem } from "../db/adapter";
 import { generateUUID } from "../utils/uuid";
@@ -30,6 +30,7 @@ export function MediaLibraryModal({
   const [carouselIndex, setCarouselIndex] = useState(0);
   const [editAltOpen, setEditAltOpen] = useState(false);
   const [editingMedia, setEditingMedia] = useState<MediaItem | null>(null);
+  const [isCopied, setIsCopied] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   // Load media items
@@ -171,6 +172,14 @@ export function MediaLibraryModal({
     }
   };
 
+  const handleCopyReminder = () => {
+    const text =
+      "![vintage aesthetic](https://images.unsplash.com/photo-1767520832109-aee2a0d72f49)";
+    navigator.clipboard.writeText(text);
+    setIsCopied(true);
+    setTimeout(() => setIsCopied(false), 2000);
+  };
+
   const formatFileSize = (bytes: number): string => {
     if (bytes < 1024) return `${bytes} B`;
     if (bytes < 1024 * 1024) return `${(bytes / 1024).toFixed(1)} KB`;
@@ -222,31 +231,6 @@ export function MediaLibraryModal({
                   </div>
                 )}
 
-                {/* Upload section */}
-                <div className="mb-6">
-                  <input
-                    ref={fileInputRef}
-                    type="file"
-                    accept={ALLOWED_IMAGE_TYPES.join(",")}
-                    multiple
-                    onChange={handleFileSelect}
-                    className="hidden"
-                    id="media-file-input"
-                  />
-                  <label
-                    htmlFor="media-file-input"
-                    className="flex items-center justify-center gap-2 w-full p-8 border-2 border-dashed border-gray-300 dark:border-gray-600 rounded-lg hover:border-gray-400 dark:hover:border-gray-500 transition-colors cursor-pointer bg-gray-50 dark:bg-gray-900/50"
-                  >
-                    <Upload className="w-5 h-5 text-gray-500 dark:text-gray-400" />
-                    <span className="text-sm text-gray-700 dark:text-gray-300">
-                      Click to upload images (max {MAX_FILE_SIZE_MB}MB each)
-                    </span>
-                  </label>
-                  <p className="text-xs text-gray-500 dark:text-gray-400 mt-2 text-center">
-                    Supported formats: JPEG, PNG, GIF, WebP, SVG
-                  </p>
-                </div>
-
                 {/* Media grid */}
                 {isLoading ? (
                   <div className="flex items-center justify-center py-12">
@@ -254,15 +238,35 @@ export function MediaLibraryModal({
                       Loading...
                     </div>
                   </div>
-                ) : mediaItems.length === 0 ? (
-                  <div className="flex flex-col items-center justify-center py-12 text-center">
-                    <ImagePlus className="w-12 h-12 text-gray-400 dark:text-gray-600 mb-3" />
-                    <p className="text-gray-600 dark:text-gray-400 text-sm">
-                      No images yet. Upload your first image to get started.
-                    </p>
-                  </div>
                 ) : (
                   <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4">
+                    {/* Upload Placeholder */}
+                    <div className="aspect-square">
+                      <input
+                        ref={fileInputRef}
+                        type="file"
+                        accept={ALLOWED_IMAGE_TYPES.join(",")}
+                        multiple
+                        onChange={handleFileSelect}
+                        className="hidden"
+                        id="media-file-input"
+                      />
+                      <label
+                        htmlFor="media-file-input"
+                        className="flex flex-col items-center justify-center gap-2 w-full h-full border-2 border-dashed border-gray-300 dark:border-gray-600 rounded-lg hover:border-gray-400 dark:hover:border-gray-500 transition-colors cursor-pointer bg-gray-50 dark:bg-gray-900/50 p-4 text-center group"
+                      >
+                        <Upload className="w-8 h-8 text-gray-400 dark:text-gray-500 group-hover:text-gray-600 dark:group-hover:text-gray-300 transition-colors" />
+                        <div>
+                          <span className="block text-sm font-medium text-gray-700 dark:text-gray-300">
+                            Upload
+                          </span>
+                          <span className="block text-[10px] text-gray-500 dark:text-gray-400 mt-1">
+                            max {MAX_FILE_SIZE_MB}MB
+                          </span>
+                        </div>
+                      </label>
+                    </div>
+
                     {mediaItems.map((item, index) => (
                       <div
                         key={item.id}
@@ -304,6 +308,34 @@ export function MediaLibraryModal({
                     ))}
                   </div>
                 )}
+              </div>
+
+              {/* Footer */}
+              <div className="p-4 border-t border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-900/50 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+                <div className="flex-1 opacity-75 hover:opacity-100 transition-opacity min-w-0">
+                  <p className="text-xs text-gray-500 dark:text-gray-400 mb-1">
+                    Reminder: When possible, use external images/GIFs via
+                    markdown syntax rather than uploading:
+                  </p>
+                  <button
+                    onClick={handleCopyReminder}
+                    className="group flex items-center gap-2 text-left w-full sm:w-auto max-w-full bg-gray-100 dark:bg-gray-800/50 hover:bg-gray-200 dark:hover:bg-gray-800 transition-colors px-2 py-1 rounded cursor-pointer border border-transparent hover:border-gray-300 dark:hover:border-gray-600"
+                    title="Click to copy"
+                  >
+                    <code className="text-[10px] sm:text-xs text-gray-600 dark:text-gray-400 font-mono truncate">
+                      ![vintage
+                      aesthetic](https://images.unsplash.com/photo-1767520832109-aee2a0d72f49)
+                    </code>
+                    {isCopied ? (
+                      <Check className="w-3 h-3 text-green-500 shrink-0" />
+                    ) : (
+                      <Copy className="w-3 h-3 text-gray-400 group-hover:text-gray-600 dark:group-hover:text-gray-300 shrink-0 opacity-0 group-hover:opacity-100 transition-opacity" />
+                    )}
+                  </button>
+                </div>
+                <p className="text-[10px] text-gray-400 dark:text-gray-500 whitespace-nowrap shrink-0">
+                  Supported formats: JPEG, PNG, GIF, WebP, SVG
+                </p>
               </div>
             </div>
           </Dialog.Content>
