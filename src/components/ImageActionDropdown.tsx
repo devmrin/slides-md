@@ -1,5 +1,5 @@
 import * as DropdownMenu from "@radix-ui/react-dropdown-menu";
-import { Copy, Trash2, MoreVertical, Edit3 } from "lucide-react";
+import { Copy, Trash2, MoreVertical, Edit3, Image } from "lucide-react";
 import type { MediaItem } from "../db/adapter";
 
 interface ImageActionDropdownProps {
@@ -26,6 +26,17 @@ export function ImageActionDropdown({
     } catch (error) {
       console.error("Failed to copy to clipboard:", error);
       alert("Failed to copy markdown link");
+    }
+  };
+
+  const copyAsLogo = async () => {
+    try {
+      const logoFrontmatter = `logo: media://${media.id}`;
+      await navigator.clipboard.writeText(logoFrontmatter);
+      console.log("Logo frontmatter copied to clipboard");
+    } catch (error) {
+      console.error("Failed to copy to clipboard:", error);
+      alert("Failed to copy logo frontmatter");
     }
   };
 
@@ -58,6 +69,14 @@ export function ImageActionDropdown({
           >
             <Copy className="w-4 h-4" />
             Copy Markdown Link
+          </DropdownMenu.Item>
+
+          <DropdownMenu.Item
+            className="flex items-center gap-2 px-3 py-2 text-sm text-gray-700 dark:text-gray-300 rounded-md hover:bg-gray-100 dark:hover:bg-gray-700 cursor-pointer outline-none"
+            onSelect={copyAsLogo}
+          >
+            <Image className="w-4 h-4" />
+            Copy as Frontmatter Logo
           </DropdownMenu.Item>
 
           <DropdownMenu.Item

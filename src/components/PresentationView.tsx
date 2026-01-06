@@ -1,9 +1,10 @@
-import { useRef, useEffect } from "react";
+import { useRef, useEffect, useState } from "react";
 import { Slide } from "./Slide";
 import { Director } from "./Director";
 import { Button } from "../ui/Button";
 import { useFullscreen } from "../hooks/useFullscreen";
 import { type SlideConfig } from "../hooks/useSlides";
+import { db } from "../db";
 
 interface PresentationViewProps {
   currentSlide: number;
@@ -36,6 +37,7 @@ export function PresentationView({
 }: PresentationViewProps) {
   const containerRef = useRef<HTMLDivElement>(null);
   const hasRequestedFullscreen = useRef(false);
+  const [resolvedLogoUrl, setResolvedLogoUrl] = useState<string | null>(null);
   const { requestFullscreenOnly } = useFullscreen(
     containerRef,
     isFullscreen,
@@ -53,6 +55,38 @@ export function PresentationView({
       requestFullscreenOnly();
     }
   }, [isFullscreen, requestFullscreenOnly]);
+
+  // Resolve media:// URL for logo if present
+  useEffect(() => {
+    const resolveLogo = async () => {
+      const logo = frontmatter?.logo;
+      if (!logo) {
+        setResolvedLogoUrl(null);
+        return;
+      }
+
+      // Check if it's a media:// URL
+      const mediaMatch = logo.match(/^media:\/\/([a-f0-9-]+)$/);
+      if (mediaMatch) {
+        const mediaId = mediaMatch[1];
+        try {
+          const mediaItem = await db.getMedia(mediaId);
+          if (mediaItem) {
+            setResolvedLogoUrl(mediaItem.dataUrl);
+            return;
+          }
+        } catch (error) {
+          console.error(`Failed to resolve logo media://${mediaId}:`, error);
+        }
+        setResolvedLogoUrl(null);
+      } else {
+        // Not a media:// URL, use as-is (regular URL)
+        setResolvedLogoUrl(logo);
+      }
+    };
+
+    resolveLogo();
+  }, [frontmatter?.logo]);
 
   const isTitle = slides[currentSlide] === "__TITLE_SLIDE__";
   const isImageOnly = imageOnlySlides.has(currentSlide);
@@ -152,21 +186,21 @@ export function PresentationView({
         onFocusInputReady={onFocusInputReady}
       />
       {/* Logo positioned relative to SlideNav container */}
-      {frontmatter?.logo && (
+      {resolvedLogoUrl && (
         <img
-          src={frontmatter.logo}
+          src={resolvedLogoUrl}
           alt="Logo"
           className={`presentation-logo absolute bottom-[94px] z-10 shadow-none ${
-            frontmatter.logoPosition === "right" ? "right-4" : "left-4"
+            frontmatter?.logoPosition === "right" ? "right-4" : "left-4"
           } ${
-            frontmatter.logoSize === "sm"
+            frontmatter?.logoSize === "sm"
               ? "h-8"
-              : frontmatter.logoSize === "lg"
+              : frontmatter?.logoSize === "lg"
               ? "h-12"
               : "h-10"
           } w-auto`}
           style={{
-            opacity: frontmatter.logoOpacity
+            opacity: frontmatter?.logoOpacity
               ? parseFloat(frontmatter.logoOpacity)
               : 0.9,
           }}

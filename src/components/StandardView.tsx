@@ -1,3 +1,4 @@
+import { useEffect, useState } from "react";
 import { Editor } from "./Editor";
 import { Slide } from "./Slide";
 import { Director } from "./Director";
@@ -6,6 +7,7 @@ import { AppHeader } from "./AppHeader";
 import { StandardViewNav } from "./StandardViewNav";
 import { useLocalStorage } from "../hooks/useLocalStorage";
 import { type SlideConfig } from "../hooks/useSlides";
+import { db } from "../db";
 import * as DropdownMenu from "@radix-ui/react-dropdown-menu";
 import { MoreVertical, RotateCcw } from "lucide-react";
 
@@ -57,6 +59,39 @@ export function StandardView({
     true
   );
   const isEditorExpanded = isEditorExpandedRaw ?? true;
+  const [resolvedLogoUrl, setResolvedLogoUrl] = useState<string | null>(null);
+
+  // Resolve media:// URL for logo if present
+  useEffect(() => {
+    const resolveLogo = async () => {
+      const logo = frontmatter?.logo;
+      if (!logo) {
+        setResolvedLogoUrl(null);
+        return;
+      }
+
+      // Check if it's a media:// URL
+      const mediaMatch = logo.match(/^media:\/\/([a-f0-9-]+)$/);
+      if (mediaMatch) {
+        const mediaId = mediaMatch[1];
+        try {
+          const mediaItem = await db.getMedia(mediaId);
+          if (mediaItem) {
+            setResolvedLogoUrl(mediaItem.dataUrl);
+            return;
+          }
+        } catch (error) {
+          console.error(`Failed to resolve logo media://${mediaId}:`, error);
+        }
+        setResolvedLogoUrl(null);
+      } else {
+        // Not a media:// URL, use as-is (regular URL)
+        setResolvedLogoUrl(logo);
+      }
+    };
+
+    resolveLogo();
+  }, [frontmatter?.logo]);
 
   return (
     <div className="h-screen flex flex-col bg-gray-50 dark:bg-gray-900 text-gray-900 dark:text-gray-100 relative">
@@ -173,21 +208,21 @@ export function StandardView({
             onToggleTheme={() => setIsDark(!isDark)}
           />
           {/* Logo positioned relative to SlideNav container */}
-          {frontmatter?.logo && (
+          {resolvedLogoUrl && (
             <img
-              src={frontmatter.logo}
+              src={resolvedLogoUrl}
               alt="Logo"
               className={`presentation-logo absolute bottom-[94px] z-10 shadow-none ${
-                frontmatter.logoPosition === "right" ? "right-4" : "left-4"
+                frontmatter?.logoPosition === "right" ? "right-4" : "left-4"
               } ${
-                frontmatter.logoSize === "sm"
+                frontmatter?.logoSize === "sm"
                   ? "h-8"
-                  : frontmatter.logoSize === "lg"
+                  : frontmatter?.logoSize === "lg"
                   ? "h-12"
                   : "h-10"
               } w-auto`}
               style={{
-                opacity: frontmatter.logoOpacity
+                opacity: frontmatter?.logoOpacity
                   ? parseFloat(frontmatter.logoOpacity)
                   : 0.9,
               }}
