@@ -72,44 +72,73 @@ function isImageOnlySlide(slide: string): boolean {
   return markdownImageRegex.test(withoutParagraphs) || htmlImageRegex.test(withoutParagraphs);
 }
 
+function splitSlidesWithConfigs(
+  content: string,
+  defaultSlideConfig: SlideConfig,
+): { slides: string[]; slideConfigs: SlideConfig[] } {
+  const normalized = content.replace(/\r\n/g, "\n");
+  const lines = normalized.split("\n");
+
+  const slides: string[] = [];
+  const slideConfigs: SlideConfig[] = [];
+
+  let currentSlideLines: string[] = [];
+  let currentConfig: SlideConfig = {};
+
+  let inFence = false;
+  let fenceChar: "`" | "~" | null = null;
+  let fenceLen = 0;
+
+  const flushSlide = () => {
+    const slideText = currentSlideLines.join("\n").trim();
+    if (slideText.length > 0 || slides.length > 0) {
+      slides.push(slideText);
+      slideConfigs.push({ ...defaultSlideConfig, ...currentConfig });
+    }
+    currentSlideLines = [];
+  };
+
+  for (const line of lines) {
+    const fenceMatch = line.match(/^\s*(```+|~~~+)(.*)$/);
+    if (fenceMatch) {
+      const fence = fenceMatch[1];
+      const char = fence[0] as "`" | "~";
+
+      if (!inFence) {
+        inFence = true;
+        fenceChar = char;
+        fenceLen = fence.length;
+      } else if (fenceChar === char && fence.length >= fenceLen) {
+        inFence = false;
+        fenceChar = null;
+        fenceLen = 0;
+      }
+
+      currentSlideLines.push(line);
+      continue;
+    }
+
+    const isDelimiterLine = !inFence && /^\s*===(?:\s+.*)?\s*$/.test(line);
+    if (isDelimiterLine) {
+      flushSlide();
+      currentConfig = parseSlideConfig(line.trim());
+      continue;
+    }
+
+    currentSlideLines.push(line);
+  }
+
+  // Add the last slide
+  flushSlide();
+
+  return { slides, slideConfigs };
+}
+
 export function useSlides(markdown: string) {
   return useMemo(() => {
     const { frontmatter, defaultSlideConfig, content } = parseFrontmatter(markdown);
-    
-    // Split by === but preserve delimiter lines to extract configs
-    const rawParts = content.split(/(===.*)/);
-    const slides: string[] = [];
-    const slideConfigs: SlideConfig[] = [];
-    
-    let currentSlideContent = "";
-    let currentConfig: SlideConfig = {};
-    
-    for (let i = 0; i < rawParts.length; i++) {
-      const part = rawParts[i].trim();
-      
-      if (part.startsWith("===")) {
-        // Save previous slide if it exists
-        if (currentSlideContent.trim() || slides.length > 0) {
-          slides.push(currentSlideContent.trim());
-          // Merge default config from frontmatter with per-slide config
-          // Per-slide config takes priority
-          slideConfigs.push({ ...defaultSlideConfig, ...currentConfig });
-        }
-        
-        // Parse config from delimiter
-        currentConfig = parseSlideConfig(part);
-        currentSlideContent = "";
-      } else if (part) {
-        currentSlideContent = part;
-      }
-    }
-    
-    // Add the last slide
-    if (currentSlideContent.trim() || slides.length > 0) {
-      slides.push(currentSlideContent.trim());
-      // Merge default config from frontmatter with per-slide config
-      slideConfigs.push({ ...defaultSlideConfig, ...currentConfig });
-    }
+
+    const { slides, slideConfigs } = splitSlidesWithConfigs(content, defaultSlideConfig);
     
     // Remove leading and trailing empty slides, but keep intentional empty slides
     const filteredIndices: number[] = [];
