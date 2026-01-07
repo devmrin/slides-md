@@ -19,6 +19,8 @@ interface PresentationViewProps {
   setCurrentSlide: (slide: number) => void;
   isFullscreen: boolean;
   onFocusInputReady?: (focusFn: () => void) => void;
+  controlsHidden: boolean;
+  toggleControls: () => void;
 }
 
 export function PresentationView({
@@ -34,6 +36,8 @@ export function PresentationView({
   setCurrentSlide,
   isFullscreen,
   onFocusInputReady,
+  controlsHidden,
+  toggleControls,
 }: PresentationViewProps) {
   const containerRef = useRef<HTMLDivElement>(null);
   const hasRequestedFullscreen = useRef(false);
@@ -96,27 +100,9 @@ export function PresentationView({
       ref={containerRef}
       className="fixed inset-0 flex flex-col bg-white dark:bg-gray-900 text-gray-900 dark:text-gray-100"
     >
-      {/* Top bar for exit, reset, and theme */}
-      <div className="w-full flex justify-between items-start px-4 pt-3 sm:px-6 sm:pt-4 z-10">
-        <Button
-          className="px-3 py-1.5 sm:py-1 text-sm border rounded border-gray-400 dark:border-gray-600 text-gray-900 dark:text-gray-100 bg-gray-50 dark:bg-gray-900 hover:bg-gray-100 dark:hover:bg-gray-800 touch-manipulation"
-          onClick={() => setIsFullscreen(false)}
-        >
-          Exit{" "}
-          <span className="ml-1 text-xs opacity-70 hidden sm:inline">
-            (ESC)
-          </span>
-        </Button>
-        <div className="flex gap-2">
-          <Button
-            className="px-3 py-1.5 sm:py-1 text-sm border rounded border-gray-400 dark:border-gray-600 text-gray-900 dark:text-gray-100 bg-gray-50 dark:bg-gray-900 hover:bg-gray-100 dark:hover:bg-gray-800 touch-manipulation"
-            onClick={() => setCurrentSlide(0)}
-          >
-            Reset{" "}
-            <span className="ml-1 text-xs opacity-70 hidden sm:inline">
-              (R)
-            </span>
-          </Button>
+      {/* Top-right buttons (fixed) */}
+      <div className="fixed top-3 right-4 sm:top-4 sm:right-6 z-20 flex gap-2">
+        {!controlsHidden && (
           <Button
             className="px-3 py-1.5 sm:py-1 text-sm border rounded border-gray-400 dark:border-gray-600 text-gray-900 dark:text-gray-100 bg-gray-50 dark:bg-gray-900 hover:bg-gray-100 dark:hover:bg-gray-800 touch-manipulation"
             onClick={() => setIsDark((d) => !d)}
@@ -126,8 +112,30 @@ export function PresentationView({
               (T)
             </span>
           </Button>
-        </div>
+        )}
+        <Button
+          className="px-3 py-1.5 sm:py-1 text-sm border rounded border-gray-400 dark:border-gray-600 text-gray-900 dark:text-gray-100 bg-gray-50 dark:bg-gray-900 hover:bg-gray-100 dark:hover:bg-gray-800 touch-manipulation"
+          onClick={toggleControls}
+        >
+          Controls{" "}
+          <span className="ml-1 text-xs opacity-70 hidden sm:inline">(C)</span>
+        </Button>
       </div>
+
+      {/* Top bar for exit - only shown when controls visible */}
+      {!controlsHidden && (
+        <div className="w-full flex justify-start items-start px-4 pt-3 sm:px-6 sm:pt-4 z-10">
+          <Button
+            className="px-3 py-1.5 sm:py-1 text-sm border rounded border-gray-400 dark:border-gray-600 text-gray-900 dark:text-gray-100 bg-gray-50 dark:bg-gray-900 hover:bg-gray-100 dark:hover:bg-gray-800 touch-manipulation"
+            onClick={() => setIsFullscreen(false)}
+          >
+            Exit{" "}
+            <span className="ml-1 text-xs opacity-70 hidden sm:inline">
+              (ESC)
+            </span>
+          </Button>
+        </div>
+      )}
       {isImageOnly ? (
         <div
           className={`presentation-view-slide flex-1 overflow-hidden flex items-center justify-center p-0`}
@@ -173,26 +181,28 @@ export function PresentationView({
           </div>
         </div>
       )}
-      <Director
-        currentSlide={currentSlide}
-        slidesLength={slides.length}
-        prevSlide={prevSlide}
-        nextSlide={nextSlide}
-        setCurrentSlide={setCurrentSlide}
-        frontmatter={frontmatter}
-        isFullscreen={true}
-        onExitFullscreen={() => setIsFullscreen(false)}
-        onToggleTheme={() => setIsDark((d) => !d)}
-        onFocusInputReady={onFocusInputReady}
-      />
+      {!controlsHidden && (
+        <Director
+          currentSlide={currentSlide}
+          slidesLength={slides.length}
+          prevSlide={prevSlide}
+          nextSlide={nextSlide}
+          setCurrentSlide={setCurrentSlide}
+          frontmatter={frontmatter}
+          isFullscreen={true}
+          onExitFullscreen={() => setIsFullscreen(false)}
+          onToggleTheme={() => setIsDark((d) => !d)}
+          onFocusInputReady={onFocusInputReady}
+        />
+      )}
       {/* Logo positioned relative to SlideNav container */}
       {resolvedLogoUrl && (
         <img
           src={resolvedLogoUrl}
           alt="Logo"
-          className={`presentation-logo absolute bottom-[94px] z-10 shadow-none ${
-            frontmatter?.logoPosition === "right" ? "right-4" : "left-4"
-          } ${
+          className={`presentation-logo absolute z-10 shadow-none ${
+            controlsHidden ? "bottom-4" : "bottom-[94px]"
+          } ${frontmatter?.logoPosition === "right" ? "right-4" : "left-4"} ${
             frontmatter?.logoSize === "sm"
               ? "h-8"
               : frontmatter?.logoSize === "lg"

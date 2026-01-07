@@ -34,6 +34,7 @@ export function PresentationPage() {
   const [focusSlideInput, setFocusSlideInput] = useState<
     (() => void) | undefined
   >(undefined);
+  const [controlsHidden, setControlsHidden] = useState<boolean>(false);
 
   // Ensure isDark is always boolean (not undefined)
   const isDarkValue = isDark ?? false;
@@ -152,6 +153,10 @@ export function PresentationPage() {
     if (currentSlide > 0) setCurrentSlide(currentSlide - 1);
   }, [currentSlide]);
 
+  const toggleControls = useCallback(() => {
+    setControlsHidden((prev) => !prev);
+  }, []);
+
   useKeyboardNavigation({
     nextSlide,
     prevSlide,
@@ -162,6 +167,7 @@ export function PresentationPage() {
     setIsDark,
     setCurrentSlide,
     focusSlideInput,
+    toggleControls,
   });
 
   // Keyboard shortcuts: Command/Control+M for Media Library, Command/Control+H for Home
@@ -275,6 +281,8 @@ export function PresentationPage() {
         setCurrentSlide={setCurrentSlide}
         isFullscreen={isFullscreen}
         onFocusInputReady={handleFocusInputReady}
+        controlsHidden={controlsHidden}
+        toggleControls={toggleControls}
       />
     );
   }

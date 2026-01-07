@@ -10,6 +10,7 @@ interface UseKeyboardNavigationProps {
   setIsDark: (updater: (prev: boolean) => boolean) => void;
   setCurrentSlide: (slide: number) => void;
   focusSlideInput?: () => void;
+  toggleControls?: () => void;
 }
 
 export function useKeyboardNavigation({
@@ -22,6 +23,7 @@ export function useKeyboardNavigation({
   setIsDark,
   setCurrentSlide,
   focusSlideInput,
+  toggleControls,
 }: UseKeyboardNavigationProps) {
   useEffect(() => {
     const handler = (e: KeyboardEvent) => {
@@ -53,9 +55,9 @@ export function useKeyboardNavigation({
           setIsEditorFullscreen(false);
         }
       }
-      // R to reset deck in fullscreen
-      if (isFullscreen && (e.key === "r" || e.key === "R")) {
-        setCurrentSlide(0);
+      // H to toggle controls in fullscreen
+      if (isFullscreen && (e.key === "c" || e.key === "C") && toggleControls) {
+        toggleControls();
       }
       // T to toggle theme in fullscreen
       if (isFullscreen && (e.key === "t" || e.key === "T")) {
@@ -72,6 +74,6 @@ export function useKeyboardNavigation({
     };
     window.addEventListener("keydown", handler);
     return () => window.removeEventListener("keydown", handler);
-  }, [nextSlide, prevSlide, isFullscreen, setIsFullscreen, isEditorFullscreen, setIsEditorFullscreen, setIsDark, setCurrentSlide, focusSlideInput]);
+  }, [nextSlide, prevSlide, isFullscreen, setIsFullscreen, isEditorFullscreen, setIsEditorFullscreen, setIsDark, setCurrentSlide, focusSlideInput, toggleControls]);
 }
 
