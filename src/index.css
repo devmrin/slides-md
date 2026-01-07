@@ -314,15 +314,22 @@
 
 /* Tables - Enhanced with better borders and contrast */
 /* Scoped to presentation views only */
+/* Fixed max-width with horizontal scroll for wide tables */
 .standard-view-slide table,
 .presentation-view-slide table {
   border-collapse: collapse;
-  width: 100%;
   margin: 1.5rem 0;
   border: 1px solid var(--color-gray-200, #e5e7eb);
   border-radius: 0.5rem;
-  overflow: hidden;
+  max-width: 800px;
+  overflow-x: auto;
+  display: block;
 }
+
+.presentation-view-slide table {
+  max-width: 896px;
+}
+
 .dark .standard-view-slide table,
 .dark .presentation-view-slide table {
   border-color: var(--color-gray-700, #374151);
@@ -335,6 +342,7 @@
   border: 1px solid var(--color-gray-200, #e5e7eb);
   padding: 0.75rem 1rem;
   text-align: left;
+  white-space: nowrap;
 }
 .dark .standard-view-slide th,
 .dark .presentation-view-slide th,
