@@ -100,19 +100,19 @@
 /* Apply neutral colors to common dark mode backgrounds and borders */
 /* Note: Only override darker grays used in dark mode, not light grays */
 .dark .bg-gray-800 {
-  background-color: #262626;
+  background-color: var(--color-gray-800, #262626);
 }
 .dark .bg-gray-900 {
-  background-color: #171717;
+  background-color: var(--color-gray-900, #171717);
 }
 .dark .border-gray-600 {
-  border-color: #525252;
+  border-color: var(--color-gray-600, #525252);
 }
 .dark .border-gray-700 {
-  border-color: #404040;
+  border-color: var(--color-gray-700, #404040);
 }
 .dark .hover\:bg-gray-800:hover {
-  background-color: #262626;
+  background-color: var(--color-gray-800, #262626);
 }
 
 /* Typography - Enhanced with better contrast and spacing */
@@ -123,12 +123,12 @@
   font-weight: 700; 
   margin: 1.5rem 0; 
   line-height: 1.2; 
-  color: #111827;
+  color: var(--color-gray-900, #111827);
   letter-spacing: -0.02em;
 }
 .dark .standard-view-slide h1,
 .dark .presentation-view-slide h1 {
-  color: #f9fafb;
+  color: var(--color-gray-50, #f9fafb);
 }
 
 .standard-view-slide h2,
@@ -137,12 +137,12 @@
   font-weight: 700; 
   margin: 1.25rem 0; 
   line-height: 1.3; 
-  color: #1f2937;
+  color: var(--color-gray-800, #1f2937);
   letter-spacing: -0.01em;
 }
 .dark .standard-view-slide h2,
 .dark .presentation-view-slide h2 {
-  color: #f3f4f6;
+  color: var(--color-gray-100, #f3f4f6);
 }
 
 .standard-view-slide h3,
@@ -151,11 +151,11 @@
   font-weight: 600; 
   margin: 1rem 0; 
   line-height: 1.3; 
-  color: #374151;
+  color: var(--color-gray-700, #374151);
 }
 .dark .standard-view-slide h3,
 .dark .presentation-view-slide h3 {
-  color: #e5e7eb;
+  color: var(--color-gray-200, #e5e7eb);
 }
 
 .standard-view-slide h4,
@@ -164,11 +164,11 @@
   font-weight: 600; 
   margin: 0.875rem 0; 
   line-height: 1.4; 
-  color: #4b5563;
+  color: var(--color-gray-600, #4b5563);
 }
 .dark .standard-view-slide h4,
 .dark .presentation-view-slide h4 {
-  color: #d1d5db;
+  color: var(--color-gray-300, #d1d5db);
 }
 
 .standard-view-slide h5,
@@ -177,11 +177,11 @@
   font-weight: 600; 
   margin: 0.75rem 0; 
   line-height: 1.4; 
-  color: #6b7280;
+  color: var(--color-gray-500, #6b7280);
 }
 .dark .standard-view-slide h5,
 .dark .presentation-view-slide h5 {
-  color: #9ca3af;
+  color: var(--color-gray-400, #9ca3af);
 }
 
 .standard-view-slide h6,
@@ -190,11 +190,11 @@
   font-weight: 600; 
   margin: 0.625rem 0; 
   line-height: 1.4; 
-  color: #6b7280;
+  color: var(--color-gray-500, #6b7280);
 }
 .dark .standard-view-slide h6,
 .dark .presentation-view-slide h6 {
-  color: #9ca3af;
+  color: var(--color-gray-400, #9ca3af);
 }
 
 /* Lists - Enhanced styling */
@@ -218,11 +218,11 @@
 .presentation-view-slide li { 
   margin: 0.5rem 0; 
   line-height: 1.7; 
-  color: #374151;
+  color: var(--color-gray-700, #374151);
 }
 .dark .standard-view-slide li,
 .dark .presentation-view-slide li {
-  color: #e5e7eb;
+  color: var(--color-gray-200, #e5e7eb);
 }
 
 /* Todo items / Task lists */
@@ -286,30 +286,30 @@
 /* Scoped to presentation views only */
 .standard-view-slide blockquote,
 .presentation-view-slide blockquote { 
-  border-left: 4px solid #9ca3af;
-  background-color: #f9fafb;
+  border-left: 4px solid var(--color-gray-400, #9ca3af);
+  background-color: var(--color-gray-50, #f9fafb);
   padding: 1rem 1.5rem; 
   margin: 1.5rem 0; 
   border-radius: 0 0.375rem 0.375rem 0;
-  color: #4b5563;
+  color: var(--color-gray-600, #4b5563);
   font-style: italic;
 }
 .dark .standard-view-slide blockquote,
 .dark .presentation-view-slide blockquote {
-  border-left-color: #6b7280;
-  background-color: #1f2937;
-  color: #d1d5db;
+  border-left-color: var(--color-gray-500, #6b7280);
+  background-color: var(--color-gray-800, #1f2937);
+  color: var(--color-gray-300, #d1d5db);
 }
 .standard-view-slide blockquote.nested,
 .presentation-view-slide blockquote.nested {
   margin-left: 1rem;
-  border-left-color: #d1d5db;
-  background-color: #f3f4f6;
+  border-left-color: var(--color-gray-300, #d1d5db);
+  background-color: var(--color-gray-100, #f3f4f6);
 }
 .dark .standard-view-slide blockquote.nested,
 .dark .presentation-view-slide blockquote.nested {
-  border-left-color: #4b5563;
-  background-color: #111827;
+  border-left-color: var(--color-gray-600, #4b5563);
+  background-color: var(--color-gray-900, #111827);
 }
 
 /* Tables - Enhanced with better borders and contrast */
@@ -319,20 +319,20 @@
   border-collapse: collapse;
   width: 100%;
   margin: 1.5rem 0;
-  border: 1px solid #e5e7eb;
+  border: 1px solid var(--color-gray-200, #e5e7eb);
   border-radius: 0.5rem;
   overflow: hidden;
 }
 .dark .standard-view-slide table,
 .dark .presentation-view-slide table {
-  border-color: #374151;
+  border-color: var(--color-gray-700, #374151);
 }
 
 .standard-view-slide th,
 .presentation-view-slide th,
 .standard-view-slide td,
 .presentation-view-slide td {
-  border: 1px solid #e5e7eb;
+  border: 1px solid var(--color-gray-200, #e5e7eb);
   padding: 0.75rem 1rem;
   text-align: left;
 }
@@ -340,39 +340,39 @@
 .dark .presentation-view-slide th,
 .dark .standard-view-slide td,
 .dark .presentation-view-slide td {
-  border-color: #374151;
+  border-color: var(--color-gray-700, #374151);
 }
 
 .standard-view-slide th,
 .presentation-view-slide th {
-  background-color: #f9fafb;
+  background-color: var(--color-gray-50, #f9fafb);
   font-weight: 600;
-  color: #111827;
+  color: var(--color-gray-900, #111827);
 }
 .dark .standard-view-slide th,
 .dark .presentation-view-slide th {
-  background-color: #1f2937;
-  color: #f9fafb;
+  background-color: var(--color-gray-800, #1f2937);
+  color: var(--color-gray-50, #f9fafb);
 }
 
 .standard-view-slide td,
 .presentation-view-slide td {
-  background-color: #ffffff;
-  color: #374151;
+  background-color: var(--color-white, #ffffff);
+  color: var(--color-gray-700, #374151);
 }
 .dark .standard-view-slide td,
 .dark .presentation-view-slide td {
-  background-color: #111827;
-  color: #e5e7eb;
+  background-color: var(--color-gray-900, #111827);
+  color: var(--color-gray-200, #e5e7eb);
 }
 
 .standard-view-slide tr:nth-child(even) td,
 .presentation-view-slide tr:nth-child(even) td {
-  background-color: #f9fafb;
+  background-color: var(--color-gray-50, #f9fafb);
 }
 .dark .standard-view-slide tr:nth-child(even) td,
 .dark .presentation-view-slide tr:nth-child(even) td {
-  background-color: #1a1f2e;
+  background-color: var(--color-gray-800, #1f2937);
 }
 
 /* Code blocks - With themed borders and backgrounds */
@@ -383,13 +383,13 @@
   border-radius: 0.5rem;
   overflow-x: auto;
   margin: 1.5rem 0;
-  border: 1px solid #e5e7eb;
-  background-color: #f9fafb;
+  border: 1px solid var(--color-gray-200, #e5e7eb);
+  background-color: var(--color-gray-50, #f9fafb);
 }
 .dark .standard-view-slide pre,
 .dark .presentation-view-slide pre {
-  border-color: #374151;
-  background-color: #1f2937;
+  border-color: var(--color-gray-700, #374151);
+  background-color: var(--color-gray-800, #1f2937);
 }
 
 /* Fixed width code blocks in slideshow views */
@@ -428,12 +428,12 @@
 .presentation-view-slide li code,
 .standard-view-slide td code,
 .presentation-view-slide td code {
-  background-color: #f3f4f6;
+  background-color: var(--color-gray-100, #f3f4f6);
   padding: 0.2rem 0.5rem;
   border-radius: 0.375rem;
   font-size: 0.875em;
   color: #dc2626;
-  border: 1px solid #e5e7eb;
+  border: 1px solid var(--color-gray-200, #e5e7eb);
   font-weight: 500;
 }
 .dark .standard-view-slide p code,
@@ -442,9 +442,9 @@
 .dark .presentation-view-slide li code,
 .dark .standard-view-slide td code,
 .dark .presentation-view-slide td code {
-  background-color: #1f2937;
+  background-color: var(--color-gray-800, #1f2937);
   color: #f87171;
-  border-color: #374151;
+  border-color: var(--color-gray-700, #374151);
 }
 
 /* Highlight.js syntax highlighting colors are now handled by the theme CSS files */
@@ -485,7 +485,7 @@
   display: block;
   text-align: center;
   font-size: 0.75rem;
-  color: #6b7280;
+  color: var(--color-gray-500, #6b7280);
   font-style: italic;
   margin-top: 0.5rem;
   margin-bottom: 0;
@@ -495,7 +495,7 @@
 
 .dark .standard-view-slide .image-alt-caption,
 .dark .presentation-view-slide .image-alt-caption {
-  color: #9ca3af;
+  color: var(--color-gray-400, #9ca3af);
 }
 
 /* Image-only slides - fill entire container */
@@ -573,31 +573,31 @@
 .presentation-view-slide p { 
   margin: 0.875rem 0; 
   line-height: 1.7; 
-  color: #374151;
+  color: var(--color-gray-700, #374151);
 }
 .dark .standard-view-slide p,
 .dark .presentation-view-slide p {
-  color: #e5e7eb;
+  color: var(--color-gray-200, #e5e7eb);
 }
 
 .standard-view-slide strong,
 .presentation-view-slide strong { 
   font-weight: 700; 
-  color: #111827;
+  color: var(--color-gray-900, #111827);
 }
 .dark .standard-view-slide strong,
 .dark .presentation-view-slide strong {
-  color: #f9fafb;
+  color: var(--color-gray-50, #f9fafb);
 }
 
 .standard-view-slide em,
 .presentation-view-slide em { 
   font-style: italic; 
-  color: #4b5563;
+  color: var(--color-gray-600, #4b5563);
 }
 .dark .standard-view-slide em,
 .dark .presentation-view-slide em {
-  color: #d1d5db;
+  color: var(--color-gray-300, #d1d5db);
 }
 
 /* Horizontal rules */
@@ -605,12 +605,12 @@
 .standard-view-slide hr,
 .presentation-view-slide hr {
   border: none;
-  border-top: 2px solid #e5e7eb;
+  border-top: 2px solid var(--color-gray-200, #e5e7eb);
   margin: 2rem 0;
 }
 .dark .standard-view-slide hr,
 .dark .presentation-view-slide hr {
-  border-top-color: #374151;
+  border-top-color: var(--color-gray-700, #374151);
 }
 
 /* Markdown container - ensure proper text rendering */
@@ -621,7 +621,7 @@
 .presentation-view-slide div[class*="slide"],
 .standard-view-slide article,
 .presentation-view-slide article {
-  color: #374151;
+  color: var(--color-gray-700, #374151);
 }
 .dark .standard-view-slide div[class*="markdown"], 
 .dark .presentation-view-slide div[class*="markdown"], 
@@ -629,7 +629,7 @@
 .dark .presentation-view-slide div[class*="slide"],
 .dark .standard-view-slide article,
 .dark .presentation-view-slide article {
-  color: #e5e7eb;
+  color: var(--color-gray-200, #e5e7eb);
 }
 
 
