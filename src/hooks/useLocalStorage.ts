@@ -3,6 +3,16 @@ import { useState, useEffect, useCallback, useRef, type Dispatch, type SetStateA
 const STORAGE_KEY = "slides-md-user-preferences";
 
 /**
+ * View mode for the presentation editor layout.
+ * - full-editor: Editor takes 100%
+ * - full-preview: Preview takes 100%
+ * - split: 50/50 split
+ * - editor-35: Editor 35%, Preview 65%
+ * - editor-65: Editor 65%, Preview 35%
+ */
+export type ViewMode = "full-editor" | "full-preview" | "split" | "editor-35" | "editor-65";
+
+/**
  * User preferences stored in localStorage.
  * All user preferences are stored under a single key as an object.
  */
@@ -10,6 +20,7 @@ export interface UserPreferences {
   theme?: boolean;
   homeViewMode?: "gallery" | "list";
   isEditorExpanded?: boolean;
+  viewMode?: ViewMode;
   [key: string]: unknown;
 }
 

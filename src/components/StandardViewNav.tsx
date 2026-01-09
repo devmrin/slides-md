@@ -1,21 +1,22 @@
 import { useNavigate } from "@tanstack/react-router";
 import { ArrowLeft, Pencil, ImagePlus } from "lucide-react";
 import { Button } from "../ui/Button";
-import { Switch } from "../ui/Switch";
+import { ViewModeSelector } from "./ViewModeSelector";
+import { type ViewMode } from "../hooks/useLocalStorage";
 
 interface StandardViewNavProps {
   presentationName?: string;
   onEditName?: () => void;
-  isEditorExpanded: boolean;
-  onToggleEditorExpand: () => void;
+  viewMode: ViewMode;
+  onViewModeChange: (mode: ViewMode) => void;
   onOpenMediaLibrary?: () => void;
 }
 
 export function StandardViewNav({
   presentationName,
   onEditName,
-  isEditorExpanded,
-  onToggleEditorExpand,
+  viewMode,
+  onViewModeChange,
   onOpenMediaLibrary,
 }: StandardViewNavProps) {
   const navigate = useNavigate();
@@ -62,16 +63,9 @@ export function StandardViewNav({
           )}
         </div>
         <div className="flex items-center gap-2">
-          <label
-            className="text-xs text-gray-600 dark:text-gray-400"
-            htmlFor="editor-toggle"
-          >
-            Show Editor
-          </label>
-          <Switch
-            id="editor-toggle"
-            checked={isEditorExpanded}
-            onCheckedChange={onToggleEditorExpand}
+          <ViewModeSelector
+            viewMode={viewMode}
+            onViewModeChange={onViewModeChange}
           />
         </div>
       </div>
