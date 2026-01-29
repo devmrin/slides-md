@@ -1,4 +1,10 @@
-import { createRootRoute, createRoute, createRouter, Outlet } from "@tanstack/react-router";
+import {
+  createRootRoute,
+  createRoute,
+  createRouter,
+  redirect,
+  Outlet,
+} from "@tanstack/react-router";
 import { HomePage } from "./pages/HomePage";
 import { PresentationPage } from "./pages/PresentationPage";
 
@@ -18,7 +24,19 @@ const presentationRoute = createRoute({
   component: PresentationPage,
 });
 
-const routeTree = rootRoute.addChildren([indexRoute, presentationRoute]);
+const catchAllRoute = createRoute({
+  getParentRoute: () => rootRoute,
+  path: "$",
+  beforeLoad: () => {
+    throw redirect({ to: "/" });
+  },
+});
+
+const routeTree = rootRoute.addChildren([
+  indexRoute,
+  presentationRoute,
+  catchAllRoute,
+]);
 
 export const router = createRouter({ routeTree });
 

@@ -290,7 +290,7 @@ export function HomePage() {
                   btnType="primary"
                   className="px-3 py-1 text-xs sm:text-sm flex items-center gap-2"
                 >
-                  Add Sample Presentation
+                  Add Sample Presentation (Recommended)
                 </Button>
               </div>
             </div>

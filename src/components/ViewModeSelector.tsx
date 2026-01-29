@@ -81,7 +81,7 @@ export function ViewModeSelector({
           className="flex items-center gap-1.5 px-2 py-1.5 text-xs border rounded border-gray-400 dark:border-gray-600 text-gray-900 dark:text-gray-100 bg-white dark:bg-gray-900 hover:bg-gray-50 dark:hover:bg-gray-800 touch-manipulation cursor-pointer"
           title="Change View"
         >
-          <ViewModeIcon mode={viewMode} size="sm" />
+          Change View <ViewModeIcon mode={viewMode} size="sm" />
         </button>
       </DropdownMenu.Trigger>
       <DropdownMenu.Portal>
@@ -90,18 +90,14 @@ export function ViewModeSelector({
           sideOffset={5}
           align="end"
         >
-          <div className="px-2 py-1.5 text-xs font-medium text-gray-500 dark:text-gray-400">
-            Change View
-          </div>
           <div className="flex items-center justify-center gap-1 p-2 border border-gray-200 dark:border-gray-700 rounded-md bg-gray-50 dark:bg-gray-900">
             {VIEW_MODES.map((mode) => (
               <DropdownMenu.Item
                 key={mode}
-                className={`p-1.5 rounded cursor-pointer outline-none transition-colors ${
-                  viewMode === mode
-                    ? "bg-blue-100 dark:bg-blue-900/50"
-                    : "hover:bg-gray-200 dark:hover:bg-gray-700"
-                }`}
+                className={`p-1.5 rounded cursor-pointer outline-none transition-colors ${viewMode === mode
+                  ? "bg-blue-100 dark:bg-blue-900/50"
+                  : "hover:bg-gray-200 dark:hover:bg-gray-700"
+                  }`}
                 onSelect={() => onViewModeChange(mode)}
               >
                 <ViewModeIcon
