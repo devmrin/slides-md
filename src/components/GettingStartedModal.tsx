@@ -622,7 +622,7 @@ This slide has custom layout and styling`}
               <span className="text-sm text-gray-700 dark:text-gray-300">
                 Crafted with ♥ by{" "}
                 <a
-                  href="https://mrinmay.com"
+                  href="https://mrinmay.dev"
                   target="_blank"
                   rel="noopener noreferrer"
                   className="text-gray-700 dark:text-gray-300 hover:text-gray-900 dark:hover:text-gray-100 underline decoration-dotted transition-colors inline-flex items-center gap-1"
