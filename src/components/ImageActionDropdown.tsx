@@ -1,17 +1,26 @@
 import * as DropdownMenu from "@radix-ui/react-dropdown-menu";
-import { Copy, Trash2, MoreVertical, Edit3, Image } from "lucide-react";
+import {
+  Copy,
+  Trash2,
+  MoreVertical,
+  Edit3,
+  Image,
+  ChevronRight,
+} from "lucide-react";
 import type { MediaItem } from "../db/adapter";
 
 interface ImageActionDropdownProps {
   media: MediaItem;
   onDelete: (id: string) => void;
   onEditAlt: (media: MediaItem) => void;
+  onCopySuccess?: (message: string) => void;
 }
 
 export function ImageActionDropdown({
   media,
   onDelete,
   onEditAlt,
+  onCopySuccess,
 }: ImageActionDropdownProps) {
   const copyMarkdownLink = async () => {
     try {
@@ -21,8 +30,7 @@ export function ImageActionDropdown({
       const markdown = `![${altText}](media://${media.id})`;
 
       await navigator.clipboard.writeText(markdown);
-      // Could add toast notification here in future
-      console.log("Markdown link copied to clipboard");
+      onCopySuccess?.("Copied as markdown link");
     } catch (error) {
       console.error("Failed to copy to clipboard:", error);
       alert("Failed to copy markdown link");
@@ -33,7 +41,7 @@ export function ImageActionDropdown({
     try {
       const logoFrontmatter = `logo: media://${media.id}`;
       await navigator.clipboard.writeText(logoFrontmatter);
-      console.log("Logo frontmatter copied to clipboard");
+      onCopySuccess?.("Copied as frontmatter logo");
     } catch (error) {
       console.error("Failed to copy to clipboard:", error);
       alert("Failed to copy logo frontmatter");
@@ -63,21 +71,38 @@ export function ImageActionDropdown({
           sideOffset={5}
           align="end"
         >
-          <DropdownMenu.Item
-            className="flex items-center gap-2 px-3 py-2 text-sm text-gray-700 dark:text-gray-300 rounded-md hover:bg-gray-100 dark:hover:bg-gray-700 cursor-pointer outline-none"
-            onSelect={copyMarkdownLink}
-          >
-            <Copy className="w-4 h-4" />
-            Copy Markdown Link
-          </DropdownMenu.Item>
-
-          <DropdownMenu.Item
-            className="flex items-center gap-2 px-3 py-2 text-sm text-gray-700 dark:text-gray-300 rounded-md hover:bg-gray-100 dark:hover:bg-gray-700 cursor-pointer outline-none"
-            onSelect={copyAsLogo}
-          >
-            <Image className="w-4 h-4" />
-            Copy as Frontmatter Logo
-          </DropdownMenu.Item>
+          {/* Copy submenu */}
+          <DropdownMenu.Sub>
+            <DropdownMenu.SubTrigger className="flex items-center justify-between gap-2 px-3 py-2 text-sm text-gray-700 dark:text-gray-300 rounded-md hover:bg-gray-100 dark:hover:bg-gray-700 cursor-pointer outline-none data-[state=open]:bg-gray-100 dark:data-[state=open]:bg-gray-700">
+              <div className="flex items-center gap-2">
+                <Copy className="w-4 h-4" />
+                Copy
+              </div>
+              <ChevronRight className="w-4 h-4" />
+            </DropdownMenu.SubTrigger>
+            <DropdownMenu.Portal>
+              <DropdownMenu.SubContent
+                className="min-w-[200px] bg-white dark:bg-gray-800 rounded-lg shadow-xl border border-gray-200 dark:border-gray-700 p-1 z-50"
+                sideOffset={2}
+                alignOffset={-5}
+              >
+                <DropdownMenu.Item
+                  className="flex items-center gap-2 px-3 py-2 text-sm text-gray-700 dark:text-gray-300 rounded-md hover:bg-gray-100 dark:hover:bg-gray-700 cursor-pointer outline-none"
+                  onSelect={copyAsLogo}
+                >
+                  <Image className="w-4 h-4" />
+                  As Frontmatter Logo
+                </DropdownMenu.Item>
+                <DropdownMenu.Item
+                  className="flex items-center gap-2 px-3 py-2 text-sm text-gray-700 dark:text-gray-300 rounded-md hover:bg-gray-100 dark:hover:bg-gray-700 cursor-pointer outline-none"
+                  onSelect={copyMarkdownLink}
+                >
+                  <Copy className="w-4 h-4" />
+                  As Markdown Link
+                </DropdownMenu.Item>
+              </DropdownMenu.SubContent>
+            </DropdownMenu.Portal>
+          </DropdownMenu.Sub>
 
           <DropdownMenu.Item
             className="flex items-center gap-2 px-3 py-2 text-sm text-gray-700 dark:text-gray-300 rounded-md hover:bg-gray-100 dark:hover:bg-gray-700 cursor-pointer outline-none"

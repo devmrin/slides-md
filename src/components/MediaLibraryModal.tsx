@@ -1,8 +1,10 @@
 import { useState, useEffect, useRef } from "react";
 import * as Dialog from "@radix-ui/react-dialog";
+import * as Tooltip from "@radix-ui/react-tooltip";
 import { X, Upload, Copy, Check } from "lucide-react";
 import { db } from "../db";
 import type { MediaItem } from "../db/adapter";
+import { ToastRoot } from "./Toast";
 import { generateUUID } from "../utils/uuid";
 import { ImageActionDropdown } from "./ImageActionDropdown";
 import { ImageCarousel } from "./ImageCarousel";
@@ -31,6 +33,8 @@ export function MediaLibraryModal({
   const [editAltOpen, setEditAltOpen] = useState(false);
   const [editingMedia, setEditingMedia] = useState<MediaItem | null>(null);
   const [isCopied, setIsCopied] = useState(false);
+  const [showToast, setShowToast] = useState(false);
+  const [toastMessage, setToastMessage] = useState("");
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   // Load media items
@@ -58,11 +62,11 @@ export function MediaLibraryModal({
     // Check file type
     if (
       !ALLOWED_IMAGE_TYPES.includes(
-        file.type as (typeof ALLOWED_IMAGE_TYPES)[number]
+        file.type as (typeof ALLOWED_IMAGE_TYPES)[number],
       )
     ) {
       return `Invalid file type. Allowed types: ${ALLOWED_IMAGE_TYPES.join(
-        ", "
+        ", ",
       )}`;
     }
 
@@ -89,7 +93,7 @@ export function MediaLibraryModal({
   };
 
   const handleFileSelect = async (
-    event: React.ChangeEvent<HTMLInputElement>
+    event: React.ChangeEvent<HTMLInputElement>,
   ) => {
     const files = event.target.files;
     if (!files || files.length === 0) return;
@@ -191,15 +195,7 @@ export function MediaLibraryModal({
       <Dialog.Root open={open} onOpenChange={onOpenChange}>
         <Dialog.Portal>
           <Dialog.Overlay className="fixed inset-0 bg-black/50 dark:bg-black/70 z-40" />
-          <Dialog.Content
-            className="fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-white dark:bg-gray-800 rounded-lg shadow-xl w-full max-w-4xl max-h-[85vh] overflow-hidden z-50 border border-gray-300 dark:border-gray-700"
-            onPointerDownOutside={(e) => {
-              if (!carouselOpen) e.preventDefault();
-            }}
-            onEscapeKeyDown={(e) => {
-              if (!carouselOpen) e.preventDefault();
-            }}
-          >
+          <Dialog.Content className="fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-white dark:bg-gray-800 rounded-lg shadow-xl w-full max-w-4xl max-h-[85vh] overflow-hidden z-50 border border-gray-300 dark:border-gray-700">
             <div className="flex flex-col h-full">
               {/* Header */}
               <div className="flex items-center justify-between p-6 border-b border-gray-200 dark:border-gray-700">
@@ -210,9 +206,15 @@ export function MediaLibraryModal({
                   <Dialog.Description className="sr-only">
                     Upload and manage images for your presentations
                   </Dialog.Description>
-                  <p className="text-sm text-gray-600 dark:text-gray-400 mt-1">
-                    {mediaItems.length} / {MAX_MEDIA_ITEMS} images
-                  </p>
+                  <div className="flex items-center gap-4 mt-1">
+                    <p className="text-sm text-gray-600 dark:text-gray-400">
+                      {mediaItems.length} / {MAX_MEDIA_ITEMS} images
+                    </p>
+                    <span className="text-gray-300 dark:text-gray-600">•</span>
+                    <p className="text-xs text-gray-500 dark:text-gray-400">
+                      Supported: JPEG, PNG, GIF, WebP, SVG
+                    </p>
+                  </div>
                 </div>
                 <button
                   onClick={() => onOpenChange(false)}
@@ -288,6 +290,11 @@ export function MediaLibraryModal({
                           media={item}
                           onDelete={handleDelete}
                           onEditAlt={handleEditAlt}
+                          onCopySuccess={(message) => {
+                            setToastMessage(message);
+                            setShowToast(true);
+                            onOpenChange(false);
+                          }}
                         />
 
                         {/* Image info overlay */}
@@ -311,31 +318,43 @@ export function MediaLibraryModal({
               </div>
 
               {/* Footer */}
-              <div className="p-4 border-t border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-900/50 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
-                <div className="flex-1 opacity-75 hover:opacity-100 transition-opacity min-w-0">
+              <div className="p-4 border-t border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-900/50">
+                <div className="opacity-75 hover:opacity-100 transition-opacity">
                   <p className="text-xs text-gray-500 dark:text-gray-400 mb-1">
                     Reminder: When possible, use external images/GIFs via
                     markdown syntax rather than uploading:
                   </p>
-                  <button
-                    onClick={handleCopyReminder}
-                    className="group flex items-center gap-2 text-left w-full sm:w-auto max-w-full bg-gray-100 dark:bg-gray-800/50 hover:bg-gray-200 dark:hover:bg-gray-800 transition-colors px-2 py-1 rounded cursor-pointer border border-transparent hover:border-gray-300 dark:hover:border-gray-600"
-                    title="Click to copy"
-                  >
-                    <code className="text-[10px] sm:text-xs text-gray-600 dark:text-gray-400 font-mono truncate">
-                      ![vintage
-                      aesthetic](https://images.unsplash.com/photo-1767520832109-aee2a0d72f49)
-                    </code>
-                    {isCopied ? (
-                      <Check className="w-3 h-3 text-green-500 shrink-0" />
-                    ) : (
-                      <Copy className="w-3 h-3 text-gray-400 group-hover:text-gray-600 dark:group-hover:text-gray-300 shrink-0 opacity-0 group-hover:opacity-100 transition-opacity" />
-                    )}
-                  </button>
+                  <Tooltip.Provider>
+                    <Tooltip.Root>
+                      <Tooltip.Trigger asChild>
+                        <button
+                          onClick={handleCopyReminder}
+                          className="group flex items-center gap-2 text-left bg-gray-100 dark:bg-gray-800/50 hover:bg-gray-200 dark:hover:bg-gray-800 transition-colors px-2 py-1 rounded cursor-pointer border border-transparent hover:border-gray-300 dark:hover:border-gray-600"
+                        >
+                          <code className="text-[10px] sm:text-xs text-gray-600 dark:text-gray-400 font-mono truncate flex-1">
+                            ![vintage
+                            aesthetic](https://images.unsplash.com/photo-1767520832109-aee2a0d72f49)
+                          </code>
+                          {isCopied ? (
+                            <Check className="w-3 h-3 text-green-500 shrink-0" />
+                          ) : (
+                            <Copy className="w-3 h-3 text-gray-400 group-hover:text-gray-600 dark:group-hover:text-gray-300 shrink-0 transition-colors" />
+                          )}
+                        </button>
+                      </Tooltip.Trigger>
+                      <Tooltip.Portal>
+                        <Tooltip.Content
+                          side="bottom"
+                          className="px-3 py-1.5 text-xs text-white bg-gray-900 dark:bg-gray-700 rounded shadow-lg z-50"
+                          sideOffset={5}
+                        >
+                          Click to copy
+                          <Tooltip.Arrow className="fill-gray-900 dark:fill-gray-700" />
+                        </Tooltip.Content>
+                      </Tooltip.Portal>
+                    </Tooltip.Root>
+                  </Tooltip.Provider>
                 </div>
-                <p className="text-[10px] text-gray-400 dark:text-gray-500 whitespace-nowrap shrink-0">
-                  Supported formats: JPEG, PNG, GIF, WebP, SVG
-                </p>
               </div>
             </div>
           </Dialog.Content>
@@ -360,6 +379,13 @@ export function MediaLibraryModal({
           onSave={handleSaveAlt}
         />
       )}
+
+      {/* Toast */}
+      <ToastRoot
+        open={showToast}
+        onOpenChange={setShowToast}
+        title={toastMessage}
+      />
     </>
   );
 }
