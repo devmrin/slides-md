@@ -118,7 +118,7 @@ function splitSlidesWithConfigs(
       continue;
     }
 
-    const isDelimiterLine = !inFence && /^\s*---(?:\s+.*)?\s*$/.test(line);
+    const isDelimiterLine = !inFence && (/^\s*---(?:\s+.*)?\s*$/.test(line) || /^\s*===(?:\s+.*)?\s*$/.test(line));
     if (isDelimiterLine) {
       flushSlide();
       currentConfig = parseSlideConfig(line.trim());
