@@ -167,7 +167,7 @@ export function PresentationsTable({
           const presentation = row.original;
           return (
             <div
-              className="min-w-0 flex justify-end overflow-hidden"
+              className="min-w-0 max-w-full flex justify-end overflow-hidden"
               onClick={(e) => e.stopPropagation()}
             >
               <PresentationActionDropdown
@@ -199,14 +199,17 @@ export function PresentationsTable({
 
   const gridCols = isMobile
     ? "180px 120px 120px 80px"
-    : "160px 200px 120px 120px 80px";
+    : "160px 1fr 120px 120px 80px";
 
-  const tableMinWidth = isMobile ? "500px" : "680px";
+  const tableMinWidth = isMobile ? "500px" : undefined;
 
   return (
     <>
-      <div className="overflow-x-auto">
-        <div style={{ minWidth: tableMinWidth }}>
+      <div className={isMobile ? "overflow-x-auto w-full" : "w-full"}>
+        <div
+          className="w-full min-w-0"
+          style={tableMinWidth != null ? { minWidth: tableMinWidth } : undefined}
+        >
           {/* Header */}
           <div
             className="grid border-b border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-800"
@@ -216,7 +219,7 @@ export function PresentationsTable({
               headerGroup.headers.map((header) => (
                 <div
                   key={header.id}
-                  className="px-4 py-3 text-left text-xs font-semibold text-gray-600 dark:text-gray-400 uppercase tracking-wider"
+                  className={`py-3 text-left text-xs font-semibold text-gray-600 dark:text-gray-400 uppercase tracking-wider ${header.column.id === "actions" ? "pl-2 pr-4" : "px-4"}`}
                 >
                   {header.isPlaceholder
                     ? null
@@ -239,7 +242,7 @@ export function PresentationsTable({
               {row.getVisibleCells().map((cell) => (
                 <div
                   key={cell.id}
-                  className={`px-4 py-3 ${cell.column.id === "actions" || cell.column.id === "name" ? "min-w-0 overflow-hidden" : ""}`}
+                  className={`py-3 ${cell.column.id === "actions" ? "pl-2 pr-4 min-w-0 overflow-hidden" : cell.column.id === "name" ? "px-4 min-w-0 overflow-hidden" : "px-4"}`}
                 >
                   {flexRender(cell.column.columnDef.cell, cell.getContext())}
                 </div>

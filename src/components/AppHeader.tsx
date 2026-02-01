@@ -8,11 +8,11 @@ interface AppHeaderProps {
 }
 
 export function AppHeader({ isDark, setIsDark }: AppHeaderProps) {
-  // Global keyboard shortcut: Command/Control+T to toggle theme
+  // Global keyboard shortcut: Control+T to toggle theme
   useEffect(() => {
     const handler = (e: KeyboardEvent) => {
-      // Command+T or Control+T to toggle theme (prevent browser default)
-      if ((e.metaKey || e.ctrlKey) && (e.key === "t" || e.key === "T")) {
+      // Control+T to toggle theme (prevent browser default)
+      if (e.ctrlKey && (e.key === "t" || e.key === "T")) {
         e.preventDefault();
         setIsDark((d) => !d);
       }

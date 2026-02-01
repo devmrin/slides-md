@@ -88,7 +88,7 @@ export function SlideNav({
             onChange={handleInputChange}
             onBlur={handleInputBlur}
             onKeyDown={handleInputKeyDown}
-            className="w-10 sm:w-12 text-center text-xs sm:text-sm border rounded border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 px-1.5 py-1 focus:outline-none focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400 tabular-nums"
+            className="w-10 sm:w-12 text-center text-xs sm:text-sm border rounded border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 px-1.5 py-1 focus:outline-none focus:ring-2 focus:ring-gray-900 dark:focus:ring-gray-100 tabular-nums"
             title={isFullscreen ? "Jump to slide (J)" : undefined}
           />
           <span className="text-xs sm:text-sm opacity-60 tabular-nums">of {slidesLength}</span>

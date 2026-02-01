@@ -16,6 +16,7 @@ const SwitchComponent = React.forwardRef<
             ref={ref}
             className={cn(
                 "w-11 h-6 bg-gray-300 dark:bg-gray-600 rounded-full relative data-[state=checked]:bg-gray-500 dark:data-[state=checked]:bg-gray-500 outline-none cursor-pointer",
+                "focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-gray-900 dark:focus-visible:ring-gray-100",
                 className
             )}
             {...props}

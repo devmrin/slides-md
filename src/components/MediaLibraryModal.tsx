@@ -284,7 +284,7 @@ export function MediaLibraryModal({
                       >
                         <button
                           onClick={() => handleImageClick(index)}
-                          className="w-full h-full cursor-pointer focus:outline-none focus:ring-2 focus:ring-blue-500 rounded-lg"
+                          className="w-full h-full cursor-pointer focus:outline-none focus:ring-2 focus:ring-gray-900 dark:focus:ring-gray-100 rounded-lg"
                         >
                           <img
                             src={item.dataUrl}

@@ -64,7 +64,8 @@ export function HomePage() {
     }
   }, [isDarkValue]);
 
-  // Keyboard shortcuts: Command/Control+N to create new presentation, Command/Control+M for Media Library, Command/Control+T for theme toggle
+  // Keyboard shortcuts: Command/Control+N to create new presentation, Command/Control+M for Media Library.
+  // Theme toggle (Command/Control+T) is handled by AppHeader to avoid duplicate handlers.
   useEffect(() => {
     const handler = (e: KeyboardEvent) => {
       // Don't handle if user is typing in an input/textarea
@@ -92,16 +93,10 @@ export function HomePage() {
         e.preventDefault();
         setMediaLibraryOpen(true);
       }
-
-      // Command+T or Control+T to toggle theme
-      if ((e.metaKey || e.ctrlKey) && (e.key === "t" || e.key === "T")) {
-        e.preventDefault();
-        setIsDark((prev) => !prev);
-      }
     };
     window.addEventListener("keydown", handler);
     return () => window.removeEventListener("keydown", handler);
-  }, [presentations.length, setIsDark]);
+  }, [presentations.length]);
 
   const loadPresentations = async () => {
     try {
