@@ -6,6 +6,7 @@ import { Button } from "../ui/Button";
 import { AppHeader } from "./AppHeader";
 import { StandardViewNav } from "./StandardViewNav";
 import { useLocalStorage, type ViewMode } from "../hooks/useLocalStorage";
+import { useDeviceDetection } from "../hooks/useDeviceDetection";
 import { type SlideConfig } from "../hooks/useSlides";
 import { db } from "../db";
 import * as DropdownMenu from "@radix-ui/react-dropdown-menu";
@@ -54,17 +55,24 @@ export function StandardView({
   onEditName,
   onOpenMediaLibrary,
 }: StandardViewProps) {
+  const { isMobile } = useDeviceDetection();
   const [viewModeRaw, setViewMode] = useLocalStorage(
     "viewMode",
     "split" as ViewMode,
   );
   const viewMode: ViewMode = viewModeRaw ?? "split";
+  const [mobilePane, setMobilePane] = useState<"editor" | "presentation">(
+    "editor",
+  );
   const [resolvedLogoUrl, setResolvedLogoUrl] = useState<string | null>(null);
 
-  // Helper to determine if editor should be visible
-  const showEditor = viewMode !== "full-preview";
-  // Helper to determine if preview should be visible
-  const showPreview = viewMode !== "full-editor";
+  // On mobile: one pane at a time (editor or presentation). On desktop: use viewMode.
+  const showEditor = isMobile
+    ? mobilePane === "editor"
+    : viewMode !== "full-preview";
+  const showPreview = isMobile
+    ? mobilePane === "presentation"
+    : viewMode !== "full-editor";
 
   // Get flex basis for editor based on view mode
   const getEditorFlexBasis = () => {
@@ -138,6 +146,9 @@ export function StandardView({
         viewMode={viewMode}
         onViewModeChange={setViewMode}
         onOpenMediaLibrary={onOpenMediaLibrary}
+        isMobile={isMobile}
+        mobilePane={mobilePane}
+        onMobilePaneChange={setMobilePane}
       />
 
       <div className="flex-1 flex overflow-hidden">
@@ -147,9 +158,9 @@ export function StandardView({
             key={`editor-${viewMode}`}
             className="flex"
             style={{
-              flexBasis: getEditorFlexBasis(),
+              flexBasis: isMobile ? "100%" : getEditorFlexBasis(),
               flexShrink: 0,
-              flexGrow: 0,
+              flexGrow: isMobile ? 1 : 0,
             }}
           >
             <Editor
@@ -170,9 +181,9 @@ export function StandardView({
             key={`preview-${viewMode}`}
             className="flex flex-col bg-white dark:bg-gray-900 relative"
             style={{
-              flexBasis: getPreviewFlexBasis(),
+              flexBasis: isMobile ? "100%" : getPreviewFlexBasis(),
               flexShrink: 0,
-              flexGrow: 0,
+              flexGrow: isMobile ? 1 : 0,
             }}
           >
             <div className="px-3 sm:px-4 py-2 border-b text-sm font-medium flex items-center justify-between gap-2 bg-gray-100 dark:bg-gray-800 text-gray-900 dark:text-gray-100 border-gray-300 dark:border-gray-700">
