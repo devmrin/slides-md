@@ -3,6 +3,7 @@ import MonacoEditor from "@monaco-editor/react";
 import { Trash2 } from "lucide-react";
 import { Button } from "../ui/Button";
 import { useFullscreen } from "../hooks/useFullscreen";
+import { useHideMonacoContextView } from "../hooks/useHideMonacoContextView";
 
 interface FullscreenEditorProps {
   markdown: string;
@@ -31,6 +32,8 @@ export function FullscreenEditor({
     isEditorFullscreen,
     setIsEditorFullscreen,
   );
+
+  useHideMonacoContextView();
 
   // Request fullscreen when component mounts with isEditorFullscreen=true
   useEffect(() => {

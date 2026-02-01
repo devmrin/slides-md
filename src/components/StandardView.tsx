@@ -7,6 +7,7 @@ import { AppHeader } from "./AppHeader";
 import { StandardViewNav } from "./StandardViewNav";
 import { useLocalStorage, type ViewMode } from "../hooks/useLocalStorage";
 import { useDeviceDetection } from "../hooks/useDeviceDetection";
+import { useHideMonacoContextView } from "../hooks/useHideMonacoContextView";
 import { type SlideConfig } from "../hooks/useSlides";
 import { db } from "../db";
 import * as DropdownMenu from "@radix-ui/react-dropdown-menu";
@@ -103,6 +104,8 @@ export function StandardView({
         return "50%";
     }
   };
+
+  useHideMonacoContextView();
 
   // Resolve media:// URL for logo if present
   useEffect(() => {
