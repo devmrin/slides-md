@@ -56,7 +56,7 @@ export function StandardView({
 }: StandardViewProps) {
   const [viewModeRaw, setViewMode] = useLocalStorage(
     "viewMode",
-    "split" as ViewMode
+    "split" as ViewMode,
   );
   const viewMode: ViewMode = viewModeRaw ?? "split";
   const [resolvedLogoUrl, setResolvedLogoUrl] = useState<string | null>(null);
@@ -218,20 +218,20 @@ export function StandardView({
                 slides[currentSlide] === "__TITLE_SLIDE__"
                   ? "items-center justify-center p-4 sm:p-8 px-4 sm:px-8"
                   : imageOnlySlides.has(currentSlide)
-                  ? "items-center justify-center p-0"
-                  : (() => {
-                      const config = slideConfigs[currentSlide] || {};
-                      const align = config.align || "center";
-                      let classes = "justify-center px-4 sm:px-8 ";
-                      if (align === "top") {
-                        classes += "pt-8 pb-8";
-                      } else if (align === "center") {
-                        classes += "pt-[25vh] pb-8";
-                      } else if (align === "bottom") {
-                        classes += "pb-8 items-end";
-                      }
-                      return classes;
-                    })()
+                    ? "items-center justify-center p-0"
+                    : (() => {
+                        const config = slideConfigs[currentSlide] || {};
+                        const align = config.align || "center";
+                        let classes = "justify-center px-4 sm:px-8 ";
+                        if (align === "top") {
+                          classes += "pt-8 pb-8";
+                        } else if (align === "center") {
+                          classes += "pt-[25vh] pb-8";
+                        } else if (align === "bottom") {
+                          classes += "pb-8 items-end";
+                        }
+                        return classes;
+                      })()
               }`}
             >
               <Slide
@@ -263,8 +263,8 @@ export function StandardView({
                   frontmatter?.logoSize === "sm"
                     ? "h-8"
                     : frontmatter?.logoSize === "lg"
-                    ? "h-12"
-                    : "h-10"
+                      ? "h-12"
+                      : "h-10"
                 } w-auto`}
                 style={{
                   opacity: frontmatter?.logoOpacity

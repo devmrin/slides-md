@@ -1,6 +1,14 @@
 import { useState, useEffect, useCallback } from "react";
 import { useNavigate } from "@tanstack/react-router";
-import { Plus, Grid3x3, List, ImagePlus, ChevronDown } from "lucide-react";
+import {
+  Plus,
+  Grid3x3,
+  List,
+  ImagePlus,
+  ChevronDown,
+  ChartPie,
+  Presentation as PresentationIcon,
+} from "lucide-react";
 import * as DropdownMenu from "@radix-ui/react-dropdown-menu";
 import { AppHeader } from "../components/AppHeader";
 import { CreatePresentationDialog } from "../components/CreatePresentationDialog";
@@ -253,16 +261,18 @@ export function HomePage() {
                     sideOffset={5}
                   >
                     <DropdownMenu.Item
-                      className="px-3 py-2 text-sm text-gray-900 dark:text-gray-100 rounded-sm cursor-pointer outline-none hover:bg-gray-100 dark:hover:bg-gray-700 focus:bg-gray-100 dark:focus:bg-gray-700"
+                      className="px-3 py-2 text-sm text-gray-900 dark:text-gray-100 rounded-sm cursor-pointer outline-none hover:bg-gray-100 dark:hover:bg-gray-700 focus:bg-gray-100 dark:focus:bg-gray-700 flex items-center gap-2"
                       onSelect={() => setCreateDialogOpen(true)}
                     >
+                      <PresentationIcon className="w-4 h-4" />
                       Create Blank
                     </DropdownMenu.Item>
                     <DropdownMenu.Item
-                      className="px-3 py-2 text-sm text-gray-900 dark:text-gray-100 rounded-sm cursor-pointer outline-none hover:bg-gray-100 dark:hover:bg-gray-700 focus:bg-gray-100 dark:focus:bg-gray-700"
+                      className="px-3 py-2 text-sm text-gray-900 dark:text-gray-100 rounded-sm cursor-pointer outline-none hover:bg-gray-100 dark:hover:bg-gray-700 focus:bg-gray-100 dark:focus:bg-gray-700 flex items-center gap-2"
                       onSelect={handleViewSample}
                     >
-                      New Sample PPT
+                      <ChartPie className="w-4 h-4" />
+                      Add Sample Presentation
                     </DropdownMenu.Item>
                   </DropdownMenu.Content>
                 </DropdownMenu.Portal>
