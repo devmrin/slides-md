@@ -76,7 +76,7 @@ const VIEW_MODE_LABELS: Record<ViewMode, string> = {
   "full-editor": "Full Editor",
   "full-preview": "Full Preview",
   split: "Split 50/50",
-  "editor-35": "Editor 35%",
+  "editor-35": "Preview 65%",
   "editor-65": "Editor 65%",
 };
 
@@ -107,11 +107,10 @@ export function ViewModeSelector({
                 <Tooltip.Root key={mode} delayDuration={200}>
                   <Tooltip.Trigger asChild>
                     <DropdownMenu.Item
-                      className={`p-1.5 rounded cursor-pointer outline-none transition-colors ${
-                        viewMode === mode
+                      className={`p-1.5 rounded cursor-pointer outline-none transition-colors ${viewMode === mode
                           ? "bg-blue-100 dark:bg-blue-900/50"
                           : "hover:bg-gray-200 dark:hover:bg-gray-700"
-                      }`}
+                        }`}
                       onSelect={() => onViewModeChange(mode)}
                     >
                       <ViewModeIcon

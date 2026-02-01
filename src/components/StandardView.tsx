@@ -220,7 +220,7 @@ export function StandardView({
                         onSelect={() => setCurrentSlide(0)}
                       >
                         <RotateCcw className="w-4 h-4" />
-                        <span>Reset Deck</span>
+                        <span>Reset to First Slide</span>
                       </DropdownMenu.Item>
                     </DropdownMenu.Content>
                   </DropdownMenu.Portal>
@@ -228,39 +228,37 @@ export function StandardView({
               </div>
             </div>
             <div
-              className={`standard-view-slide flex-1 min-h-0 min-w-0 overflow-auto flex text-gray-900 dark:text-gray-100 ${
-                slides[currentSlide] === "__TITLE_SLIDE__"
-                  ? "items-center justify-center p-4 sm:p-8 px-4 sm:px-8"
-                  : imageOnlySlides.has(currentSlide)
-                    ? "items-center justify-center p-0"
-                    : (() => {
-                        const config = slideConfigs[currentSlide] || {};
-                        const align = config.align || "center";
-                        let classes = "justify-center px-4 sm:px-8 ";
-                        if (align === "top") {
-                          classes += "pt-8 pb-8";
-                        } else if (align === "center") {
-                          classes += "pt-[25vh] pb-8";
-                        } else if (align === "bottom") {
-                          classes += "pb-8 items-end";
-                        }
-                        return classes;
-                      })()
-              }`}
+              className={`standard-view-slide flex-1 min-h-0 min-w-0 overflow-auto flex text-gray-900 dark:text-gray-100 ${slides[currentSlide] === "__TITLE_SLIDE__"
+                ? "items-center justify-center p-4 sm:p-8 px-4 sm:px-8"
+                : imageOnlySlides.has(currentSlide)
+                  ? "items-center justify-center p-0"
+                  : (() => {
+                    const config = slideConfigs[currentSlide] || {};
+                    const align = config.align || "center";
+                    let classes = "justify-center px-4 sm:px-8 ";
+                    if (align === "top") {
+                      classes += "pt-8 pb-8";
+                    } else if (align === "center") {
+                      classes += "pt-[25vh] pb-8";
+                    } else if (align === "bottom") {
+                      classes += "pb-8 items-end";
+                    }
+                    return classes;
+                  })()
+                }`}
             >
               <div
-                className={`min-w-0 flex-1 flex ${
-                  slides[currentSlide] === "__TITLE_SLIDE__"
+                className={`min-w-0 flex-1 flex ${slides[currentSlide] === "__TITLE_SLIDE__"
+                  ? "items-center justify-center"
+                  : imageOnlySlides.has(currentSlide)
                     ? "items-center justify-center"
-                    : imageOnlySlides.has(currentSlide)
-                      ? "items-center justify-center"
-                      : (() => {
-                          const config = slideConfigs[currentSlide] || {};
-                          const align = config.align || "center";
-                          if (align === "bottom") return "justify-center items-end";
-                          return "justify-center items-start";
-                        })()
-                }`}
+                    : (() => {
+                      const config = slideConfigs[currentSlide] || {};
+                      const align = config.align || "center";
+                      if (align === "bottom") return "justify-center items-end";
+                      return "justify-center items-start";
+                    })()
+                  }`}
               >
                 <Slide
                   key={currentSlide}
@@ -286,15 +284,13 @@ export function StandardView({
               <img
                 src={resolvedLogoUrl}
                 alt="Logo"
-                className={`presentation-logo absolute bottom-[94px] z-10 shadow-none ${
-                  frontmatter?.logoPosition === "right" ? "right-4" : "left-4"
-                } ${
-                  frontmatter?.logoSize === "sm"
+                className={`presentation-logo absolute bottom-[94px] z-10 shadow-none ${frontmatter?.logoPosition === "right" ? "right-4" : "left-4"
+                  } ${frontmatter?.logoSize === "sm"
                     ? "h-8"
                     : frontmatter?.logoSize === "lg"
                       ? "h-12"
                       : "h-10"
-                } w-auto`}
+                  } w-auto`}
                 style={{
                   opacity: frontmatter?.logoOpacity
                     ? parseFloat(frontmatter.logoOpacity)
