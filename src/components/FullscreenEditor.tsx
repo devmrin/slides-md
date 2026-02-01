@@ -18,7 +18,6 @@ interface FullscreenEditorProps {
 export function FullscreenEditor({
   markdown,
   setMarkdown,
-  setCurrentSlide,
   onClear,
   onCopy,
   setIsEditorFullscreen,

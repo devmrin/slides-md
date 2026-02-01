@@ -91,7 +91,7 @@ export function Editor({
             title="Enter Fullscreen"
           >
             <Maximize className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
-            <span className="hidden sm:inline">Fullscreen Editor</span>
+            <span className="hidden sm:inline">Fullscreen</span>
           </Button>
           <Button
             onClick={handleCopy}

@@ -1,4 +1,5 @@
 import * as DropdownMenu from "@radix-ui/react-dropdown-menu";
+import { Layout } from "lucide-react";
 import { type ViewMode } from "../hooks/useLocalStorage";
 
 interface ViewModeSelectorProps {
@@ -81,6 +82,7 @@ export function ViewModeSelector({
           className="flex items-center gap-1.5 px-2 py-1.5 text-xs border rounded border-gray-400 dark:border-gray-600 text-gray-900 dark:text-gray-100 bg-white dark:bg-gray-900 hover:bg-gray-50 dark:hover:bg-gray-800 touch-manipulation cursor-pointer"
           title="Change View"
         >
+          <Layout className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
           Change View <ViewModeIcon mode={viewMode} size="sm" />
         </button>
       </DropdownMenu.Trigger>

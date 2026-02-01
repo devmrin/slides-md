@@ -9,7 +9,7 @@ import { useLocalStorage, type ViewMode } from "../hooks/useLocalStorage";
 import { type SlideConfig } from "../hooks/useSlides";
 import { db } from "../db";
 import * as DropdownMenu from "@radix-ui/react-dropdown-menu";
-import { MoreVertical, RotateCcw } from "lucide-react";
+import { MoreVertical, RotateCcw, Presentation } from "lucide-react";
 
 interface StandardViewProps {
   markdown: string;
@@ -180,8 +180,9 @@ export function StandardView({
               <div className="flex items-center gap-2">
                 <Button
                   onClick={toggleFullscreen}
-                  className="px-2 sm:px-3 py-1 text-xs border rounded border-gray-400 dark:border-gray-600 text-gray-900 dark:text-gray-100 bg-white dark:bg-gray-900 hover:bg-gray-50 dark:hover:bg-gray-800"
+                  className="px-2 sm:px-3 py-1 text-xs border rounded border-gray-400 dark:border-gray-600 text-gray-900 dark:text-gray-100 bg-white dark:bg-gray-900 hover:bg-gray-50 dark:hover:bg-gray-800 flex items-center gap-1.5"
                 >
+                  <Presentation className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
                   <span className="hidden sm:inline">Present (⌘↵)</span>
                   <span className="sm:hidden">Present</span>
                 </Button>
