@@ -1,8 +1,8 @@
 import * as Dialog from "@radix-ui/react-dialog";
 import { X, Copy, Check, ArrowUpRight } from "lucide-react";
 import { useState } from "react";
-import { format } from "date-fns";
 import { Button } from "../ui/Button";
+import { getSampleFrontmatter } from "../utils/frontmatterTemplates";
 
 export function GettingStartedModal() {
   const [copied, setCopied] = useState(false);
@@ -13,39 +13,37 @@ export function GettingStartedModal() {
 
   const llmPrompt = `FORMAT CONTRACT (slides.md)
 
-1. Output type
-Respond with a single text document for slides.md.
+Generate a single markdown document compatible with slides.md.
 
-2. Frontmatter
-Start with:
-  @@@
-  title: ...
-  date: YYYY-MM-DD
-  presenter: ...
-  description: ...
-  @@@
+Rules:
 
-3. Slide separation
-Use three hyphens on a line by itself to separate slides:
-  ---
-This is standard markdown syntax (horizontal rule).
-Everything between delimiters becomes one slide.
+Output
 
-4. Code fences
-Use TRIPLE backticks for code blocks:
-  \`\`\`lang
-  code...
-  \`\`\`
-Inline code uses single backticks: \`like this\`
+Respond with only the markdown content.
 
-5. Allowed Markdown
-Headings (#, ##, ###), lists, blockquotes, checkboxes
+No explanations, no commentary.
 
-6. No extra commentary
-Output only the deck content.
+Frontmatter (optional)
 
----
-[INSERT YOUR TOPIC OR CONTENT HERE]`;
+If included, it must appear at the top and be wrapped with @@@.
+
+Used to generate a title slide and global defaults.
+
+Slides
+
+Separate slides using --- on its own line.
+
+Each section between separators is one slide.
+
+Markdown
+
+Allowed: headings, lists, blockquotes, checkboxes.
+
+Code blocks use triple backticks with language.
+
+Inline code uses single backticks.
+
+Produce a complete presentation for the given topic.`;
 
   const handleCopy = async () => {
     try {
@@ -58,16 +56,8 @@ Output only the deck content.
   };
 
   const handleCopyFrontmatter = async () => {
-    const sampleFrontmatter = `@@@
-title: Sample presentation
-description: Add presentation description
-date: ${format(new Date(), "yyyyMMdd")}
-presenter: My team
-logo: https://example.com/logo.png
-@@@
-`;
     try {
-      await navigator.clipboard.writeText(sampleFrontmatter);
+      await navigator.clipboard.writeText(getSampleFrontmatter());
       setFrontmatterCopied(true);
       setTimeout(() => setFrontmatterCopied(false), 2000);
     } catch (err) {
@@ -160,14 +150,16 @@ This slide has custom layout and styling`;
                 {/* Overview */}
                 <section>
                   <p className="leading-relaxed">
-                    <span className="font-bold">✱ slides.md</span> turns
-                    markdown into presentations.
+                    <img
+                      src="/logo.png"
+                      alt="slides.md"
+                      className="w-6 h-6 inline-block align-middle mr-2"
+                    />
+                    <span className="font-bold">slides.md</span> turns markdown
+                    into clean presentations out of the box.
                     <br />
-                    add optional frontmatter for metadata, separate slides with{" "}
-                    <code className="px-1.5 py-0.5 bg-gray-100 dark:bg-gray-700 rounded text-xs font-mono">
-                      ---
-                    </code>
-                    , and you're done.
+                    optionally, add frontmatter to create a title slide and
+                    style everything using modifiers.
                   </p>
                 </section>
 
@@ -212,13 +204,7 @@ This slide has custom layout and styling`;
                         <Copy className="w-4 h-4" />
                       )}
                     </Button>
-                    {`@@@
-title: Sample presentation
-description: Add presentation description
-date: ${format(new Date(), "yyyyMMdd")}
-presenter: My team
-logo: https://example.com/logo.png
-@@@`}
+                    {getSampleFrontmatter().trim()}
                   </div>
 
                   <p className="leading-relaxed">
@@ -281,10 +267,10 @@ logo: https://example.com/logo.png
                   </ul>
                 </section>
 
-                {/* Global Slide Configuration */}
+                {/* Global Slide Modifiers */}
                 <section>
                   <h2 className="text-xl font-semibold mb-3 text-gray-900 dark:text-gray-100">
-                    Global Slide Configuration
+                    Global Slide Modifiers
                   </h2>
                   <p className="leading-relaxed">
                     set default styling for all slides in frontmatter. these can
@@ -315,7 +301,7 @@ animate: fade-in
 
                   <p className="leading-relaxed mt-3">
                     all slides will inherit these defaults unless overridden
-                    with per-slide configuration (see below).
+                    with per-slide modifiers (see below).
                     <br />
                     <br />
                     <strong>size</strong> accepts predefined values (
@@ -390,10 +376,10 @@ More content`}
                   </div>
                 </section>
 
-                {/* Per-Slide Configuration */}
+                {/* Per-Slide Modifiers */}
                 <section>
                   <h2 className="text-xl font-semibold mb-3 text-gray-900 dark:text-gray-100">
-                    Per-Slide Configuration (Override Defaults)
+                    Per-Slide Modifiers (Override Defaults)
                   </h2>
                   <p className="leading-relaxed">
                     add optional styling attributes to the slide delimiter to
@@ -679,8 +665,16 @@ This slide has custom layout and styling`}
                     LLM Prompt
                   </h2>
                   <p className="leading-relaxed mb-3">
-                    use this prompt to generate slides.md-compatible
-                    presentations:
+                    use this prompt to generate{" "}
+                    <span className="inline-flex items-center gap-1 whitespace-nowrap">
+                      <img
+                        src="/logo.png"
+                        alt="slides.md"
+                        className="w-4 h-4"
+                      />
+                      <span className="font-semibold">slides.md</span>
+                    </span>{" "}
+                    compatible presentations:
                   </p>
 
                   <div className="relative bg-gray-900 dark:bg-gray-950 rounded-lg p-4 border border-gray-700 dark:border-gray-600 text-sm font-mono text-gray-100 dark:text-gray-200 whitespace-pre-wrap">

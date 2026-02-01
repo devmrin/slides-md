@@ -85,7 +85,7 @@ This command verifies code quality by running ESLint and TypeScript type checkin
   title: My Talk Title
   presenter: Your Name
   description: Short description
-  logo: https://example.com/logo.png
+  logo: https://slides.elnotes.com/logo.png
   @@@
   ```
   

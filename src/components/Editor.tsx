@@ -1,9 +1,17 @@
 import { useState, useRef, useEffect } from "react";
 import MonacoEditor, { type OnMount } from "@monaco-editor/react";
 import * as DropdownMenu from "@radix-ui/react-dropdown-menu";
-import { Copy, Check, Maximize, MoreVertical, Trash2 } from "lucide-react";
+import {
+  Copy,
+  Check,
+  Maximize,
+  MoreVertical,
+  Trash2,
+  Plus,
+} from "lucide-react";
 import { Button } from "../ui/Button";
 import { getSlideIndexFromCursor } from "../utils/slideMapping";
+import { getSampleFrontmatter } from "../utils/frontmatterTemplates";
 
 interface EditorProps {
   markdown: string;
@@ -61,6 +69,14 @@ export function Editor({
     setTimeout(() => setIsCopied(false), 2000);
   };
 
+  const hasFrontmatter = (): boolean => {
+    return markdown.trim().startsWith("@@@");
+  };
+
+  const handleInsertSampleFrontmatter = () => {
+    setMarkdown(getSampleFrontmatter() + "\n" + markdown);
+  };
+
   return (
     <div
       className={`${
@@ -111,16 +127,15 @@ export function Editor({
                 sideOffset={5}
                 align="end"
               >
-                <DropdownMenu.Item
-                  className="px-3 py-2 text-sm text-gray-900 dark:text-gray-100 rounded-sm cursor-pointer outline-none hover:bg-gray-100 dark:hover:bg-gray-700 focus:bg-gray-100 dark:focus:bg-gray-700 flex items-center gap-2"
-                  onSelect={handleInsertSamplePresentation}
-                >
-                  <FilePlus className="w-4 h-4" />
-                  <span>Replace with sample presentation</span>
-                  {isSampleInserted && (
-                    <Check className="w-3.5 h-3.5 ml-auto" />
-                  )}
-                </DropdownMenu.Item>
+                {!hasFrontmatter() && (
+                  <DropdownMenu.Item
+                    className="px-3 py-2 text-sm text-gray-900 dark:text-gray-100 rounded-sm cursor-pointer outline-none hover:bg-gray-100 dark:hover:bg-gray-700 focus:bg-gray-100 dark:focus:bg-gray-700 flex items-center gap-2"
+                    onSelect={handleInsertSampleFrontmatter}
+                  >
+                    <Plus className="w-4 h-4" />
+                    <span>Insert Sample Frontmatter</span>
+                  </DropdownMenu.Item>
+                )}
                 <DropdownMenu.Item
                   className="px-3 py-2 text-sm text-gray-900 dark:text-gray-100 rounded-sm cursor-pointer outline-none hover:bg-gray-100 dark:hover:bg-gray-700 focus:bg-gray-100 dark:focus:bg-gray-700 flex items-center gap-2"
                   onSelect={onClear}
