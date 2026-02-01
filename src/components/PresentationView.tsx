@@ -6,6 +6,7 @@ import { LaserPointerOverlay } from "./LaserPointerOverlay";
 import { useFullscreen } from "../hooks/useFullscreen";
 import { type SlideConfig } from "../hooks/useSlides";
 import { db } from "../db";
+import { getImageUrlsFromMarkdown } from "../utils/getImageUrlsFromMarkdown";
 
 interface PresentationViewProps {
   currentSlide: number;
@@ -126,6 +127,26 @@ export function PresentationView({
 
     resolveLogo();
   }, [frontmatter?.logo]);
+
+  // Preload all non-media image URLs from every slide so they're cached before navigation.
+  // media:// URLs are resolved from IndexedDB per-slide and are not preloaded here.
+  useEffect(() => {
+    const urls = new Set<string>();
+    for (const slide of slides) {
+      if (slide === "__TITLE_SLIDE__") continue;
+      for (const url of getImageUrlsFromMarkdown(slide)) {
+        urls.add(url);
+      }
+    }
+    const logo = frontmatter?.logo;
+    if (logo && !logo.startsWith("media://")) {
+      urls.add(logo);
+    }
+    urls.forEach((url) => {
+      const img = new Image();
+      img.src = url;
+    });
+  }, [slides, frontmatter?.logo]);
 
   const isTitle = slides[currentSlide] === "__TITLE_SLIDE__";
   const isImageOnly = imageOnlySlides.has(currentSlide);
