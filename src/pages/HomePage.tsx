@@ -1,6 +1,7 @@
 import { useState, useEffect, useCallback } from "react";
 import { useNavigate } from "@tanstack/react-router";
-import { Plus, Grid3x3, List, ImagePlus } from "lucide-react";
+import { Plus, Grid3x3, List, ImagePlus, ChevronDown } from "lucide-react";
+import * as DropdownMenu from "@radix-ui/react-dropdown-menu";
 import { AppHeader } from "../components/AppHeader";
 import { CreatePresentationDialog } from "../components/CreatePresentationDialog";
 import { MediaLibraryModal } from "../components/MediaLibraryModal";
@@ -21,6 +22,8 @@ export function HomePage() {
   const [isLoading, setIsLoading] = useState(true);
   const [createDialogOpen, setCreateDialogOpen] = useState(false);
   const [mediaLibraryOpen, setMediaLibraryOpen] = useState(false);
+  const [newPresentationDropdownOpen, setNewPresentationDropdownOpen] =
+    useState(false);
   const [viewMode, setViewMode] = useLocalStorage("homeViewMode", "gallery");
   const [isDark, setIsDarkRaw] = useLocalStorage("theme", false);
 
@@ -36,7 +39,7 @@ export function HomePage() {
         setIsDarkRaw(value);
       }
     },
-    [setIsDarkRaw]
+    [setIsDarkRaw],
   );
 
   useEffect(() => {
@@ -70,7 +73,7 @@ export function HomePage() {
       if ((e.metaKey || e.ctrlKey) && (e.key === "n" || e.key === "N")) {
         e.preventDefault();
         if (presentations.length < MAX_PRESENTATIONS) {
-          setCreateDialogOpen(true);
+          setNewPresentationDropdownOpen(true);
         }
       }
 
@@ -227,15 +230,43 @@ export function HomePage() {
         {presentations.length > 0 && (
           <div className="px-6 py-4 border-b border-gray-300 dark:border-gray-700 bg-gray-100 dark:bg-gray-800 flex items-center justify-between">
             <div className="flex items-center gap-4">
-              <Button
-                onClick={() => setCreateDialogOpen(true)}
-                disabled={presentations.length >= MAX_PRESENTATIONS}
-                className="px-3 py-1 text-xs sm:text-sm border rounded border-gray-400 dark:border-gray-600 text-gray-900 dark:text-gray-100 bg-white dark:bg-gray-900 hover:bg-gray-50 dark:hover:bg-gray-800 disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2"
+              <DropdownMenu.Root
+                open={newPresentationDropdownOpen}
+                onOpenChange={setNewPresentationDropdownOpen}
               >
-                <Plus className="w-4 h-4" />
-                <span className="hidden sm:inline">New Presentation (^N)</span>
-                <span className="sm:hidden">New Presentation</span>
-              </Button>
+                <DropdownMenu.Trigger asChild>
+                  <Button
+                    disabled={presentations.length >= MAX_PRESENTATIONS}
+                    className="px-3 py-1 text-xs sm:text-sm border rounded border-gray-400 dark:border-gray-600 text-gray-900 dark:text-gray-100 bg-white dark:bg-gray-900 hover:bg-gray-50 dark:hover:bg-gray-800 disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2"
+                  >
+                    <Plus className="w-4 h-4" />
+                    <span className="hidden sm:inline">
+                      New Presentation (^N)
+                    </span>
+                    <span className="sm:hidden">New Presentation</span>
+                    <ChevronDown className="w-3 h-3" />
+                  </Button>
+                </DropdownMenu.Trigger>
+                <DropdownMenu.Portal>
+                  <DropdownMenu.Content
+                    className="min-w-[200px] bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-700 rounded-md shadow-lg p-1 z-50"
+                    sideOffset={5}
+                  >
+                    <DropdownMenu.Item
+                      className="px-3 py-2 text-sm text-gray-900 dark:text-gray-100 rounded-sm cursor-pointer outline-none hover:bg-gray-100 dark:hover:bg-gray-700 focus:bg-gray-100 dark:focus:bg-gray-700"
+                      onSelect={() => setCreateDialogOpen(true)}
+                    >
+                      Create Blank
+                    </DropdownMenu.Item>
+                    <DropdownMenu.Item
+                      className="px-3 py-2 text-sm text-gray-900 dark:text-gray-100 rounded-sm cursor-pointer outline-none hover:bg-gray-100 dark:hover:bg-gray-700 focus:bg-gray-100 dark:focus:bg-gray-700"
+                      onSelect={handleViewSample}
+                    >
+                      New Sample PPT
+                    </DropdownMenu.Item>
+                  </DropdownMenu.Content>
+                </DropdownMenu.Portal>
+              </DropdownMenu.Root>
               <Button
                 onClick={() => setMediaLibraryOpen(true)}
                 className="px-3 py-1 text-xs sm:text-sm border rounded border-gray-400 dark:border-gray-600 text-gray-900 dark:text-gray-100 bg-white dark:bg-gray-900 hover:bg-gray-50 dark:hover:bg-gray-800 flex items-center gap-2"
@@ -278,20 +309,37 @@ export function HomePage() {
                 No presentations yet?
               </p>
               <div className="flex flex-col sm:flex-row gap-3 items-center">
-                <Button
-                  onClick={() => setCreateDialogOpen(true)}
-                  className="px-3 py-1 text-xs sm:text-sm border rounded border-gray-400 dark:border-gray-300 text-gray-900 dark:text-gray-900 bg-white dark:bg-white hover:bg-gray-50 dark:hover:bg-gray-100 flex items-center gap-2"
+                <DropdownMenu.Root
+                  open={newPresentationDropdownOpen}
+                  onOpenChange={setNewPresentationDropdownOpen}
                 >
-                  <Plus className="w-4 h-4" />
-                  Create Your First Presentation
-                </Button>
-                <Button
-                  onClick={handleViewSample}
-                  btnType="primary"
-                  className="px-3 py-1 text-xs sm:text-sm flex items-center gap-2"
-                >
-                  Add Sample Presentation (Recommended)
-                </Button>
+                  <DropdownMenu.Trigger asChild>
+                    <Button className="px-3 py-1 text-xs sm:text-sm border rounded border-gray-400 dark:border-gray-300 text-gray-900 dark:text-gray-900 bg-white dark:bg-white hover:bg-gray-50 dark:hover:bg-gray-100 flex items-center gap-2">
+                      <Plus className="w-4 h-4" />
+                      New Presentation
+                      <ChevronDown className="w-3 h-3" />
+                    </Button>
+                  </DropdownMenu.Trigger>
+                  <DropdownMenu.Portal>
+                    <DropdownMenu.Content
+                      className="min-w-[200px] bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-700 rounded-md shadow-lg p-1 z-50"
+                      sideOffset={5}
+                    >
+                      <DropdownMenu.Item
+                        className="px-3 py-2 text-sm text-gray-900 dark:text-gray-100 rounded-sm cursor-pointer outline-none hover:bg-gray-100 dark:hover:bg-gray-700 focus:bg-gray-100 dark:focus:bg-gray-700"
+                        onSelect={() => setCreateDialogOpen(true)}
+                      >
+                        Create Blank
+                      </DropdownMenu.Item>
+                      <DropdownMenu.Item
+                        className="px-3 py-2 text-sm text-gray-900 dark:text-gray-100 rounded-sm cursor-pointer outline-none hover:bg-gray-100 dark:hover:bg-gray-700 focus:bg-gray-100 dark:focus:bg-gray-700"
+                        onSelect={handleViewSample}
+                      >
+                        New Sample PPT
+                      </DropdownMenu.Item>
+                    </DropdownMenu.Content>
+                  </DropdownMenu.Portal>
+                </DropdownMenu.Root>
               </div>
             </div>
           ) : viewMode === "gallery" ? (

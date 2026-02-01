@@ -1,9 +1,8 @@
-import { useRef, useEffect, useState } from "react";
+import { useRef, useEffect } from "react";
 import MonacoEditor from "@monaco-editor/react";
-import { Trash2, Check, FilePlus } from "lucide-react";
+import { Trash2 } from "lucide-react";
 import { Button } from "../ui/Button";
 import { useFullscreen } from "../hooks/useFullscreen";
-import { getSamplePresentationMarkdown } from "../utils/samplePresentation";
 
 interface FullscreenEditorProps {
   markdown: string;
@@ -28,20 +27,19 @@ export function FullscreenEditor({
 }: FullscreenEditorProps) {
   const containerRef = useRef<HTMLDivElement>(null);
   const hasRequestedFullscreen = useRef(false);
-  const { requestFullscreenOnly } = useFullscreen(containerRef, isEditorFullscreen, setIsEditorFullscreen);
-  const [isSampleInserted, setIsSampleInserted] = useState(false);
-
-  const handleInsertSamplePresentation = () => {
-    const sampleMarkdown = getSamplePresentationMarkdown();
-    setMarkdown(sampleMarkdown);
-    setCurrentSlide(0);
-    setIsSampleInserted(true);
-    setTimeout(() => setIsSampleInserted(false), 2000);
-  };
+  const { requestFullscreenOnly } = useFullscreen(
+    containerRef,
+    isEditorFullscreen,
+    setIsEditorFullscreen,
+  );
 
   // Request fullscreen when component mounts with isEditorFullscreen=true
   useEffect(() => {
-    if (isEditorFullscreen && containerRef.current && !hasRequestedFullscreen.current) {
+    if (
+      isEditorFullscreen &&
+      containerRef.current &&
+      !hasRequestedFullscreen.current
+    ) {
       hasRequestedFullscreen.current = true;
       requestFullscreenOnly();
     }
@@ -59,25 +57,21 @@ export function FullscreenEditor({
           className="px-3 py-1.5 sm:py-1 text-sm touch-manipulation"
           onClick={() => setIsEditorFullscreen(false)}
         >
-          Exit <span className="ml-1 text-xs opacity-70 hidden sm:inline">(ESC)</span>
+          Exit{" "}
+          <span className="ml-1 text-xs opacity-70 hidden sm:inline">
+            (ESC)
+          </span>
         </Button>
         <div className="flex gap-2 pb-3 sm:pb-4">
-          <Button
-            btnType="secondary"
-            className="px-3 py-1.5 sm:py-1 text-sm touch-manipulation flex items-center gap-1.5"
-            onClick={handleInsertSamplePresentation}
-          >
-            <FilePlus className="w-4 h-4" />
-            <span className="hidden sm:inline">Insert Sample Presentation</span>
-            <span className="sm:hidden">Insert Sample</span>
-            {isSampleInserted && <Check className="w-3.5 h-3.5 ml-1" />}
-          </Button>
           <Button
             btnType="secondary"
             className="px-3 py-1.5 sm:py-1 text-sm touch-manipulation"
             onClick={onCopy}
           >
-            Copy <span className="ml-1 text-xs opacity-70 hidden sm:inline">Current Content</span>
+            Copy{" "}
+            <span className="ml-1 text-xs opacity-70 hidden sm:inline">
+              Current Content
+            </span>
           </Button>
           <Button
             btnType="secondary"
@@ -107,7 +101,8 @@ export function FullscreenEditor({
             automaticLayout: true,
             scrollBeyondLastLine: false,
             padding: { top: 8, bottom: 8 },
-            fontFamily: "ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, 'Liberation Mono', monospace",
+            fontFamily:
+              "ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, 'Liberation Mono', monospace",
           }}
           className="h-full"
         />
@@ -115,4 +110,3 @@ export function FullscreenEditor({
     </div>
   );
 }
-

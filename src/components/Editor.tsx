@@ -1,16 +1,8 @@
 import { useState, useRef, useEffect } from "react";
 import MonacoEditor, { type OnMount } from "@monaco-editor/react";
 import * as DropdownMenu from "@radix-ui/react-dropdown-menu";
-import {
-  Copy,
-  Check,
-  Maximize,
-  MoreVertical,
-  Trash2,
-  FilePlus,
-} from "lucide-react";
+import { Copy, Check, Maximize, MoreVertical, Trash2 } from "lucide-react";
 import { Button } from "../ui/Button";
-import { getSamplePresentationMarkdown } from "../utils/samplePresentation";
 import { getSlideIndexFromCursor } from "../utils/slideMapping";
 
 interface EditorProps {
@@ -35,7 +27,6 @@ export function Editor({
   isExpanded,
 }: EditorProps) {
   const [isCopied, setIsCopied] = useState(false);
-  const [isSampleInserted, setIsSampleInserted] = useState(false);
 
   // Ref to hold the latest setCurrentSlide function to avoid stale closures in event listener
   const setCurrentSlideRef = useRef(setCurrentSlide);
@@ -68,14 +59,6 @@ export function Editor({
     onCopy();
     setIsCopied(true);
     setTimeout(() => setIsCopied(false), 2000);
-  };
-
-  const handleInsertSamplePresentation = () => {
-    const sampleMarkdown = getSamplePresentationMarkdown();
-    setMarkdown(sampleMarkdown);
-    setCurrentSlide(0);
-    setIsSampleInserted(true);
-    setTimeout(() => setIsSampleInserted(false), 2000);
   };
 
   return (
@@ -133,7 +116,7 @@ export function Editor({
                   onSelect={handleInsertSamplePresentation}
                 >
                   <FilePlus className="w-4 h-4" />
-                  <span>Insert Sample Presentation</span>
+                  <span>Replace with sample presentation</span>
                   {isSampleInserted && (
                     <Check className="w-3.5 h-3.5 ml-auto" />
                   )}
