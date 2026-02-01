@@ -10,7 +10,7 @@ export interface SlideConfig {
 
 /**
  * Parses slide delimiter attributes from a line like:
- * === align=top text=right size=sm
+ * --- align=top text=right size=sm
  * Returns parsed config or empty object if no valid attributes found
  */
 function parseSlideConfig(delimiterLine: string): SlideConfig {
@@ -118,7 +118,7 @@ function splitSlidesWithConfigs(
       continue;
     }
 
-    const isDelimiterLine = !inFence && /^\s*===(?:\s+.*)?\s*$/.test(line);
+    const isDelimiterLine = !inFence && /^\s*---(?:\s+.*)?\s*$/.test(line);
     if (isDelimiterLine) {
       flushSlide();
       currentConfig = parseSlideConfig(line.trim());

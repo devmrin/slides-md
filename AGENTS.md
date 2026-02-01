@@ -270,22 +270,22 @@ description: A brief summary
 
 ### Slide Separation
 
-**Delimiter:** `===` (three equals signs on a line)
+**Delimiter:** `---` (three hyphens on a line, standard markdown horizontal rule)
 
 **Example:**
 ```
 # Slide 1
 Content here
 
-===
+---
 
 # Slide 2
 More content
 ```
 
 **Edge Cases:**
-- Trailing empty slides after last `===` are filtered out
-- Intentional empty slides (between two `===`) are kept
+- Trailing empty slides after last `---` are filtered out
+- Intentional empty slides (between two `---`) are kept
 
 ### Custom Markdown Extensions
 

@@ -16,7 +16,7 @@ animate: fade-in
 
 > Rendering location is now an architectural choice
 
-===
+---
 
 # Core Motivation
 
@@ -25,11 +25,11 @@ animate: fade-in
 - Enable direct access to backend resources
 - Simplify data fetching logic
 
-=== animate=zoom-in
+--- animate=zoom-in
 
 ![rsc-architecture](https://images.ctfassets.net/e5382hct74si/6BZdqyxU26iA3AYmnnuMl8/a70c1b6f55c10aae42df9b16ae8200d5/With_React.png)
 
-===
+---
 
 # Server vs Client Components
 
@@ -38,7 +38,7 @@ animate: fade-in
 - Clear boundary enforced by architecture
 - Explicit opt-in for client-side behavior
 
-===
+---
 
 # Rendering Model
 
@@ -47,7 +47,7 @@ animate: fade-in
 - Client hydrates only interactive parts
 - Non-interactive UI remains static
 
-===
+---
 
 # Data Fetching Pattern
 
@@ -56,7 +56,7 @@ animate: fade-in
 - Leverages server-only credentials
 - Eliminates duplicated data logic
 
-=== align=top
+--- align=top
 
 # Server Component Example
 
@@ -75,7 +75,7 @@ export default async function UserProfile() {
 }
 ```
 
-===
+---
 
 # When to Use Client Components
 
@@ -84,7 +84,7 @@ export default async function UserProfile() {
 - Browser-only APIs
 - Animations and effects
 
-===
+---
 
 # Architectural Implications
 
@@ -93,7 +93,7 @@ export default async function UserProfile() {
 - Improve performance by default
 - Enforce clearer separation of concerns
 
-=== size=lg text=right
+--- size=lg text=right
 
 # Q&A
 

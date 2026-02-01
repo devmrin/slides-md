@@ -23,8 +23,10 @@ Start with:
   @@@
 
 3. Slide separation
-Separate slides with a line containing exactly:
-  ===
+Use three hyphens on a line by itself to separate slides:
+  ---
+This is standard markdown syntax (horizontal rule).
+Everything between delimiters becomes one slide.
 
 4. Code fences
 Use TRIPLE backticks for code blocks:
@@ -110,7 +112,7 @@ logo: https://example.com/logo.png
                   <br />
                   add optional frontmatter for metadata, separate slides with{" "}
                   <code className="px-1.5 py-0.5 bg-gray-100 dark:bg-gray-700 rounded text-xs font-mono">
-                    ===
+                    ---
                   </code>
                   , and you're done.
                 </p>
@@ -294,7 +296,7 @@ animate: fade-in
                 <p className="leading-relaxed">
                   use{" "}
                   <code className="px-1.5 py-0.5 bg-gray-100 dark:bg-gray-700 rounded text-xs font-mono">
-                    ===
+                    ---
                   </code>{" "}
                   delimiter in content to separate slides:
                 </p>
@@ -303,7 +305,7 @@ animate: fade-in
                   {`# First Slide
 Content here
 
-===
+---
 
 # Second Slide
 More content`}
@@ -321,7 +323,7 @@ More content`}
                 </p>
 
                 <div className="mt-3 p-4 bg-gray-900 dark:bg-gray-950 rounded-lg text-xs overflow-x-auto border border-gray-700 dark:border-gray-600 font-mono text-gray-100 dark:text-gray-200 whitespace-pre">
-                  {`=== align=top text=center size=lg animate=ease-in-out
+                  {`--- align=top text=center size=lg animate=ease-in-out
 
 # Custom Styled Slide
 This slide has custom layout and styling`}
