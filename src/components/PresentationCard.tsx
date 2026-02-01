@@ -14,6 +14,8 @@ interface PresentationCardProps {
   onDelete: (id: string) => void;
   onEdit: (id: string, newName: string) => void;
   onDuplicate: (id: string) => void;
+  /** When true, uses smaller thumbnail and padding for mobile/narrow layouts */
+  compact?: boolean;
 }
 
 export function PresentationCard({
@@ -21,6 +23,7 @@ export function PresentationCard({
   onDelete,
   onEdit,
   onDuplicate,
+  compact = false,
 }: PresentationCardProps) {
   const navigate = useNavigate();
   const { frontmatter, slides } = useSlides(presentation.markdown);
@@ -66,8 +69,20 @@ export function PresentationCard({
       onClick={handleClick}
     >
       {/* Thumbnail preview */}
-      <div className="w-full h-[150px] bg-gray-100 dark:bg-gray-900 flex items-center justify-center p-4 overflow-hidden">
-        <div className="standard-view-slide scale-[0.3] origin-center w-[333%] h-[333%] pointer-events-none">
+      <div
+        className={
+          compact
+            ? "w-full h-[90px] sm:h-[100px] bg-gray-100 dark:bg-gray-900 flex items-center justify-center p-2 overflow-hidden"
+            : "w-full h-[150px] bg-gray-100 dark:bg-gray-900 flex items-center justify-center p-4 overflow-hidden"
+        }
+      >
+        <div
+          className={
+            compact
+              ? "standard-view-slide scale-[0.2] sm:scale-[0.22] origin-center w-[500%] h-[500%] pointer-events-none"
+              : "standard-view-slide scale-[0.3] origin-center w-[333%] h-[333%] pointer-events-none"
+          }
+        >
           <Slide
             slide={firstSlide}
             isTitle={firstSlide === "__TITLE_SLIDE__"}
@@ -77,9 +92,15 @@ export function PresentationCard({
       </div>
 
       {/* Card content */}
-      <div className="p-3">
-        <div className="flex items-center justify-between gap-2">
-          <h3 className="font-semibold text-gray-900 dark:text-gray-100 truncate flex-1">
+      <div className={compact ? "p-2" : "p-3"}>
+        <div className="flex items-center justify-between gap-1.5 sm:gap-2">
+          <h3
+            className={
+              compact
+                ? "font-medium text-sm text-gray-900 dark:text-gray-100 truncate flex-1"
+                : "font-semibold text-gray-900 dark:text-gray-100 truncate flex-1"
+            }
+          >
             {presentation.name}
           </h3>
           <div className="flex items-center gap-1">

@@ -9,6 +9,7 @@ import {
 } from "@tanstack/react-table";
 import { Slide } from "./Slide";
 import { useSlides } from "../hooks/useSlides";
+import { useDeviceDetection } from "../hooks/useDeviceDetection";
 import { DeleteConfirmationDialog } from "./DeleteConfirmationDialog";
 import { EditPresentationNameDialog } from "./EditPresentationNameDialog";
 import { PresentationActionDropdown } from "./PresentationActionDropdown";
@@ -47,6 +48,7 @@ export function PresentationsTable({
   onDuplicate,
 }: PresentationsTableProps) {
   const navigate = useNavigate();
+  const { isMobile } = useDeviceDetection();
   const [deleteDialogOpen, setDeleteDialogOpen] = useState<string | null>(null);
   const [deleteTarget, setDeleteTarget] = useState<Presentation | null>(null);
   const [editDialogOpen, setEditDialogOpen] = useState<string | null>(null);
@@ -111,17 +113,23 @@ export function PresentationsTable({
 
   const columns = useMemo<ColumnDef<Presentation>[]>(
     () => [
-      {
-        id: "preview",
-        header: "Preview",
-        cell: ({ row }) => <PreviewCell presentation={row.original} />,
-      },
+      ...(!isMobile
+        ? [
+            {
+              id: "preview",
+              header: "Preview",
+              cell: ({ row }: { row: { original: Presentation } }) => (
+                <PreviewCell presentation={row.original} />
+              ),
+            },
+          ]
+        : []),
       {
         id: "name",
         header: "Name",
         accessorKey: "name",
         cell: ({ getValue }) => (
-          <div className="font-semibold text-gray-900 dark:text-gray-100">
+          <div className="font-semibold text-gray-900 dark:text-gray-100 truncate min-w-0">
             {getValue() as string}
           </div>
         ),
@@ -154,12 +162,12 @@ export function PresentationsTable({
       },
       {
         id: "actions",
-        header: "",
+        header: "Actions",
         cell: ({ row }) => {
           const presentation = row.original;
           return (
             <div
-              className="w-12 flex justify-end"
+              className="min-w-0 flex justify-end overflow-hidden"
               onClick={(e) => e.stopPropagation()}
             >
               <PresentationActionDropdown
@@ -179,7 +187,7 @@ export function PresentationsTable({
         maxSize: 48,
       },
     ],
-    [onDelete, onEdit, onDuplicate],
+    [isMobile, onDelete, onEdit, onDuplicate],
   );
 
   // eslint-disable-next-line react-hooks/incompatible-library
@@ -189,14 +197,20 @@ export function PresentationsTable({
     getCoreRowModel: getCoreRowModel(),
   });
 
+  const gridCols = isMobile
+    ? "180px 120px 120px 80px"
+    : "160px 200px 120px 120px 80px";
+
+  const tableMinWidth = isMobile ? "500px" : "680px";
+
   return (
     <>
       <div className="overflow-x-auto">
-        <div className="w-full">
+        <div style={{ minWidth: tableMinWidth }}>
           {/* Header */}
           <div
             className="grid border-b border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-800"
-            style={{ gridTemplateColumns: "160px 1fr 120px 120px 120px" }}
+            style={{ gridTemplateColumns: gridCols }}
           >
             {table.getHeaderGroups().map((headerGroup) =>
               headerGroup.headers.map((header) => (
@@ -219,11 +233,14 @@ export function PresentationsTable({
             <div
               key={row.id}
               className="grid border-b border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 hover:bg-gray-50 dark:hover:bg-gray-700/50 cursor-pointer transition-colors"
-              style={{ gridTemplateColumns: "160px 1fr 120px 120px 120px" }}
+              style={{ gridTemplateColumns: gridCols }}
               onClick={() => handleRowClick(row.original)}
             >
               {row.getVisibleCells().map((cell) => (
-                <div key={cell.id} className="px-4 py-3">
+                <div
+                  key={cell.id}
+                  className={`px-4 py-3 ${cell.column.id === "actions" || cell.column.id === "name" ? "min-w-0 overflow-hidden" : ""}`}
+                >
                   {flexRender(cell.column.columnDef.cell, cell.getContext())}
                 </div>
               ))}

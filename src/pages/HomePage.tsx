@@ -21,11 +21,13 @@ import { db } from "../db";
 import { generateUUID } from "../utils/uuid";
 import { MAX_PRESENTATIONS } from "../config/constants";
 import { useLocalStorage } from "../hooks/useLocalStorage";
+import { useDeviceDetection } from "../hooks/useDeviceDetection";
 import type { Presentation } from "../db/adapter";
 import seedMarkdown from "../data/seed.md?raw";
 
 export function HomePage() {
   const navigate = useNavigate();
+  const { isMobile } = useDeviceDetection();
   const [presentations, setPresentations] = useState<Presentation[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [createDialogOpen, setCreateDialogOpen] = useState(false);
@@ -236,8 +238,8 @@ export function HomePage() {
       <div className="flex-1 flex flex-col overflow-hidden">
         {/* Top bar with controls */}
         {presentations.length > 0 && (
-          <div className="px-6 py-4 border-b border-gray-300 dark:border-gray-700 bg-gray-100 dark:bg-gray-800 flex items-center justify-between">
-            <div className="flex items-center gap-4">
+          <div className="px-4 sm:px-6 py-3 sm:py-4 border-b border-gray-300 dark:border-gray-700 bg-gray-100 dark:bg-gray-800 flex flex-row items-center justify-between gap-3 flex-wrap">
+            <div className="flex flex-wrap items-center gap-2 sm:gap-4 min-w-0">
               <DropdownMenu.Root
                 open={newPresentationDropdownOpen}
                 onOpenChange={setNewPresentationDropdownOpen}
@@ -245,14 +247,12 @@ export function HomePage() {
                 <DropdownMenu.Trigger asChild>
                   <Button
                     disabled={presentations.length >= MAX_PRESENTATIONS}
-                    className="px-3 py-1 text-xs sm:text-sm border rounded border-gray-400 dark:border-gray-600 text-gray-900 dark:text-gray-100 bg-white dark:bg-gray-900 hover:bg-gray-50 dark:hover:bg-gray-800 disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2"
+                    className="shrink-0 px-2.5 sm:px-3 py-1.5 text-xs sm:text-sm border rounded border-gray-400 dark:border-gray-600 text-gray-900 dark:text-gray-100 bg-white dark:bg-gray-900 hover:bg-gray-50 dark:hover:bg-gray-800 disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-1.5 sm:gap-2"
                   >
-                    <Plus className="w-4 h-4" />
-                    <span className="hidden sm:inline">
-                      New Presentation (^N)
-                    </span>
-                    <span className="sm:hidden">New Presentation</span>
-                    <ChevronDown className="w-3 h-3" />
+                    <Plus className="w-4 h-4 shrink-0" />
+                    <span className="hidden sm:inline">New Presentation (^N)</span>
+                    <span className="sm:hidden">New</span>
+                    <ChevronDown className="w-3 h-3 shrink-0" />
                   </Button>
                 </DropdownMenu.Trigger>
                 <DropdownMenu.Portal>
@@ -279,29 +279,37 @@ export function HomePage() {
               </DropdownMenu.Root>
               <Button
                 onClick={() => setMediaLibraryOpen(true)}
-                className="px-3 py-1 text-xs sm:text-sm border rounded border-gray-400 dark:border-gray-600 text-gray-900 dark:text-gray-100 bg-white dark:bg-gray-900 hover:bg-gray-50 dark:hover:bg-gray-800 flex items-center gap-2"
+                className="shrink-0 px-2.5 sm:px-3 py-1.5 text-xs sm:text-sm border rounded border-gray-400 dark:border-gray-600 text-gray-900 dark:text-gray-100 bg-white dark:bg-gray-900 hover:bg-gray-50 dark:hover:bg-gray-800 flex items-center gap-1.5 sm:gap-2"
               >
-                <ImagePlus className="w-4 h-4" />
+                <ImagePlus className="w-4 h-4 shrink-0" />
                 <span className="hidden sm:inline">Media Library (^M)</span>
-                <span className="sm:hidden">Media (^M)</span>
+                <span className="sm:hidden">Media</span>
               </Button>
               {presentations.length >= MAX_PRESENTATIONS && (
-                <span className="text-sm text-gray-500 dark:text-gray-400">
-                  Maximum of {MAX_PRESENTATIONS} presentations reached
+                <span className="text-xs sm:text-sm text-gray-500 dark:text-gray-400">
+                  Max {MAX_PRESENTATIONS} presentations
                 </span>
               )}
             </div>
 
-            {/* View mode toggle */}
-            <div className="flex items-center gap-2">
-              <Grid3x3 className="w-4 h-4 text-gray-600 dark:text-gray-400" />
+            {/* View mode toggle — more spacing so icons don't smash */}
+            <div className="flex items-center gap-3 sm:gap-4 shrink-0">
+              <span className="sr-only">View:</span>
+              <Grid3x3
+                className="w-4 h-4 text-gray-600 dark:text-gray-400 shrink-0"
+                aria-hidden
+              />
               <Switch
                 checked={viewMode === "list"}
                 onCheckedChange={(checked) =>
                   setViewMode(checked ? "list" : "gallery")
                 }
+                aria-label="Gallery or list view"
               />
-              <List className="w-4 h-4 text-gray-600 dark:text-gray-400" />
+              <List
+                className="w-4 h-4 text-gray-600 dark:text-gray-400 shrink-0"
+                aria-hidden
+              />
             </div>
           </div>
         )}
@@ -353,7 +361,13 @@ export function HomePage() {
               </div>
             </div>
           ) : viewMode === "gallery" ? (
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
+            <div
+              className={
+                isMobile
+                  ? "grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3 sm:gap-4"
+                  : "grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4"
+              }
+            >
               {presentations.map((pres) => (
                 <PresentationCard
                   key={pres.id}
@@ -361,6 +375,7 @@ export function HomePage() {
                   onDelete={handleDelete}
                   onEdit={handleEdit}
                   onDuplicate={handleDuplicate}
+                  compact={isMobile}
                 />
               ))}
             </div>

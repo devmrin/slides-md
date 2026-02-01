@@ -117,7 +117,7 @@ This slide has custom layout and styling`;
     <Dialog.Root>
       <Dialog.Trigger asChild>
         <button
-          className="text-xs ml-2 opacity-70 underline cursor-pointer hover:opacity-100 transition-opacity text-gray-900 dark:text-gray-100"
+          className="text-xs ml-0 sm:ml-2 mt-1 sm:mt-0 basis-full sm:basis-auto opacity-70 underline cursor-pointer hover:opacity-100 transition-opacity text-gray-900 dark:text-gray-100 text-left"
           type="button"
         >
           how do I present a markdown?
