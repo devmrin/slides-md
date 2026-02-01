@@ -7,9 +7,14 @@ import {
 } from "@tanstack/react-router";
 import { HomePage } from "./pages/HomePage";
 import { PresentationPage } from "./pages/PresentationPage";
+import { ToastProvider } from "./components/Toast";
 
 const rootRoute = createRootRoute({
-  component: () => <Outlet />,
+  component: () => (
+    <ToastProvider>
+      <Outlet />
+    </ToastProvider>
+  ),
 });
 
 const indexRoute = createRoute({
@@ -45,4 +50,3 @@ declare module "@tanstack/react-router" {
     router: typeof router;
   }
 }
-

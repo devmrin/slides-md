@@ -4,6 +4,8 @@ import { format } from "date-fns";
 import { DeleteConfirmationDialog } from "./DeleteConfirmationDialog";
 import { EditPresentationNameDialog } from "./EditPresentationNameDialog";
 import { PresentationActionDropdown } from "./PresentationActionDropdown";
+import { ToastRoot } from "./Toast";
+import { exportMarkdown } from "../utils/exportMarkdown";
 import type { Presentation } from "../db/adapter";
 
 interface PresentationListItemProps {
@@ -22,6 +24,7 @@ export function PresentationListItem({
   const navigate = useNavigate();
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
   const [editDialogOpen, setEditDialogOpen] = useState(false);
+  const [toastOpen, setToastOpen] = useState(false);
 
   const handleClick = () => {
     // Prevent navigation if a dialog is open
@@ -48,6 +51,12 @@ export function PresentationListItem({
     onDelete(presentation.id);
   };
 
+  const handleExport = () => {
+    exportMarkdown(presentation.markdown, presentation.name, () => {
+      setToastOpen(true);
+    });
+  };
+
   const formattedDate = format(new Date(presentation.updatedAt), "MMM d, yyyy");
 
   return (
@@ -68,6 +77,7 @@ export function PresentationListItem({
         onDelete={onDelete}
         onEdit={onEdit}
         onDuplicate={onDuplicate}
+        onExport={handleExport}
         onEditClick={handleEdit}
         onDeleteClick={handleDelete}
       />
@@ -83,6 +93,12 @@ export function PresentationListItem({
         onOpenChange={setDeleteDialogOpen}
         onConfirm={handleConfirmDelete}
         presentationName={presentation.name}
+      />
+      <ToastRoot
+        open={toastOpen}
+        onOpenChange={setToastOpen}
+        title="Markdown exported successfully"
+        description={`${presentation.name} has been downloaded`}
       />
     </div>
   );

@@ -12,6 +12,7 @@ import { useSlides } from "../hooks/useSlides";
 import { DeleteConfirmationDialog } from "./DeleteConfirmationDialog";
 import { EditPresentationNameDialog } from "./EditPresentationNameDialog";
 import { PresentationActionDropdown } from "./PresentationActionDropdown";
+import { ToastRoot } from "./Toast";
 import { exportMarkdown } from "../utils/exportMarkdown";
 import type { Presentation } from "../db/adapter";
 
@@ -50,6 +51,8 @@ export function PresentationsTable({
   const [deleteTarget, setDeleteTarget] = useState<Presentation | null>(null);
   const [editDialogOpen, setEditDialogOpen] = useState<string | null>(null);
   const [editTarget, setEditTarget] = useState<Presentation | null>(null);
+  const [toastOpen, setToastOpen] = useState(false);
+  const [exportedName, setExportedName] = useState("");
 
   const handleRowClick = (presentation: Presentation) => {
     // Prevent navigation if a dialog is open
@@ -100,7 +103,10 @@ export function PresentationsTable({
   };
 
   const handleExport = (presentation: Presentation) => {
-    exportMarkdown(presentation.markdown, presentation.name);
+    exportMarkdown(presentation.markdown, presentation.name, () => {
+      setExportedName(presentation.name);
+      setToastOpen(true);
+    });
   };
 
   const columns = useMemo<ColumnDef<Presentation>[]>(
@@ -173,7 +179,7 @@ export function PresentationsTable({
         maxSize: 48,
       },
     ],
-    [onDelete, onEdit, onDuplicate]
+    [onDelete, onEdit, onDuplicate],
   );
 
   // eslint-disable-next-line react-hooks/incompatible-library
@@ -202,10 +208,10 @@ export function PresentationsTable({
                     ? null
                     : flexRender(
                         header.column.columnDef.header,
-                        header.getContext()
+                        header.getContext(),
                       )}
                 </div>
-              ))
+              )),
             )}
           </div>
           {/* Rows */}
@@ -243,6 +249,13 @@ export function PresentationsTable({
           onSave={handleConfirmEdit}
         />
       )}
+
+      <ToastRoot
+        open={toastOpen}
+        onOpenChange={setToastOpen}
+        title="Markdown exported successfully"
+        description={`${exportedName} has been downloaded`}
+      />
     </>
   );
 }

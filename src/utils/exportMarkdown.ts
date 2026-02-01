@@ -2,8 +2,13 @@
  * Downloads markdown content as a file
  * @param markdown The markdown content to download
  * @param presentationName The name of the presentation
+ * @param onSuccess Optional callback to invoke after successful export
  */
-export function exportMarkdown(markdown: string, presentationName: string) {
+export function exportMarkdown(
+  markdown: string,
+  presentationName: string,
+  onSuccess?: () => void
+) {
   // Create UTC timestamp
   const timestamp = new Date().toISOString().replace(/[:.]/g, "-");
   
@@ -23,4 +28,9 @@ export function exportMarkdown(markdown: string, presentationName: string) {
   link.click();
   document.body.removeChild(link);
   URL.revokeObjectURL(url);
+  
+  // Invoke success callback if provided
+  if (onSuccess) {
+    onSuccess();
+  }
 }

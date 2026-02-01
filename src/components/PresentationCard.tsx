@@ -5,6 +5,7 @@ import { useSlides } from "../hooks/useSlides";
 import { DeleteConfirmationDialog } from "./DeleteConfirmationDialog";
 import { EditPresentationNameDialog } from "./EditPresentationNameDialog";
 import { PresentationActionDropdown } from "./PresentationActionDropdown";
+import { ToastRoot } from "./Toast";
 import { exportMarkdown } from "../utils/exportMarkdown";
 import type { Presentation } from "../db/adapter";
 
@@ -26,6 +27,7 @@ export function PresentationCard({
   const firstSlide = slides[0] || "";
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
   const [editDialogOpen, setEditDialogOpen] = useState(false);
+  const [toastOpen, setToastOpen] = useState(false);
 
   const handleClick = () => {
     // Prevent navigation if a dialog is open
@@ -53,7 +55,9 @@ export function PresentationCard({
   };
 
   const handleExport = () => {
-    exportMarkdown(presentation.markdown, presentation.name);
+    exportMarkdown(presentation.markdown, presentation.name, () => {
+      setToastOpen(true);
+    });
   };
 
   return (
@@ -103,6 +107,12 @@ export function PresentationCard({
         onOpenChange={setDeleteDialogOpen}
         onConfirm={handleConfirmDelete}
         presentationName={presentation.name}
+      />
+      <ToastRoot
+        open={toastOpen}
+        onOpenChange={setToastOpen}
+        title="Markdown exported successfully"
+        description={`${presentation.name} has been downloaded`}
       />
     </div>
   );
