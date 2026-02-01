@@ -35,6 +35,9 @@ export function MediaLibraryModal({
   const [isCopied, setIsCopied] = useState(false);
   const [showToast, setShowToast] = useState(false);
   const [toastMessage, setToastMessage] = useState("");
+  const [toastVariant, setToastVariant] = useState<"success" | "error">(
+    "success",
+  );
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   // Load media items
@@ -106,7 +109,10 @@ export function MediaLibraryModal({
       // Validate file
       const validationError = validateFile(file);
       if (validationError) {
-        setError(validationError);
+        console.error("Validation failed:", validationError);
+        setToastMessage(validationError);
+        setToastVariant("error");
+        setShowToast(true);
         continue;
       }
 
@@ -126,7 +132,9 @@ export function MediaLibraryModal({
         await db.saveMedia(newMedia);
       } catch (err) {
         console.error("Failed to upload image:", err);
-        setError(`Failed to upload ${file.name}`);
+        setToastMessage(`Failed to upload ${file.name}`);
+        setToastVariant("error");
+        setShowToast(true);
       }
     }
 
@@ -292,6 +300,7 @@ export function MediaLibraryModal({
                           onEditAlt={handleEditAlt}
                           onCopySuccess={(message) => {
                             setToastMessage(message);
+                            setToastVariant("success");
                             setShowToast(true);
                             onOpenChange(false);
                           }}
@@ -385,6 +394,7 @@ export function MediaLibraryModal({
         open={showToast}
         onOpenChange={setShowToast}
         title={toastMessage}
+        variant={toastVariant}
       />
     </>
   );
