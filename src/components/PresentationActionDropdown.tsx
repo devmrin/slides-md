@@ -1,5 +1,5 @@
 import * as DropdownMenu from "@radix-ui/react-dropdown-menu";
-import { Copy, Trash2, MoreVertical, Pencil } from "lucide-react";
+import { Copy, Trash2, MoreVertical, Pencil, Download } from "lucide-react";
 import type { Presentation } from "../db/adapter";
 
 interface PresentationActionDropdownProps {
@@ -7,6 +7,7 @@ interface PresentationActionDropdownProps {
   onDelete: (id: string) => void;
   onEdit: (id: string, newName: string) => void;
   onDuplicate: (id: string) => void;
+  onExport: (id: string) => void;
   onEditClick: () => void;
   onDeleteClick: () => void;
 }
@@ -14,11 +15,16 @@ interface PresentationActionDropdownProps {
 export function PresentationActionDropdown({
   presentation,
   onDuplicate,
+  onExport,
   onEditClick,
   onDeleteClick,
 }: PresentationActionDropdownProps) {
   const handleDuplicate = () => {
     onDuplicate(presentation.id);
+  };
+
+  const handleExport = () => {
+    onExport(presentation.id);
   };
 
   return (
@@ -54,6 +60,14 @@ export function PresentationActionDropdown({
           >
             <Copy className="w-4 h-4" />
             Duplicate
+          </DropdownMenu.Item>
+
+          <DropdownMenu.Item
+            className="flex items-center gap-2 px-3 py-2 text-sm text-gray-700 dark:text-gray-300 rounded-md hover:bg-gray-100 dark:hover:bg-gray-700 cursor-pointer outline-none"
+            onSelect={handleExport}
+          >
+            <Download className="w-4 h-4" />
+            Export Markdown
           </DropdownMenu.Item>
 
           <DropdownMenu.Separator className="h-px bg-gray-200 dark:bg-gray-700 my-1" />

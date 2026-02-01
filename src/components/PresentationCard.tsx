@@ -5,6 +5,7 @@ import { useSlides } from "../hooks/useSlides";
 import { DeleteConfirmationDialog } from "./DeleteConfirmationDialog";
 import { EditPresentationNameDialog } from "./EditPresentationNameDialog";
 import { PresentationActionDropdown } from "./PresentationActionDropdown";
+import { exportMarkdown } from "../utils/exportMarkdown";
 import type { Presentation } from "../db/adapter";
 
 interface PresentationCardProps {
@@ -51,6 +52,10 @@ export function PresentationCard({
     onDelete(presentation.id);
   };
 
+  const handleExport = () => {
+    exportMarkdown(presentation.markdown, presentation.name);
+  };
+
   return (
     <div
       className="bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-700 rounded-lg overflow-hidden cursor-pointer hover:shadow-lg transition-shadow"
@@ -79,6 +84,7 @@ export function PresentationCard({
               onDelete={onDelete}
               onEdit={onEdit}
               onDuplicate={onDuplicate}
+              onExport={handleExport}
               onEditClick={handleEdit}
               onDeleteClick={handleDelete}
             />

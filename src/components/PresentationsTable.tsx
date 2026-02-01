@@ -12,6 +12,7 @@ import { useSlides } from "../hooks/useSlides";
 import { DeleteConfirmationDialog } from "./DeleteConfirmationDialog";
 import { EditPresentationNameDialog } from "./EditPresentationNameDialog";
 import { PresentationActionDropdown } from "./PresentationActionDropdown";
+import { exportMarkdown } from "../utils/exportMarkdown";
 import type { Presentation } from "../db/adapter";
 
 interface PresentationsTableProps {
@@ -98,6 +99,10 @@ export function PresentationsTable({
     }
   };
 
+  const handleExport = (presentation: Presentation) => {
+    exportMarkdown(presentation.markdown, presentation.name);
+  };
+
   const columns = useMemo<ColumnDef<Presentation>[]>(
     () => [
       {
@@ -156,6 +161,7 @@ export function PresentationsTable({
                 onDelete={onDelete}
                 onEdit={onEdit}
                 onDuplicate={onDuplicate}
+                onExport={() => handleExport(presentation)}
                 onEditClick={() => handleEditClick(presentation)}
                 onDeleteClick={() => handleDeleteClick(presentation)}
               />
