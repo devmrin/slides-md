@@ -2,6 +2,7 @@ import { useRef, useEffect, useState } from "react";
 import { Slide } from "./Slide";
 import { Director } from "./Director";
 import { Button } from "../ui/Button";
+import { LaserPointerOverlay } from "./LaserPointerOverlay";
 import { useFullscreen } from "../hooks/useFullscreen";
 import { type SlideConfig } from "../hooks/useSlides";
 import { db } from "../db";
@@ -21,6 +22,9 @@ interface PresentationViewProps {
   onFocusInputReady?: (focusFn: () => void) => void;
   controlsHidden: boolean;
   toggleControls: () => void;
+  laserPointerActive: boolean;
+  onToggleLaserPointer: () => void;
+  isDesktop: boolean;
 }
 
 export function PresentationView({
@@ -38,6 +42,9 @@ export function PresentationView({
   onFocusInputReady,
   controlsHidden,
   toggleControls,
+  laserPointerActive,
+  onToggleLaserPointer,
+  isDesktop,
 }: PresentationViewProps) {
   const containerRef = useRef<HTMLDivElement>(null);
   const hasRequestedFullscreen = useRef(false);
@@ -133,15 +140,32 @@ export function PresentationView({
       {/* Top-right buttons (fixed) */}
       <div className="fixed top-3 right-4 sm:top-4 sm:right-6 z-20 flex gap-2">
         {!controlsHidden && (
-          <Button
-            className="px-3 py-1.5 sm:py-1 text-sm border rounded border-gray-400 dark:border-gray-600 text-gray-900 dark:text-gray-100 bg-gray-50 dark:bg-gray-900 hover:bg-gray-100 dark:hover:bg-gray-800 touch-manipulation"
-            onClick={() => setIsDark((d) => !d)}
-          >
-            Theme{" "}
-            <span className="ml-1 text-xs opacity-70 hidden sm:inline">
-              (T)
-            </span>
-          </Button>
+          <>
+            <Button
+              className="px-3 py-1.5 sm:py-1 text-sm border rounded border-gray-400 dark:border-gray-600 text-gray-900 dark:text-gray-100 bg-gray-50 dark:bg-gray-900 hover:bg-gray-100 dark:hover:bg-gray-800 touch-manipulation"
+              onClick={() => setIsDark((d) => !d)}
+            >
+              Theme{" "}
+              <span className="ml-1 text-xs opacity-70 hidden sm:inline">
+                (T)
+              </span>
+            </Button>
+            {isDesktop && (
+              <Button
+                className={`px-3 py-1.5 sm:py-1 text-sm border rounded touch-manipulation ${
+                  laserPointerActive
+                    ? "border-red-500 dark:border-red-400 text-red-600 dark:text-red-400 bg-red-50 dark:bg-red-900/20"
+                    : "border-gray-400 dark:border-gray-600 text-gray-900 dark:text-gray-100 bg-gray-50 dark:bg-gray-900 hover:bg-gray-100 dark:hover:bg-gray-800"
+                }`}
+                onClick={onToggleLaserPointer}
+              >
+                Laser{" "}
+                <span className="ml-1 text-xs opacity-70 hidden sm:inline">
+                  (L)
+                </span>
+              </Button>
+            )}
+          </>
         )}
         <Button
           className="px-3 py-1.5 sm:py-1 text-sm border rounded border-gray-400 dark:border-gray-600 text-gray-900 dark:text-gray-100 bg-gray-50 dark:bg-gray-900 hover:bg-gray-100 dark:hover:bg-gray-800 touch-manipulation"
@@ -151,6 +175,11 @@ export function PresentationView({
           <span className="ml-1 text-xs opacity-70 hidden sm:inline">(C)</span>
         </Button>
       </div>
+
+      {/* Laser pointer overlay (desktop only, when active) */}
+      {isDesktop && (
+        <LaserPointerOverlay active={laserPointerActive} />
+      )}
 
       {/* Top bar for exit - only shown when controls visible */}
       {!controlsHidden && (

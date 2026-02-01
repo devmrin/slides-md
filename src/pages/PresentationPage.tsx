@@ -10,6 +10,7 @@ import { useParams, useNavigate } from "@tanstack/react-router";
 import { useSlides } from "../hooks/useSlides";
 import { useKeyboardNavigation } from "../hooks/useKeyboardNavigation";
 import { useLocalStorage } from "../hooks/useLocalStorage";
+import { useDeviceDetection } from "../hooks/useDeviceDetection";
 import { PresentationView } from "../components/PresentationView";
 import { FullscreenEditor } from "../components/FullscreenEditor";
 import { StandardView } from "../components/StandardView";
@@ -35,6 +36,9 @@ export function PresentationPage() {
     (() => void) | undefined
   >(undefined);
   const [controlsHidden, setControlsHidden] = useState<boolean>(false);
+  const [laserPointerActive, setLaserPointerActive] = useState<boolean>(false);
+
+  const { isDesktop } = useDeviceDetection();
 
   // Ensure isDark is always boolean (not undefined)
   const isDarkValue = isDark ?? false;
@@ -157,6 +161,10 @@ export function PresentationPage() {
     setControlsHidden((prev) => !prev);
   }, []);
 
+  const toggleLaserPointer = useCallback(() => {
+    setLaserPointerActive((prev) => !prev);
+  }, []);
+
   useKeyboardNavigation({
     nextSlide,
     prevSlide,
@@ -168,7 +176,14 @@ export function PresentationPage() {
     setCurrentSlide,
     focusSlideInput,
     toggleControls,
+    toggleLaserPointer,
+    isDesktop,
   });
+
+  // Turn off laser when exiting presentation (Exit button or Esc)
+  useEffect(() => {
+    if (!isFullscreen) setLaserPointerActive(false);
+  }, [isFullscreen]);
 
   // Keyboard shortcuts: Command/Control+M for Media Library, Command/Control+H for Home
   useEffect(() => {
@@ -283,6 +298,9 @@ export function PresentationPage() {
         onFocusInputReady={handleFocusInputReady}
         controlsHidden={controlsHidden}
         toggleControls={toggleControls}
+        laserPointerActive={laserPointerActive}
+        onToggleLaserPointer={toggleLaserPointer}
+        isDesktop={isDesktop}
       />
     );
   }

@@ -11,6 +11,10 @@ interface UseKeyboardNavigationProps {
   setCurrentSlide: (slide: number) => void;
   focusSlideInput?: () => void;
   toggleControls?: () => void;
+  /** Toggle laser pointer (desktop only). L key in fullscreen. */
+  toggleLaserPointer?: () => void;
+  /** When false, L key is not bound (e.g. on mobile). */
+  isDesktop?: boolean;
 }
 
 export function useKeyboardNavigation({
@@ -24,6 +28,8 @@ export function useKeyboardNavigation({
   setCurrentSlide,
   focusSlideInput,
   toggleControls,
+  toggleLaserPointer,
+  isDesktop,
 }: UseKeyboardNavigationProps) {
   useEffect(() => {
     const handler = (e: KeyboardEvent) => {
@@ -71,9 +77,19 @@ export function useKeyboardNavigation({
           focusSlideInput();
         }
       }
+      // L to toggle laser pointer in fullscreen (desktop only)
+      if (
+        isFullscreen &&
+        (e.key === "l" || e.key === "L") &&
+        isDesktop &&
+        toggleLaserPointer
+      ) {
+        e.preventDefault();
+        toggleLaserPointer();
+      }
     };
     window.addEventListener("keydown", handler);
     return () => window.removeEventListener("keydown", handler);
-  }, [nextSlide, prevSlide, isFullscreen, setIsFullscreen, isEditorFullscreen, setIsEditorFullscreen, setIsDark, setCurrentSlide, focusSlideInput, toggleControls]);
+  }, [nextSlide, prevSlide, isFullscreen, setIsFullscreen, isEditorFullscreen, setIsEditorFullscreen, setIsDark, setCurrentSlide, focusSlideInput, toggleControls, toggleLaserPointer, isDesktop]);
 }
 
