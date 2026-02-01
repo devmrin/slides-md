@@ -53,28 +53,23 @@ export function getSlideIndexFromCursor(markdown: string, cursorLine: number): n
     const rawSlides: RawSlide[] = [];
     let currentRawSlideStart = hasFrontmatter ? fmEndLine + 1 : 0;
     
+    let inFence = false;
+    let fenceChar: string | null = null;
+    let fenceLen = 0;
+
+    const isDelimiterLine = (line: string, inFenceState: boolean) => {
+        return !inFenceState && (/^\s*---(?:\s+.*)?\s*$/.test(line) || /^\s*===(?:\s+.*)?\s*$/.test(line));
+    };
+
     // Helper to finish a slide
     const finishSlide = (endLine: number) => {
-      // If start > end, it's an empty range (e.g. consecutive delimiters? or delimiter at starts)
-      // If consecutive delimiters:
-      // Line N: ===
-      // Line N+1: ===
-      // Slide at N ends at N-1 (empty). Next slide starts at N+1.
-      // Wait, if Line N is delimiter, it starts new slide.
-      // If Line N+1 is delimiter, it starts another new slide.
-      // The slide starting at N ranges from N to N (just the delimiter line).
-      // Has content? No.
-      
       let hasContent = false;
-      // We check content in range [currentRawSlideStart, endLine]
-      // Important: The delimiter line itself (at currentRawSlideStart) should NOT count as content.
-      
       for (let i = currentRawSlideStart; i <= endLine; i++) {
           const line = lines[i];
           if (!line) continue;
           
           // Identify if this specific line is a delimiter
-          if (line.trim().startsWith("===")) {
+          if (isDelimiterLine(line, false)) {
               // This is a delimiter. It is structural, not content.
               continue; 
           }
@@ -94,34 +89,33 @@ export function getSlideIndexFromCursor(markdown: string, cursorLine: number): n
     };
   
     for (let i = (hasFrontmatter ? fmEndLine + 1 : 0); i < totalLines; i++) {
-      const line = lines[i];
-      // Check for delimiter
-      if (line.trim().startsWith("===")) {
-          // This line starts a new slide.
-          // The PREVIOUS slide ends at i - 1.
-          // Note: If i=0, we finishing "slide -1"? No.
-          if (i > (hasFrontmatter ? fmEndLine + 1 : 0)) {
-               finishSlide(i - 1);
-          } else {
-             // If delimiter is the very first line of content (e.g. line 0 or fmEnd+1)
-             // Then the "previous" slide (Raw Slide 0) was empty/non-existent?
-             // Actually, `useSlides` split logic: `content.split`.
-             // If content starts with `===`, empty string is first part?
-             // `content.split(/(===.*)/)` -> `["", "===...", "rest"]`
-             // Loop:
-             // 1. part="" -> ignored? `if (part.startsWith) ... else if (part)`.
-             // `part` is empty string (falsy) -> skipped.
-             // 2. part="===" -> Start new slide.
-             // So essentially, if content starts with delimiter, the "first" slide is the one configured by that delimiter.
-             // My logic: `currentRawSlideStart` init to `start`.
-             // If `i == start`, we hit delimiter immediately.
-             // We DO NOT call finishSlide.
-             // We just update `currentRawSlideStart = i`.
-             // So `rawSlides` is empty. The first slide pushed will be the one starting at this delimiter.
-             // This matches `useSlides` skipping the initial empty part.
-          }
-          currentRawSlideStart = i; 
-      }
+        const line = lines[i];
+
+        // Track code fences
+        const fenceMatch = line.match(/^\s*(```+|~~~+)(.*)$/);
+        if (fenceMatch) {
+            const fence = fenceMatch[1];
+            const char = fence[0];
+            if (!inFence) {
+                inFence = true;
+                fenceChar = char;
+                fenceLen = fence.length;
+            } else if (fenceChar === char && fence.length >= fenceLen) {
+                inFence = false;
+                fenceChar = null;
+                fenceLen = 0;
+            }
+        }
+
+        // Check for delimiter
+        if (isDelimiterLine(line, inFence)) {
+            // This line starts a new slide.
+            // The PREVIOUS slide ends at i - 1.
+            if (i > (hasFrontmatter ? fmEndLine + 1 : 0)) {
+                 finishSlide(i - 1);
+            }
+            currentRawSlideStart = i; 
+        }
     }
     // Finish last slide
     finishSlide(totalLines - 1);
