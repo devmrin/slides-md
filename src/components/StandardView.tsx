@@ -179,7 +179,7 @@ export function StandardView({
         {showPreview && (
           <div
             key={`preview-${viewMode}`}
-            className="flex flex-col bg-white dark:bg-gray-900 relative"
+            className="flex flex-col min-w-0 overflow-hidden bg-white dark:bg-gray-900 relative"
             style={{
               flexBasis: isMobile ? "100%" : getPreviewFlexBasis(),
               flexShrink: 0,
@@ -225,7 +225,7 @@ export function StandardView({
               </div>
             </div>
             <div
-              className={`standard-view-slide flex-1 overflow-auto flex text-gray-900 dark:text-gray-100 ${
+              className={`standard-view-slide flex-1 min-h-0 min-w-0 overflow-auto flex text-gray-900 dark:text-gray-100 ${
                 slides[currentSlide] === "__TITLE_SLIDE__"
                   ? "items-center justify-center p-4 sm:p-8 px-4 sm:px-8"
                   : imageOnlySlides.has(currentSlide)
@@ -245,14 +245,29 @@ export function StandardView({
                       })()
               }`}
             >
-              <Slide
-                key={currentSlide}
-                slide={slides[currentSlide]}
-                isTitle={slides[currentSlide] === "__TITLE_SLIDE__"}
-                isImageOnly={imageOnlySlides.has(currentSlide)}
-                frontmatter={frontmatter}
-                config={slideConfigs[currentSlide]}
-              />
+              <div
+                className={`min-w-0 flex-1 flex ${
+                  slides[currentSlide] === "__TITLE_SLIDE__"
+                    ? "items-center justify-center"
+                    : imageOnlySlides.has(currentSlide)
+                      ? "items-center justify-center"
+                      : (() => {
+                          const config = slideConfigs[currentSlide] || {};
+                          const align = config.align || "center";
+                          if (align === "bottom") return "justify-center items-end";
+                          return "justify-center items-start";
+                        })()
+                }`}
+              >
+                <Slide
+                  key={currentSlide}
+                  slide={slides[currentSlide]}
+                  isTitle={slides[currentSlide] === "__TITLE_SLIDE__"}
+                  isImageOnly={imageOnlySlides.has(currentSlide)}
+                  frontmatter={frontmatter}
+                  config={slideConfigs[currentSlide]}
+                />
+              </div>
             </div>
             <Director
               currentSlide={currentSlide}

@@ -41,7 +41,35 @@ export function PresentationView({
 }: PresentationViewProps) {
   const containerRef = useRef<HTMLDivElement>(null);
   const hasRequestedFullscreen = useRef(false);
+  const touchStartRef = useRef<{ x: number; y: number } | null>(null);
   const [resolvedLogoUrl, setResolvedLogoUrl] = useState<string | null>(null);
+
+  const SWIPE_THRESHOLD = 50;
+
+  const handleTouchStart = (e: React.TouchEvent) => {
+    if (e.changedTouches.length === 0) return;
+    touchStartRef.current = {
+      x: e.changedTouches[0].clientX,
+      y: e.changedTouches[0].clientY,
+    };
+  };
+
+  const handleTouchEnd = (e: React.TouchEvent) => {
+    if (e.changedTouches.length === 0 || !touchStartRef.current) return;
+    const start = touchStartRef.current;
+    touchStartRef.current = null;
+    const endX = e.changedTouches[0].clientX;
+    const endY = e.changedTouches[0].clientY;
+    const deltaX = endX - start.x;
+    const deltaY = endY - start.y;
+    if (Math.abs(deltaX) < SWIPE_THRESHOLD) return;
+    if (Math.abs(deltaY) > Math.abs(deltaX)) return; // vertical scroll, don't change slide
+    if (deltaX < 0) {
+      nextSlide();
+    } else {
+      prevSlide();
+    }
+  };
   const { requestFullscreenOnly } = useFullscreen(
     containerRef,
     isFullscreen,
@@ -99,6 +127,8 @@ export function PresentationView({
     <div
       ref={containerRef}
       className="fixed inset-0 flex flex-col bg-white dark:bg-gray-900 text-gray-900 dark:text-gray-100"
+      onTouchStart={handleTouchStart}
+      onTouchEnd={handleTouchEnd}
     >
       {/* Top-right buttons (fixed) */}
       <div className="fixed top-3 right-4 sm:top-4 sm:right-6 z-20 flex gap-2">
