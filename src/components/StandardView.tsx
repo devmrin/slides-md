@@ -169,14 +169,32 @@ export function StandardView({
   ) : null;
 
   useEffect(() => {
+    const strip = thumbnailStripRef.current;
     const target = thumbnailRefs.current[currentSlide];
-    if (!target) return;
-    target.scrollIntoView({
-      behavior: "smooth",
-      block: "nearest",
-      inline: "center",
-    });
-  }, [currentSlide, slides.length]);
+    if (!strip || !target) return;
+
+    const stripRect = strip.getBoundingClientRect();
+    const targetRect = target.getBoundingClientRect();
+    if (stripRect.width === 0 || targetRect.width === 0) return;
+
+    const isOutLeft = targetRect.left < stripRect.left;
+    const isOutRight = targetRect.right > stripRect.right;
+
+    if (isOutLeft || isOutRight) {
+      const targetCenter =
+        targetRect.left -
+        stripRect.left +
+        strip.scrollLeft +
+        targetRect.width / 2;
+      const nextScrollLeft = Math.max(0, targetCenter - stripRect.width / 2);
+      strip.scrollTo({ left: nextScrollLeft, behavior: "smooth" });
+    }
+
+    const activeElement = document.activeElement;
+    if (activeElement && strip.contains(activeElement)) {
+      target.focus({ preventScroll: true });
+    }
+  }, [currentSlide, slides.length, showPreview]);
 
   return (
     <div className="h-screen flex flex-col bg-gray-50 dark:bg-gray-900 text-gray-900 dark:text-gray-100 relative">
@@ -293,7 +311,7 @@ export function StandardView({
                           }}
                           onClick={() => setCurrentSlide(index)}
                           aria-current={isActive}
-                          className={`relative flex-none w-[160px] h-[90px] rounded-none overflow-hidden border transition-shadow focus:outline-none focus-visible:ring-2 focus-visible:ring-gray-400 dark:focus-visible:ring-gray-500 ${
+                          className={`relative flex-none w-[160px] h-[90px] rounded-none overflow-hidden border transition-shadow focus:outline-none ${
                             isActive
                               ? "border-gray-500 dark:border-gray-400 shadow-sm"
                               : "border-gray-200 dark:border-gray-800 hover:border-gray-300 dark:hover:border-gray-700"
@@ -305,7 +323,7 @@ export function StandardView({
                               isTitle={isThumbTitle}
                               isImageOnly={isThumbImageOnly}
                               align={slideConfigs[index]?.align}
-                              frameClassName="bg-white dark:bg-gray-900"
+                              frameClassName="bg-white dark:bg-gray-900 preview-frame"
                               overlay={logoOverlay}
                             >
                               <Slide
