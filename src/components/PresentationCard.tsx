@@ -1,11 +1,14 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate } from "@tanstack/react-router";
+import { ChevronLeft, ChevronRight } from "lucide-react";
 import { Slide } from "./Slide";
 import { useSlides } from "../hooks/useSlides";
 import { DeleteConfirmationDialog } from "./DeleteConfirmationDialog";
 import { EditPresentationNameDialog } from "./EditPresentationNameDialog";
 import { PresentationActionDropdown } from "./PresentationActionDropdown";
 import { ToastRoot } from "./Toast";
+import { SlideFrame } from "./SlideFrame";
+import { db } from "../db";
 import { exportMarkdown } from "../utils/exportMarkdown";
 import type { Presentation } from "../db/adapter";
 
@@ -26,11 +29,82 @@ export function PresentationCard({
   compact = false,
 }: PresentationCardProps) {
   const navigate = useNavigate();
-  const { frontmatter, slides } = useSlides(presentation.markdown);
-  const firstSlide = slides[0] || "";
+  const { frontmatter, slides, slideConfigs, imageOnlySlides } = useSlides(
+    presentation.markdown,
+  );
+  const [currentSlide, setCurrentSlide] = useState(0);
+  const slideCount = slides.length;
+  const activeSlide = slides[currentSlide] || "";
+  const isTitleSlide = activeSlide === "__TITLE_SLIDE__";
+  const isImageOnly = imageOnlySlides.has(currentSlide);
+  const activeConfig = slideConfigs[currentSlide];
+  const [resolvedLogoUrl, setResolvedLogoUrl] = useState<string | null>(null);
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
   const [editDialogOpen, setEditDialogOpen] = useState(false);
   const [toastOpen, setToastOpen] = useState(false);
+
+  useEffect(() => {
+    if (slideCount === 0) {
+      setCurrentSlide(0);
+      return;
+    }
+    if (currentSlide > slideCount - 1) {
+      setCurrentSlide(slideCount - 1);
+    }
+  }, [currentSlide, slideCount]);
+
+  useEffect(() => {
+    const resolveLogo = async () => {
+      const logo = frontmatter?.logo;
+      if (!logo) {
+        setResolvedLogoUrl(null);
+        return;
+      }
+
+      const mediaMatch = logo.match(/^media:\/\/([a-f0-9-]+)$/);
+      if (mediaMatch) {
+        const mediaId = mediaMatch[1];
+        try {
+          const mediaItem = await db.getMedia(mediaId);
+          if (mediaItem) {
+            setResolvedLogoUrl(mediaItem.dataUrl);
+            return;
+          }
+        } catch (error) {
+          console.error(`Failed to resolve logo media://${mediaId}:`, error);
+        }
+        setResolvedLogoUrl(null);
+      } else {
+        setResolvedLogoUrl(logo);
+      }
+    };
+
+    resolveLogo();
+  }, [frontmatter?.logo]);
+
+  const logoOverlay = resolvedLogoUrl ? (
+    <img
+      src={resolvedLogoUrl}
+      alt="Logo"
+      className={`presentation-logo preview-logo absolute bottom-16 z-10 shadow-none ${
+        frontmatter?.logoPosition === "right" ? "right-16" : "left-16"
+      } ${
+        frontmatter?.logoSize === "sm"
+          ? "h-8"
+          : frontmatter?.logoSize === "lg"
+            ? "h-12"
+            : "h-10"
+      } w-auto`}
+      style={{
+        opacity: frontmatter?.logoOpacity
+          ? parseFloat(frontmatter.logoOpacity)
+          : 0.9,
+      }}
+      onError={(event) => {
+        (event.target as HTMLImageElement).style.display = "none";
+      }}
+    />
+  ) : null;
 
   const handleClick = () => {
     // Prevent navigation if a dialog is open
@@ -72,22 +146,55 @@ export function PresentationCard({
       <div
         className={
           compact
-            ? "w-full h-[90px] sm:h-[100px] bg-gray-100 dark:bg-gray-900 flex items-center justify-center p-2 overflow-hidden"
-            : "w-full h-[150px] bg-gray-100 dark:bg-gray-900 flex items-center justify-center p-4 overflow-hidden"
+            ? "w-full aspect-video bg-gray-100 dark:bg-gray-900 flex items-center justify-center overflow-hidden"
+            : "w-full aspect-video bg-gray-100 dark:bg-gray-900 flex items-center justify-center overflow-hidden"
         }
       >
-        <div
-          className={
-            compact
-              ? "standard-view-slide scale-[0.2] sm:scale-[0.22] origin-center w-[500%] h-[500%] pointer-events-none"
-              : "standard-view-slide scale-[0.3] origin-center w-[333%] h-[333%] pointer-events-none"
-          }
-        >
-          <Slide
-            slide={firstSlide}
-            isTitle={firstSlide === "__TITLE_SLIDE__"}
-            frontmatter={frontmatter}
-          />
+        <div className="w-full h-full relative">
+          <SlideFrame
+            variant="standard"
+            isTitle={isTitleSlide}
+            isImageOnly={isImageOnly}
+            align={activeConfig?.align}
+            frameClassName="preview-frame w-full h-full"
+            overlay={logoOverlay}
+          >
+            <Slide
+              slide={activeSlide}
+              isTitle={isTitleSlide}
+              isImageOnly={isImageOnly}
+              frontmatter={frontmatter}
+              config={activeConfig}
+            />
+          </SlideFrame>
+          {slideCount > 1 && (
+            <>
+              <button
+                type="button"
+                className="absolute left-0 top-1/2 -translate-y-1/2 h-8 w-8 bg-white/90 dark:bg-gray-800/90 text-gray-700 dark:text-gray-200 shadow-sm border border-gray-200/70 dark:border-gray-700/70 flex items-center justify-center transition hover:bg-white dark:hover:bg-gray-800 disabled:opacity-40 disabled:cursor-default"
+                onClick={(event) => {
+                  event.stopPropagation();
+                  setCurrentSlide((prev) => Math.max(0, prev - 1));
+                }}
+                aria-label="Previous slide"
+                disabled={currentSlide === 0}
+              >
+                <ChevronLeft className="h-3 w-3" />
+              </button>
+              <button
+                type="button"
+                className="absolute right-0 top-1/2 -translate-y-1/2 h-8 w-8 bg-white/90 dark:bg-gray-800/90 text-gray-700 dark:text-gray-200 shadow-sm border border-gray-200/70 dark:border-gray-700/70 flex items-center justify-center transition hover:bg-white dark:hover:bg-gray-800 disabled:opacity-40 disabled:cursor-default"
+                onClick={(event) => {
+                  event.stopPropagation();
+                  setCurrentSlide((prev) => Math.min(slideCount - 1, prev + 1));
+                }}
+                aria-label="Next slide"
+                disabled={currentSlide === slideCount - 1}
+              >
+                <ChevronRight className="h-3 w-3" />
+              </button>
+            </>
+          )}
         </div>
       </div>
 

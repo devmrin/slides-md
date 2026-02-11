@@ -106,6 +106,15 @@
   box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08);
 }
 
+.slide-frame-inner.preview-frame {
+  border: 0;
+  box-shadow: none;
+}
+
+.preview-logo {
+  pointer-events: none;
+}
+
 .dark .slide-frame-inner {
   border-color: rgba(255, 255, 255, 0.12);
   box-shadow: 0 10px 25px rgba(0, 0, 0, 0.35);

@@ -1,4 +1,4 @@
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useNavigate } from "@tanstack/react-router";
 import { format } from "date-fns";
 import {
@@ -7,13 +7,16 @@ import {
   type ColumnDef,
   flexRender,
 } from "@tanstack/react-table";
+import { ChevronLeft, ChevronRight } from "lucide-react";
 import { Slide } from "./Slide";
+import { SlideFrame } from "./SlideFrame";
 import { useSlides } from "../hooks/useSlides";
 import { useDeviceDetection } from "../hooks/useDeviceDetection";
 import { DeleteConfirmationDialog } from "./DeleteConfirmationDialog";
 import { EditPresentationNameDialog } from "./EditPresentationNameDialog";
 import { PresentationActionDropdown } from "./PresentationActionDropdown";
 import { ToastRoot } from "./Toast";
+import { db } from "../db";
 import { exportMarkdown } from "../utils/exportMarkdown";
 import type { Presentation } from "../db/adapter";
 
@@ -25,17 +28,127 @@ interface PresentationsTableProps {
 }
 
 function PreviewCell({ presentation }: { presentation: Presentation }) {
-  const { frontmatter, slides } = useSlides(presentation.markdown);
-  const firstSlide = slides[0] || "";
+  const { frontmatter, slides, slideConfigs, imageOnlySlides } = useSlides(
+    presentation.markdown,
+  );
+  const [currentSlide, setCurrentSlide] = useState(0);
+  const slideCount = slides.length;
+  const activeSlide = slides[currentSlide] || "";
+  const isTitleSlide = activeSlide === "__TITLE_SLIDE__";
+  const isImageOnly = imageOnlySlides.has(currentSlide);
+  const activeConfig = slideConfigs[currentSlide];
+  const [resolvedLogoUrl, setResolvedLogoUrl] = useState<string | null>(null);
+
+  useEffect(() => {
+    if (slideCount === 0) {
+      setCurrentSlide(0);
+      return;
+    }
+    if (currentSlide > slideCount - 1) {
+      setCurrentSlide(slideCount - 1);
+    }
+  }, [currentSlide, slideCount]);
+
+  useEffect(() => {
+    const resolveLogo = async () => {
+      const logo = frontmatter?.logo;
+      if (!logo) {
+        setResolvedLogoUrl(null);
+        return;
+      }
+
+      const mediaMatch = logo.match(/^media:\/\/([a-f0-9-]+)$/);
+      if (mediaMatch) {
+        const mediaId = mediaMatch[1];
+        try {
+          const mediaItem = await db.getMedia(mediaId);
+          if (mediaItem) {
+            setResolvedLogoUrl(mediaItem.dataUrl);
+            return;
+          }
+        } catch (error) {
+          console.error(`Failed to resolve logo media://${mediaId}:`, error);
+        }
+        setResolvedLogoUrl(null);
+      } else {
+        setResolvedLogoUrl(logo);
+      }
+    };
+
+    resolveLogo();
+  }, [frontmatter?.logo]);
+
+  const logoOverlay = resolvedLogoUrl ? (
+    <img
+      src={resolvedLogoUrl}
+      alt="Logo"
+      className={`presentation-logo preview-logo absolute bottom-16 z-10 shadow-none ${
+        frontmatter?.logoPosition === "right" ? "right-16" : "left-16"
+      } ${
+        frontmatter?.logoSize === "sm"
+          ? "h-8"
+          : frontmatter?.logoSize === "lg"
+            ? "h-12"
+            : "h-10"
+      } w-auto`}
+      style={{
+        opacity: frontmatter?.logoOpacity
+          ? parseFloat(frontmatter.logoOpacity)
+          : 0.9,
+      }}
+      onError={(event) => {
+        (event.target as HTMLImageElement).style.display = "none";
+      }}
+    />
+  ) : null;
 
   return (
-    <div className="w-32 h-20 bg-gray-100 dark:bg-gray-900 flex items-center justify-center overflow-hidden rounded">
-      <div className="standard-view-slide scale-[0.15] origin-center w-[667%] h-[667%] pointer-events-none">
-        <Slide
-          slide={firstSlide}
-          isTitle={firstSlide === "__TITLE_SLIDE__"}
-          frontmatter={frontmatter}
-        />
+    <div className="w-32 aspect-video bg-gray-100 dark:bg-gray-900 flex items-center justify-center overflow-hidden rounded">
+      <div className="w-full h-full relative">
+        <SlideFrame
+          variant="standard"
+          isTitle={isTitleSlide}
+          isImageOnly={isImageOnly}
+          align={activeConfig?.align}
+          frameClassName="preview-frame w-full h-full"
+          overlay={logoOverlay}
+        >
+          <Slide
+            slide={activeSlide}
+            isTitle={isTitleSlide}
+            isImageOnly={isImageOnly}
+            frontmatter={frontmatter}
+            config={activeConfig}
+          />
+        </SlideFrame>
+        {slideCount > 1 && (
+          <>
+            <button
+              type="button"
+              className="absolute left-0 top-1/2 -translate-y-1/2 h-6 w-6 bg-white/90 dark:bg-gray-800/90 text-gray-700 dark:text-gray-200 shadow-sm border border-gray-200/70 dark:border-gray-700/70 flex items-center justify-center disabled:opacity-40 disabled:cursor-default"
+              onClick={(event) => {
+                event.stopPropagation();
+                setCurrentSlide((prev) => Math.max(0, prev - 1));
+              }}
+              aria-label="Previous slide"
+              disabled={currentSlide === 0}
+            >
+              <ChevronLeft className="h-3 w-3" />
+            </button>
+            <button
+              type="button"
+              className="absolute right-0 top-1/2 -translate-y-1/2 h-6 w-6 bg-white/90 dark:bg-gray-800/90 text-gray-700 dark:text-gray-200 shadow-sm border border-gray-200/70 dark:border-gray-700/70 flex items-center justify-center disabled:opacity-40 disabled:cursor-default"
+              onClick={(event) => {
+                event.stopPropagation();
+                setCurrentSlide((prev) => Math.min(slideCount - 1, prev + 1));
+              }}
+              aria-label="Next slide"
+              disabled={currentSlide === slideCount - 1}
+            >
+              <ChevronRight className="h-3 w-3" />
+            </button>
+          </>
+        )}
       </div>
     </div>
   );
@@ -208,7 +321,9 @@ export function PresentationsTable({
       <div className={isMobile ? "overflow-x-auto w-full" : "w-full"}>
         <div
           className="w-full min-w-0"
-          style={tableMinWidth != null ? { minWidth: tableMinWidth } : undefined}
+          style={
+            tableMinWidth != null ? { minWidth: tableMinWidth } : undefined
+          }
         >
           {/* Header */}
           <div
