@@ -82,6 +82,59 @@
   animation: easeInOut 0.8s cubic-bezier(0.45, 0.05, 0.55, 0.95);
 }
 
+/* Shared slide frame (16:9) */
+.slide-frame {
+  width: 100%;
+  height: 100%;
+  min-width: 0;
+  min-height: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+
+.slide-frame-inner {
+  position: relative;
+  width: 100%;
+  max-width: 100%;
+  max-height: 100%;
+  aspect-ratio: 16 / 9;
+  margin: auto;
+  overflow: hidden;
+  border: 1px solid rgba(0, 0, 0, 0.12);
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08);
+}
+
+.dark .slide-frame-inner {
+  border-color: rgba(255, 255, 255, 0.12);
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.35);
+}
+
+.slide-canvas {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 1280px;
+  height: 720px;
+  transform-origin: top left;
+}
+
+.slide-content {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  min-height: 0;
+}
+
+.slide-canvas-overlay {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+
 /* Neutral dark mode colors - override Tailwind's slightly bluish grays with pure neutral tones */
 .dark {
   /* Override Tailwind's gray scale with neutral (non-bluish) colors */
@@ -321,13 +374,9 @@
   margin: 1.5rem 0;
   border: 1px solid var(--color-gray-200, #e5e7eb);
   border-radius: 0.5rem;
-  max-width: 800px;
+  max-width: 100%;
   overflow-x: auto;
   display: block;
-}
-
-.presentation-view-slide table {
-  max-width: 896px;
 }
 
 .dark .standard-view-slide table,
@@ -393,6 +442,8 @@
   margin: 1.5rem 0;
   border: 1px solid var(--color-gray-200, #e5e7eb);
   background-color: var(--color-gray-50, #f9fafb);
+  width: 100%;
+  max-width: 100%;
 }
 .dark .standard-view-slide pre,
 .dark .presentation-view-slide pre {
@@ -400,18 +451,6 @@
   background-color: var(--color-gray-800, #1f2937);
 }
 
-/* Fixed width code blocks in slideshow views */
-.standard-view-slide pre {
-  width: 800px;
-  max-width: 100%;
-  overflow-x: auto;
-}
-
-.presentation-view-slide pre {
-  width: 896px;
-  max-width: 100%;
-  overflow-x: auto;
-}
 
 /* Scoped to presentation views only */
 .standard-view-slide code,

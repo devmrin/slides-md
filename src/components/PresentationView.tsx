@@ -5,6 +5,7 @@ import { Button } from "../ui/Button";
 import { LaserPointerOverlay } from "./LaserPointerOverlay";
 import { useFullscreen } from "../hooks/useFullscreen";
 import { type SlideConfig } from "../hooks/useSlides";
+import { SlideFrame } from "./SlideFrame";
 import { db } from "../db";
 import { getImageUrlsFromMarkdown } from "../utils/getImageUrlsFromMarkdown";
 
@@ -81,7 +82,7 @@ export function PresentationView({
   const { requestFullscreenOnly } = useFullscreen(
     containerRef,
     isFullscreen,
-    setIsFullscreen
+    setIsFullscreen,
   );
 
   // Request fullscreen when component mounts with isFullscreen=true
@@ -198,9 +199,7 @@ export function PresentationView({
       </div>
 
       {/* Laser pointer overlay (desktop only, when active) */}
-      {isDesktop && (
-        <LaserPointerOverlay active={laserPointerActive} />
-      )}
+      {isDesktop && <LaserPointerOverlay active={laserPointerActive} />}
 
       {/* Top bar for exit - only shown when controls visible */}
       {!controlsHidden && (
@@ -216,9 +215,38 @@ export function PresentationView({
           </Button>
         </div>
       )}
-      {isImageOnly ? (
-        <div
-          className={`presentation-view-slide flex-1 overflow-hidden flex items-center justify-center p-0`}
+      <div className="flex-1 overflow-hidden">
+        <SlideFrame
+          variant="presentation"
+          isTitle={isTitle}
+          isImageOnly={isImageOnly}
+          align={slideConfigs[currentSlide]?.align}
+          frameClassName="bg-white dark:bg-gray-900"
+          overlay={
+            resolvedLogoUrl ? (
+              <img
+                src={resolvedLogoUrl}
+                alt="Logo"
+                className={`presentation-logo absolute bottom-16 z-10 shadow-none ${
+                  frontmatter?.logoPosition === "right" ? "right-16" : "left-16"
+                } ${
+                  frontmatter?.logoSize === "sm"
+                    ? "h-8"
+                    : frontmatter?.logoSize === "lg"
+                      ? "h-12"
+                      : "h-10"
+                } w-auto`}
+                style={{
+                  opacity: frontmatter?.logoOpacity
+                    ? parseFloat(frontmatter.logoOpacity)
+                    : 0.9,
+                }}
+                onError={(e) => {
+                  (e.target as HTMLImageElement).style.display = "none";
+                }}
+              />
+            ) : null
+          }
         >
           <Slide
             key={currentSlide}
@@ -228,39 +256,8 @@ export function PresentationView({
             frontmatter={frontmatter}
             config={slideConfigs[currentSlide]}
           />
-        </div>
-      ) : (
-        <div className="flex-1 overflow-auto">
-          <div
-            className={`presentation-view-slide flex ${
-              isTitle
-                ? "min-h-full items-center justify-center p-4 sm:p-12 px-4 sm:px-12"
-                : (() => {
-                    const config = slideConfigs[currentSlide] || {};
-                    const align = config.align || "center";
-                    let classes = "justify-center px-4 sm:px-12 ";
-                    if (align === "top") {
-                      classes += "pt-8 pb-12";
-                    } else if (align === "center") {
-                      classes += "pt-[25vh] pb-12";
-                    } else if (align === "bottom") {
-                      classes += "pb-12 items-end";
-                    }
-                    return classes;
-                  })()
-            }`}
-          >
-            <Slide
-              key={currentSlide}
-              slide={slides[currentSlide]}
-              isTitle={isTitle}
-              isImageOnly={isImageOnly}
-              frontmatter={frontmatter}
-              config={slideConfigs[currentSlide]}
-            />
-          </div>
-        </div>
-      )}
+        </SlideFrame>
+      </div>
       {!controlsHidden && (
         <Director
           currentSlide={currentSlide}
@@ -273,30 +270,6 @@ export function PresentationView({
           onExitFullscreen={() => setIsFullscreen(false)}
           onToggleTheme={() => setIsDark((d) => !d)}
           onFocusInputReady={onFocusInputReady}
-        />
-      )}
-      {/* Logo positioned relative to SlideNav container */}
-      {resolvedLogoUrl && (
-        <img
-          src={resolvedLogoUrl}
-          alt="Logo"
-          className={`presentation-logo absolute z-10 shadow-none ${
-            controlsHidden ? "bottom-4" : "bottom-[94px]"
-          } ${frontmatter?.logoPosition === "right" ? "right-4" : "left-4"} ${
-            frontmatter?.logoSize === "sm"
-              ? "h-8"
-              : frontmatter?.logoSize === "lg"
-              ? "h-12"
-              : "h-10"
-          } w-auto`}
-          style={{
-            opacity: frontmatter?.logoOpacity
-              ? parseFloat(frontmatter.logoOpacity)
-              : 0.9,
-          }}
-          onError={(e) => {
-            (e.target as HTMLImageElement).style.display = "none";
-          }}
         />
       )}
     </div>

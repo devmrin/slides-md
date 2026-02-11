@@ -9,6 +9,7 @@ import { useLocalStorage, type ViewMode } from "../hooks/useLocalStorage";
 import { useDeviceDetection } from "../hooks/useDeviceDetection";
 import { useHideMonacoContextView } from "../hooks/useHideMonacoContextView";
 import { type SlideConfig } from "../hooks/useSlides";
+import { SlideFrame } from "./SlideFrame";
 import { db } from "../db";
 import * as DropdownMenu from "@radix-ui/react-dropdown-menu";
 import { MoreVertical, RotateCcw, Presentation } from "lucide-react";
@@ -139,6 +140,9 @@ export function StandardView({
     resolveLogo();
   }, [frontmatter?.logo]);
 
+  const isTitle = slides[currentSlide] === "__TITLE_SLIDE__";
+  const isImageOnly = imageOnlySlides.has(currentSlide);
+
   return (
     <div className="h-screen flex flex-col bg-gray-50 dark:bg-gray-900 text-gray-900 dark:text-gray-100 relative">
       <AppHeader isDark={isDark} setIsDark={setIsDark} />
@@ -227,48 +231,50 @@ export function StandardView({
                 </DropdownMenu.Root>
               </div>
             </div>
-            <div
-              className={`standard-view-slide flex-1 min-h-0 min-w-0 overflow-auto flex text-gray-900 dark:text-gray-100 ${slides[currentSlide] === "__TITLE_SLIDE__"
-                ? "items-center justify-center p-4 sm:p-8 px-4 sm:px-8"
-                : imageOnlySlides.has(currentSlide)
-                  ? "items-center justify-center p-0"
-                  : (() => {
-                    const config = slideConfigs[currentSlide] || {};
-                    const align = config.align || "center";
-                    let classes = "justify-center px-4 sm:px-8 ";
-                    if (align === "top") {
-                      classes += "pt-8 pb-8";
-                    } else if (align === "center") {
-                      classes += "pt-[25vh] pb-8";
-                    } else if (align === "bottom") {
-                      classes += "pb-8 items-end";
-                    }
-                    return classes;
-                  })()
-                }`}
-            >
-              <div
-                className={`min-w-0 flex-1 flex ${slides[currentSlide] === "__TITLE_SLIDE__"
-                  ? "items-center justify-center"
-                  : imageOnlySlides.has(currentSlide)
-                    ? "items-center justify-center"
-                    : (() => {
-                      const config = slideConfigs[currentSlide] || {};
-                      const align = config.align || "center";
-                      if (align === "bottom") return "justify-center items-end";
-                      return "justify-center items-start";
-                    })()
-                  }`}
+            <div className="flex-1 min-h-0 min-w-0 overflow-hidden bg-white dark:bg-gray-900">
+              <SlideFrame
+                variant="standard"
+                isTitle={isTitle}
+                isImageOnly={isImageOnly}
+                align={slideConfigs[currentSlide]?.align}
+                frameClassName="bg-white dark:bg-gray-900"
+                overlay={
+                  resolvedLogoUrl ? (
+                    <img
+                      src={resolvedLogoUrl}
+                      alt="Logo"
+                      className={`presentation-logo absolute bottom-16 z-10 shadow-none ${
+                        frontmatter?.logoPosition === "right"
+                          ? "right-16"
+                          : "left-16"
+                      } ${
+                        frontmatter?.logoSize === "sm"
+                          ? "h-8"
+                          : frontmatter?.logoSize === "lg"
+                            ? "h-12"
+                            : "h-10"
+                      } w-auto`}
+                      style={{
+                        opacity: frontmatter?.logoOpacity
+                          ? parseFloat(frontmatter.logoOpacity)
+                          : 0.9,
+                      }}
+                      onError={(e) => {
+                        (e.target as HTMLImageElement).style.display = "none";
+                      }}
+                    />
+                  ) : null
+                }
               >
                 <Slide
                   key={currentSlide}
                   slide={slides[currentSlide]}
-                  isTitle={slides[currentSlide] === "__TITLE_SLIDE__"}
-                  isImageOnly={imageOnlySlides.has(currentSlide)}
+                  isTitle={isTitle}
+                  isImageOnly={isImageOnly}
                   frontmatter={frontmatter}
                   config={slideConfigs[currentSlide]}
                 />
-              </div>
+              </SlideFrame>
             </div>
             <Director
               currentSlide={currentSlide}
@@ -279,28 +285,6 @@ export function StandardView({
               frontmatter={frontmatter}
               onToggleTheme={() => setIsDark(!isDark)}
             />
-            {/* Logo positioned relative to SlideNav container */}
-            {resolvedLogoUrl && (
-              <img
-                src={resolvedLogoUrl}
-                alt="Logo"
-                className={`presentation-logo absolute bottom-[94px] z-10 shadow-none ${frontmatter?.logoPosition === "right" ? "right-4" : "left-4"
-                  } ${frontmatter?.logoSize === "sm"
-                    ? "h-8"
-                    : frontmatter?.logoSize === "lg"
-                      ? "h-12"
-                      : "h-10"
-                  } w-auto`}
-                style={{
-                  opacity: frontmatter?.logoOpacity
-                    ? parseFloat(frontmatter.logoOpacity)
-                    : 0.9,
-                }}
-                onError={(e) => {
-                  (e.target as HTMLImageElement).style.display = "none";
-                }}
-              />
-            )}
           </div>
         )}
       </div>
