@@ -279,42 +279,46 @@ export function StandardView({
                     const isThumbImageOnly = imageOnlySlides.has(index);
 
                     return (
-                      <button
+                      <div
                         key={`thumb-${index}`}
-                        type="button"
-                        ref={(element) => {
-                          thumbnailRefs.current[index] = element;
-                        }}
-                        onClick={() => setCurrentSlide(index)}
-                        aria-current={isActive}
-                        className={`relative flex-none w-[160px] h-[90px] rounded-none overflow-hidden border transition-shadow focus:outline-none focus-visible:ring-2 focus-visible:ring-gray-400 dark:focus-visible:ring-gray-500 ${
-                          isActive
-                            ? "border-gray-500 dark:border-gray-400 shadow-sm"
-                            : "border-gray-200 dark:border-gray-800 hover:border-gray-300 dark:hover:border-gray-700"
-                        }`}
+                        className="flex items-start gap-2 flex-none"
                       >
-                        <div className="w-full h-full">
-                          <SlideFrame
-                            variant="standard"
-                            isTitle={isThumbTitle}
-                            isImageOnly={isThumbImageOnly}
-                            align={slideConfigs[index]?.align}
-                            frameClassName="bg-white dark:bg-gray-900"
-                            overlay={logoOverlay}
-                          >
-                            <Slide
-                              slide={slide}
-                              isTitle={isThumbTitle}
-                              isImageOnly={isThumbImageOnly}
-                              frontmatter={frontmatter}
-                              config={slideConfigs[index]}
-                            />
-                          </SlideFrame>
-                        </div>
-                        <div className="absolute top-1 left-1 text-[11px] font-medium px-1.5 py-0.5 rounded bg-white/80 text-gray-800 dark:bg-gray-900/80 dark:text-gray-100">
+                        <div className="pt-1 text-xs font-semibold text-gray-500 dark:text-gray-400 w-5 text-right">
                           {index + 1}
                         </div>
-                      </button>
+                        <button
+                          type="button"
+                          ref={(element) => {
+                            thumbnailRefs.current[index] = element;
+                          }}
+                          onClick={() => setCurrentSlide(index)}
+                          aria-current={isActive}
+                          className={`relative flex-none w-[160px] h-[90px] rounded-none overflow-hidden border transition-shadow focus:outline-none focus-visible:ring-2 focus-visible:ring-gray-400 dark:focus-visible:ring-gray-500 ${
+                            isActive
+                              ? "border-gray-500 dark:border-gray-400 shadow-sm"
+                              : "border-gray-200 dark:border-gray-800 hover:border-gray-300 dark:hover:border-gray-700"
+                          }`}
+                        >
+                          <div className="w-full h-full">
+                            <SlideFrame
+                              variant="standard"
+                              isTitle={isThumbTitle}
+                              isImageOnly={isThumbImageOnly}
+                              align={slideConfigs[index]?.align}
+                              frameClassName="bg-white dark:bg-gray-900"
+                              overlay={logoOverlay}
+                            >
+                              <Slide
+                                slide={slide}
+                                isTitle={isThumbTitle}
+                                isImageOnly={isThumbImageOnly}
+                                frontmatter={frontmatter}
+                                config={slideConfigs[index]}
+                              />
+                            </SlideFrame>
+                          </div>
+                        </button>
+                      </div>
                     );
                   })}
                   <div className="flex-none w-3" aria-hidden="true" />
