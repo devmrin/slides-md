@@ -42,12 +42,22 @@ export function useKeyboardNavigation({
           activeElement.hasAttribute("contenteditable") ||
           activeElement.closest(".cm-editor") !== null);
 
-      if (isEditing && (e.key === "ArrowRight" || e.key === "ArrowLeft")) {
+      if (
+        isEditing &&
+        (e.key === "ArrowRight" ||
+          e.key === "ArrowLeft" ||
+          e.key === "p" ||
+          e.key === "P" ||
+          e.key === "n" ||
+          e.key === "N")
+      ) {
         return; // Let the editor handle these keys
       }
 
       if (e.key === "ArrowRight") nextSlide();
       if (e.key === "ArrowLeft") prevSlide();
+      if (e.key === "n" || e.key === "N") nextSlide();
+      if (e.key === "p" || e.key === "P") prevSlide();
       // Command+Enter to start presentation (fullscreen)
       if ((e.metaKey || e.ctrlKey) && e.key === "Enter") {
         setIsFullscreen(true);
