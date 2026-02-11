@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Editor } from "./Editor";
 import { Slide } from "./Slide";
 import { Director } from "./Director";
@@ -67,6 +67,8 @@ export function StandardView({
     "editor",
   );
   const [resolvedLogoUrl, setResolvedLogoUrl] = useState<string | null>(null);
+  const thumbnailStripRef = useRef<HTMLDivElement>(null);
+  const thumbnailRefs = useRef<Array<HTMLButtonElement | null>>([]);
 
   // On mobile: one pane at a time (editor or presentation). On desktop: use viewMode.
   const showEditor = isMobile
@@ -142,6 +144,39 @@ export function StandardView({
 
   const isTitle = slides[currentSlide] === "__TITLE_SLIDE__";
   const isImageOnly = imageOnlySlides.has(currentSlide);
+  const logoOverlay = resolvedLogoUrl ? (
+    <img
+      src={resolvedLogoUrl}
+      alt="Logo"
+      className={`presentation-logo absolute bottom-16 z-10 shadow-none ${
+        frontmatter?.logoPosition === "right" ? "right-16" : "left-16"
+      } ${
+        frontmatter?.logoSize === "sm"
+          ? "h-8"
+          : frontmatter?.logoSize === "lg"
+            ? "h-12"
+            : "h-10"
+      } w-auto`}
+      style={{
+        opacity: frontmatter?.logoOpacity
+          ? parseFloat(frontmatter.logoOpacity)
+          : 0.9,
+      }}
+      onError={(e) => {
+        (e.target as HTMLImageElement).style.display = "none";
+      }}
+    />
+  ) : null;
+
+  useEffect(() => {
+    const target = thumbnailRefs.current[currentSlide];
+    if (!target) return;
+    target.scrollIntoView({
+      behavior: "smooth",
+      block: "nearest",
+      inline: "center",
+    });
+  }, [currentSlide, slides.length]);
 
   return (
     <div className="h-screen flex flex-col bg-gray-50 dark:bg-gray-900 text-gray-900 dark:text-gray-100 relative">
@@ -231,6 +266,61 @@ export function StandardView({
                 </DropdownMenu.Root>
               </div>
             </div>
+            <div className="px-0 py-3 border-b border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-900">
+              <div className="pb-2">
+                <div
+                  ref={thumbnailStripRef}
+                  className="flex gap-3 overflow-x-auto slides-strip-scrollbar"
+                >
+                  <div className="flex-none w-3" aria-hidden="true" />
+                  {slides.map((slide, index) => {
+                    const isActive = index === currentSlide;
+                    const isThumbTitle = slide === "__TITLE_SLIDE__";
+                    const isThumbImageOnly = imageOnlySlides.has(index);
+
+                    return (
+                      <button
+                        key={`thumb-${index}`}
+                        type="button"
+                        ref={(element) => {
+                          thumbnailRefs.current[index] = element;
+                        }}
+                        onClick={() => setCurrentSlide(index)}
+                        aria-current={isActive}
+                        className={`relative flex-none w-[160px] h-[90px] rounded-none overflow-hidden border transition-shadow focus:outline-none focus-visible:ring-2 focus-visible:ring-gray-400 dark:focus-visible:ring-gray-500 ${
+                          isActive
+                            ? "border-gray-500 dark:border-gray-400 shadow-sm"
+                            : "border-gray-200 dark:border-gray-800 hover:border-gray-300 dark:hover:border-gray-700"
+                        }`}
+                      >
+                        <div className="w-full h-full">
+                          <SlideFrame
+                            variant="standard"
+                            isTitle={isThumbTitle}
+                            isImageOnly={isThumbImageOnly}
+                            align={slideConfigs[index]?.align}
+                            frameClassName="bg-white dark:bg-gray-900"
+                            overlay={logoOverlay}
+                          >
+                            <Slide
+                              slide={slide}
+                              isTitle={isThumbTitle}
+                              isImageOnly={isThumbImageOnly}
+                              frontmatter={frontmatter}
+                              config={slideConfigs[index]}
+                            />
+                          </SlideFrame>
+                        </div>
+                        <div className="absolute top-1 left-1 text-[11px] font-medium px-1.5 py-0.5 rounded bg-white/80 text-gray-800 dark:bg-gray-900/80 dark:text-gray-100">
+                          {index + 1}
+                        </div>
+                      </button>
+                    );
+                  })}
+                  <div className="flex-none w-3" aria-hidden="true" />
+                </div>
+              </div>
+            </div>
             <div className="flex-1 min-h-0 min-w-0 overflow-hidden bg-white dark:bg-gray-900">
               <SlideFrame
                 variant="standard"
@@ -238,33 +328,7 @@ export function StandardView({
                 isImageOnly={isImageOnly}
                 align={slideConfigs[currentSlide]?.align}
                 frameClassName="bg-white dark:bg-gray-900"
-                overlay={
-                  resolvedLogoUrl ? (
-                    <img
-                      src={resolvedLogoUrl}
-                      alt="Logo"
-                      className={`presentation-logo absolute bottom-16 z-10 shadow-none ${
-                        frontmatter?.logoPosition === "right"
-                          ? "right-16"
-                          : "left-16"
-                      } ${
-                        frontmatter?.logoSize === "sm"
-                          ? "h-8"
-                          : frontmatter?.logoSize === "lg"
-                            ? "h-12"
-                            : "h-10"
-                      } w-auto`}
-                      style={{
-                        opacity: frontmatter?.logoOpacity
-                          ? parseFloat(frontmatter.logoOpacity)
-                          : 0.9,
-                      }}
-                      onError={(e) => {
-                        (e.target as HTMLImageElement).style.display = "none";
-                      }}
-                    />
-                  ) : null
-                }
+                overlay={logoOverlay}
               >
                 <Slide
                   key={currentSlide}

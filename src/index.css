@@ -730,3 +730,39 @@
 .dark .scrollbar-thin::-webkit-scrollbar-thumb:hover {
   background: var(--color-gray-700, #404040);
 }
+
+/* Slide strip scrollbar: thinner and padded so it does not touch thumbnails */
+.slides-strip-scrollbar {
+  scrollbar-width: thin;
+  scrollbar-color: var(--color-gray-200, #e5e5e5) transparent;
+  padding-bottom: 8px;
+}
+
+.slides-strip-scrollbar::-webkit-scrollbar {
+  height: 6px;
+}
+
+.slides-strip-scrollbar::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.slides-strip-scrollbar::-webkit-scrollbar-thumb {
+  background: var(--color-gray-200, #e5e5e5);
+  border-radius: 999px;
+}
+
+.slides-strip-scrollbar::-webkit-scrollbar-thumb:hover {
+  background: var(--color-gray-300, #d4d4d4);
+}
+
+.dark .slides-strip-scrollbar {
+  scrollbar-color: var(--color-gray-800, #262626) transparent;
+}
+
+.dark .slides-strip-scrollbar::-webkit-scrollbar-thumb {
+  background: var(--color-gray-800, #262626);
+}
+
+.dark .slides-strip-scrollbar::-webkit-scrollbar-thumb:hover {
+  background: var(--color-gray-700, #404040);
+}

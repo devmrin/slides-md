@@ -40,7 +40,8 @@ export function useKeyboardNavigation({
         (activeElement.tagName === "INPUT" ||
           activeElement.tagName === "TEXTAREA" ||
           activeElement.hasAttribute("contenteditable") ||
-          activeElement.closest(".cm-editor") !== null);
+          activeElement.closest(".cm-editor") !== null ||
+          activeElement.closest(".monaco-editor") !== null);
 
       if (
         isEditing &&
