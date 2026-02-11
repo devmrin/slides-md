@@ -745,6 +745,8 @@
   scrollbar-width: thin;
   scrollbar-color: var(--color-gray-200, #e5e5e5) transparent;
   padding-bottom: 8px;
+  -webkit-overflow-scrolling: touch;
+  touch-action: pan-x;
 }
 
 .slides-strip-scrollbar::-webkit-scrollbar {
