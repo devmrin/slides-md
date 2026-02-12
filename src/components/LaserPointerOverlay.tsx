@@ -1,6 +1,6 @@
 import { useRef, useEffect } from "react";
 
-const TRAIL_MS = 600;
+const TRAIL_MS = 350;
 const THROTTLE_MS = 16;
 const STROKE_WIDTH = 4;
 const DOT_RADIUS = 5;
