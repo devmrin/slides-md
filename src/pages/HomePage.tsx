@@ -245,7 +245,9 @@ export function HomePage() {
                     className="shrink-0 px-2.5 sm:px-3 py-1.5 text-xs sm:text-sm border rounded border-gray-400 dark:border-gray-600 text-gray-900 dark:text-gray-100 bg-white dark:bg-gray-900 hover:bg-gray-50 dark:hover:bg-gray-800 disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-1.5 sm:gap-2"
                   >
                     <Plus className="w-4 h-4 shrink-0" />
-                    <span className="hidden sm:inline">New Presentation (^N)</span>
+                    <span className="hidden sm:inline">
+                      New Presentation (^N)
+                    </span>
                     <span className="sm:hidden">New</span>
                     <ChevronDown className="w-3 h-3 shrink-0" />
                   </Button>
@@ -287,25 +289,26 @@ export function HomePage() {
               )}
             </div>
 
-            {/* View mode toggle — more spacing so icons don't smash */}
-            <div className="flex items-center gap-3 sm:gap-4 shrink-0">
-              <span className="sr-only">View:</span>
-              <Grid3x3
-                className="w-4 h-4 text-gray-600 dark:text-gray-400 shrink-0"
-                aria-hidden
-              />
-              <Switch
-                checked={viewMode === "list"}
-                onCheckedChange={(checked) =>
-                  setViewMode(checked ? "list" : "gallery")
-                }
-                aria-label="Gallery or list view"
-              />
-              <List
-                className="w-4 h-4 text-gray-600 dark:text-gray-400 shrink-0"
-                aria-hidden
-              />
-            </div>
+            {!isMobile && (
+              <div className="flex items-center gap-3 sm:gap-4 shrink-0">
+                <span className="sr-only">View:</span>
+                <Grid3x3
+                  className="w-4 h-4 text-gray-600 dark:text-gray-400 shrink-0"
+                  aria-hidden
+                />
+                <Switch
+                  checked={viewMode === "list"}
+                  onCheckedChange={(checked) =>
+                    setViewMode(checked ? "list" : "gallery")
+                  }
+                  aria-label="Gallery or list view"
+                />
+                <List
+                  className="w-4 h-4 text-gray-600 dark:text-gray-400 shrink-0"
+                  aria-hidden
+                />
+              </div>
+            )}
           </div>
         )}
 
@@ -355,7 +358,7 @@ export function HomePage() {
                 </DropdownMenu.Root>
               </div>
             </div>
-          ) : viewMode === "gallery" ? (
+          ) : isMobile || viewMode === "gallery" ? (
             <div
               className={
                 isMobile
