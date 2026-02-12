@@ -33,21 +33,13 @@ function PreviewCell({ presentation }: { presentation: Presentation }) {
   );
   const [currentSlide, setCurrentSlide] = useState(0);
   const slideCount = slides.length;
-  const activeSlide = slides[currentSlide] || "";
+  const maxSlideIndex = Math.max(0, slideCount - 1);
+  const activeSlideIndex = Math.min(currentSlide, maxSlideIndex);
+  const activeSlide = slides[activeSlideIndex] || "";
   const isTitleSlide = activeSlide === "__TITLE_SLIDE__";
-  const isImageOnly = imageOnlySlides.has(currentSlide);
-  const activeConfig = slideConfigs[currentSlide];
+  const isImageOnly = imageOnlySlides.has(activeSlideIndex);
+  const activeConfig = slideConfigs[activeSlideIndex];
   const [resolvedLogoUrl, setResolvedLogoUrl] = useState<string | null>(null);
-
-  useEffect(() => {
-    if (slideCount === 0) {
-      setCurrentSlide(0);
-      return;
-    }
-    if (currentSlide > slideCount - 1) {
-      setCurrentSlide(slideCount - 1);
-    }
-  }, [currentSlide, slideCount]);
 
   useEffect(() => {
     const resolveLogo = async () => {
@@ -131,7 +123,7 @@ function PreviewCell({ presentation }: { presentation: Presentation }) {
                 setCurrentSlide((prev) => Math.max(0, prev - 1));
               }}
               aria-label="Previous slide"
-              disabled={currentSlide === 0}
+              disabled={activeSlideIndex === 0}
             >
               <ChevronLeft className="h-3 w-3" />
             </button>
@@ -143,7 +135,7 @@ function PreviewCell({ presentation }: { presentation: Presentation }) {
                 setCurrentSlide((prev) => Math.min(slideCount - 1, prev + 1));
               }}
               aria-label="Next slide"
-              disabled={currentSlide === slideCount - 1}
+              disabled={activeSlideIndex === slideCount - 1}
             >
               <ChevronRight className="h-3 w-3" />
             </button>

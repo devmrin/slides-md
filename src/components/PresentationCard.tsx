@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useNavigate } from "@tanstack/react-router";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { Slide } from "./Slide";
@@ -34,24 +34,19 @@ export function PresentationCard({
   );
   const [currentSlide, setCurrentSlide] = useState(0);
   const slideCount = slides.length;
-  const activeSlide = slides[currentSlide] || "";
+  const maxSlideIndex = Math.max(0, slideCount - 1);
+  const activeSlideIndex = Math.min(currentSlide, maxSlideIndex);
+  const activeSlide = slides[activeSlideIndex] || "";
   const isTitleSlide = activeSlide === "__TITLE_SLIDE__";
-  const isImageOnly = imageOnlySlides.has(currentSlide);
-  const activeConfig = slideConfigs[currentSlide];
+  const isImageOnly = imageOnlySlides.has(activeSlideIndex);
+  const activeConfig = slideConfigs[activeSlideIndex];
   const [resolvedLogoUrl, setResolvedLogoUrl] = useState<string | null>(null);
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
   const [editDialogOpen, setEditDialogOpen] = useState(false);
   const [toastOpen, setToastOpen] = useState(false);
-
-  useEffect(() => {
-    if (slideCount === 0) {
-      setCurrentSlide(0);
-      return;
-    }
-    if (currentSlide > slideCount - 1) {
-      setCurrentSlide(slideCount - 1);
-    }
-  }, [currentSlide, slideCount]);
+  const touchStartRef = useRef<{ x: number; y: number } | null>(null);
+  const didSwipeRef = useRef(false);
+  const SWIPE_THRESHOLD = 40;
 
   useEffect(() => {
     const resolveLogo = async () => {
@@ -107,11 +102,52 @@ export function PresentationCard({
   ) : null;
 
   const handleClick = () => {
+    if (didSwipeRef.current) {
+      didSwipeRef.current = false;
+      return;
+    }
     // Prevent navigation if a dialog is open
     if (deleteDialogOpen || editDialogOpen) {
       return;
     }
     navigate({ to: "/presentation/$id", params: { id: presentation.id } });
+  };
+
+  const handleTouchStart = (event: React.TouchEvent) => {
+    if (event.changedTouches.length === 0 || slideCount <= 1) return;
+    didSwipeRef.current = false;
+    touchStartRef.current = {
+      x: event.changedTouches[0].clientX,
+      y: event.changedTouches[0].clientY,
+    };
+  };
+
+  const handleTouchEnd = (event: React.TouchEvent) => {
+    if (
+      event.changedTouches.length === 0 ||
+      !touchStartRef.current ||
+      slideCount <= 1
+    ) {
+      return;
+    }
+
+    const start = touchStartRef.current;
+    touchStartRef.current = null;
+
+    const endX = event.changedTouches[0].clientX;
+    const endY = event.changedTouches[0].clientY;
+    const deltaX = endX - start.x;
+    const deltaY = endY - start.y;
+
+    if (Math.abs(deltaX) < SWIPE_THRESHOLD) return;
+    if (Math.abs(deltaY) > Math.abs(deltaX)) return;
+
+    didSwipeRef.current = true;
+    if (deltaX < 0) {
+      setCurrentSlide((prev) => Math.min(slideCount - 1, prev + 1));
+    } else {
+      setCurrentSlide((prev) => Math.max(0, prev - 1));
+    }
   };
 
   const handleEdit = () => {
@@ -150,7 +186,11 @@ export function PresentationCard({
             : "w-full aspect-video bg-gray-100 dark:bg-gray-900 flex items-center justify-center overflow-hidden"
         }
       >
-        <div className="w-full h-full relative">
+        <div
+          className="w-full h-full relative"
+          onTouchStart={handleTouchStart}
+          onTouchEnd={handleTouchEnd}
+        >
           <SlideFrame
             variant="standard"
             isTitle={isTitleSlide}
@@ -177,7 +217,7 @@ export function PresentationCard({
                   setCurrentSlide((prev) => Math.max(0, prev - 1));
                 }}
                 aria-label="Previous slide"
-                disabled={currentSlide === 0}
+                disabled={activeSlideIndex === 0}
               >
                 <ChevronLeft className="h-3 w-3" />
               </button>
@@ -189,7 +229,7 @@ export function PresentationCard({
                   setCurrentSlide((prev) => Math.min(slideCount - 1, prev + 1));
                 }}
                 aria-label="Next slide"
-                disabled={currentSlide === slideCount - 1}
+                disabled={activeSlideIndex === slideCount - 1}
               >
                 <ChevronRight className="h-3 w-3" />
               </button>
