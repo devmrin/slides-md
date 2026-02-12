@@ -349,6 +349,9 @@ export function StandardView({
                 isTitle={isTitle}
                 isImageOnly={isImageOnly}
                 align={slideConfigs[currentSlide]?.align}
+                canvasPosition={
+                  viewMode === "full-preview" ? "top-center" : "top-left"
+                }
                 frameClassName="bg-white dark:bg-gray-900"
                 overlay={logoOverlay}
               >

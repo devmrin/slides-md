@@ -9,6 +9,7 @@ interface SlideFrameProps {
   isTitle?: boolean;
   isImageOnly?: boolean;
   align?: "top" | "center" | "bottom";
+  canvasPosition?: "top-left" | "top-center" | "center";
   frameClassName?: string;
   overlay?: ReactNode;
   children: ReactNode;
@@ -19,6 +20,7 @@ export function SlideFrame({
   isTitle,
   isImageOnly,
   align = "center",
+  canvasPosition = "top-left",
   frameClassName,
   overlay,
   children,
@@ -60,13 +62,29 @@ export function SlideFrame({
   const variantClass =
     variant === "standard" ? "standard-view-slide" : "presentation-view-slide";
 
+  const canvasStyle =
+    canvasPosition === "center"
+      ? {
+          top: "50%",
+          left: "50%",
+          transform: `scale(${scale}) translate(-50%, -50%)`,
+        }
+      : canvasPosition === "top-center"
+        ? {
+            left: "50%",
+            transform: `scale(${scale}) translateX(-50%)`,
+          }
+        : {
+            transform: `scale(${scale})`,
+          };
+
   return (
     <div className="slide-frame">
       <div
         ref={frameRef}
         className={`slide-frame-inner ${frameClassName || ""}`}
       >
-        <div className="slide-canvas" style={{ transform: `scale(${scale})` }}>
+        <div className="slide-canvas" style={canvasStyle}>
           <div className={`slide-content ${variantClass} ${layoutClass}`}>
             {children}
           </div>
