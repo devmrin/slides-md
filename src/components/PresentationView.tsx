@@ -221,6 +221,7 @@ export function PresentationView({
           isTitle={isTitle}
           isImageOnly={isImageOnly}
           align={slideConfigs[currentSlide]?.align}
+          canvasPosition="top-center"
           frameClassName="bg-white dark:bg-gray-900"
           overlay={
             resolvedLogoUrl ? (

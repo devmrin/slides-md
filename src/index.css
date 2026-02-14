@@ -140,6 +140,13 @@
   overflow-x: hidden;
   -webkit-overflow-scrolling: touch;
   overscroll-behavior: contain;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
+.slide-content::-webkit-scrollbar {
+  width: 0;
+  height: 0;
 }
 
 .slide-frame-inner.preview-frame .slide-content {
